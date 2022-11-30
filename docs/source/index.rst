@@ -1,10 +1,10 @@
-Das TOS Handbuch
-================
+Das UNCO Handbuch
+=================
 
-Willkommen beim Tender Offer Scan, schön dass du da bist!
-Hier möchten wir jedem das Leben leichter machen, der sich für TOS interessiert in Form einer Dokumentation über das Ziel, das Verfahren und den technischen Aufbau von TOS.
+Willkommen beim Uncertanty Comparator, schön dass du da bist!
+Hier möchte ich jedem das Leben leichter machen, der sich für UNCO interessiert in Form einer Dokumentation über das Ziel, das Verfahren und den technischen Aufbau von UNCO.
 
-Bei Fragen rund um TOS helfen euch gerne die Studenten aus dem CC Data Science & AI weiter.
+Bei Fragen rund um UNCO schreibt mich gerne auf github an (scrumbleton97@gmail.com).
 
 Und jetzt viel Spaß beim Stöbern ;)
 
@@ -16,4 +16,4 @@ Inhalt:
 
    how-to-use
    concepts/concepts
-   tos/modules
+   unco/modules
