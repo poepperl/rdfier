@@ -1,0 +1,28 @@
+# local package
+-e ./src
+
+# external requirements
+autodoc
+Sphinx
+sphinx-autobuild
+rstcheck
+docutils
+pydot
+graphviz 
+sphinx-rtd-theme
+coverage
+flake8
+pytest
+
+sklearn
+pandas
+icecream
+
+boto3 #used to connect to S3 like storage and AWS
+s3fs #used to connect to S3 like storage with pandas
+
+
+jupyter
+tqdm #progress bars
+confuse #used for config loading
+#pyarrow #used to read and write parquet files

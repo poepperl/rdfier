@@ -1,0 +1,18 @@
+version: '3'
+services:
+  mlflow:
+    build: 
+      context: mlflow
+    container_name: mlflow
+    expose:
+      - 80
+      - 443
+
+  serving:
+    build:
+      context: serving
+    container_name: model_serving
+    expose:
+      - 81
+      - 442
+

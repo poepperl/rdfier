@@ -1,0 +1,18 @@
+FROM python:3.8-slim-buster
+
+RUN mkdir /opt/ml
+RUN mkdir /opt/ml/input
+RUN mkdir /opt/ml/input/code
+RUN mkdir /opt/ml/input/data
+RUN mkdir /opt/ml/output
+RUN mkdir /opt/ml/output/metric
+RUN mkdir /opt/ml/output/model
+
+COPY requirements-train.txt /opt/ml/input/code
+COPY setup.py /opt/ml/input/code
+COPY ../../src /opt/ml/input/code
+
+WORKDIR /opt/ml/input/code
+RUN pip install -r requirements-train.txt
+
+ENTRYPOINT [ "/bin/bash" ]
