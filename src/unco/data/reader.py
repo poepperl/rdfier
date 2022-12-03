@@ -1,7 +1,5 @@
-import os
 import csv
 from colorama import Fore  # prints warnings in red
-from src.unco import UNCO_PATH
 
 
 class Reader:
@@ -42,7 +40,3 @@ class Reader:
             print(Fore.RED + "Warning: PDF not aviable." + Fore.RESET)
         else:
             print(Fore.RED + "Warning: Unknown File-Type!" + Fore.RESET)
-
-
-path = os.path.join(UNCO_PATH, "tests/test_data/csv_testdata/unittest_readersv")
-data = Reader(path).read()
