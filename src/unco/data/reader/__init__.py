@@ -1,3 +1,3 @@
-from .csvreader import CSVReader
+# from .csvreader import CSVReader
 
-__all__ = ["CSVReader"]
+# __all__ = ["CSVReader"]
