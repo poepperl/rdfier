@@ -13,6 +13,7 @@ sphinx-rtd-theme
 coverage
 flake8
 pytest
+colorama # colored prints
 
 sklearn
 pandas
