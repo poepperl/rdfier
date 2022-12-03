@@ -1,6 +1,6 @@
 import re
-from tos import get_datetime_postfix
-from tos.data import read_utils as data_utils
+from unco import get_datetime_postfix
+from unco.data import read_utils as data_utils
 
 def test_get_datetime_postfix():
     postfix = get_datetime_postfix()
