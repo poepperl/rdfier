@@ -1,7 +1,9 @@
 import os
 
-def getUncoPath():
-    TOS_PATH = os.path.dirname(__file__)
-    return TOS_PATH[:30]
 
-UNCO_PATH = getUncoPath()
+def get_unco_path():
+    unco_path = os.path.dirname(__file__)
+    return unco_path[:30]
+
+
+UNCO_PATH = get_unco_path()
