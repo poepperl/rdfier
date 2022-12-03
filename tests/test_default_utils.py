@@ -1,9 +1,10 @@
 # Relative Paths:
 import os
-from unco import UNCO_PATH
+from src.unco import UNCO_PATH
 
-#CSV Reader:
-from unco.data import Reader
+# CSV Reader:
+from src.unco.data import Reader
+
 
 def test_data_reader_read_csv_data():
     path = os.path.join(UNCO_PATH, "tests/test_data/csv_testdata/unittest_readersv")
