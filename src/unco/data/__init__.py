@@ -1,3 +1,4 @@
-from .reader.csvreader import CSVReader
+from .reader import Reader
+from .dataset import Dataset
 
-__all__ = ["CSVReader"]
+__all__ = ["Reader", "Dataset"]
