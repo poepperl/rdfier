@@ -1,19 +1,14 @@
-import re
-from unco import get_datetime_postfix
-from unco.data import read_utils as data_utils
+# Relative Paths:
+import os
+import unco
 
-def test_get_datetime_postfix():
-    postfix = get_datetime_postfix()
-    assert re.match(r"\d{8}_\d{6}$", postfix) != None
+#CSV Reader:
+from unco.data.reader import csvreader
 
-def test_data_utils_get_all_files_in_path_all():
-    file_list = data_utils.get_all_files_in_path('tests/test_data')
-    assert len(file_list) == 5
 
-def test_data_utils_get_all_files_in_path_json_only():
-    file_list = data_utils.get_all_files_in_path('tests/test_data', 'json')
-    assert len(file_list) == 1
+UNCO_PATH = unco.getUscoPath()
 
-def test_data_utils_get_all_files_in_path_not_recursive():
-    file_list = data_utils.get_all_files_in_path('tests/test_data', recursive=False)
-    assert len(file_list) == 0
+def test_data_reader_read_csv_data():
+    path = os.path.join(UNCO_PATH, "tests/test_data/csv_testdata/unittest_reader.csv")
+    data = csvreader.CSVReader(path).read()
+    assert list(data)[2][2] == "Zaubereiministerium"
