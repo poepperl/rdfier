@@ -5,11 +5,3 @@ unco.data package
    :members:
    :undoc-members:
    :show-inheritance:
-
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 0
-
-   unco.data.reader
