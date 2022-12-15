@@ -21,7 +21,7 @@ class Dataset:
         # get random number of uncertainties between 1 and the number of rows
         if number_of_uncertainties <= 0:
             number_of_uncertainties = random.randrange(1, ncolums)
-        elif number_of_uncertainties > ncolums-1:
+        elif number_of_uncertainties >= ncolums:
             print(Fore.RED + "ERROR: Number of Uncertanties to high." + Fore.RESET)
             return
 
