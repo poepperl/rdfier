@@ -40,13 +40,7 @@ class Dataset:
             
             uncertain_columns = list_of_columns
 
-        print(uncertain_columns)
-
-        # for column in random_columns:
-        #     column_name = first_line[column]
-        #     column_name = column_name[column_name.rfind("#")+1:]
-        #     column_name += "*hasUncertainty"
-        #     next(self.data).append(column_name)
+        # TODO: Für jede Spalte wähle zufällige Anzahl an Uncertainty Values und erstelle eine neue csv in welche diese eingetragen werden.
 
 p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
 p.add_uncertainty_flags(3, [])
