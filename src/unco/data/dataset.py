@@ -11,9 +11,9 @@ class Dataset:
     Attributes
     ----------
     data : pd.DataFrame
-        DataFrame wich includes the data from Reader
+        DataFrame wich includes the data from Reader.
     uncertainty_flags: dict
-        Dictionary to save some uncertainty flags
+        Dictionary to save some uncertainty flags. A flag is saved as: uncertainty_flags[(ID,column_index)] = 1
     """
 
     data: pd.DataFrame
@@ -24,17 +24,17 @@ class Dataset:
         Parameters
         ----------
         path : str
-            Path to the input-data
+            Path to the input-data.
         """
         self.data = Reader(path).read()
 
     def add_uncertainty_flags(self, number_of_uncertain_columns: int=0, list_of_columns: list[int] =[], uncertainties_per_column: int = 0) -> None:
-        """ Method to create random uncertaintie flags
+        """ Method to create random uncertaintie flags.
 
         Parameters
         ----------
         number_of_uncertain_columns : int, optional
-            The number of columns, which get uncertainty flags. Only used, if list_of_columns is empty. By default, the number is chosen randomly between 1 and the number of columns
+            The number of columns, which get uncertainty flags. Only used, if list_of_columns is empty. By default, the number is chosen randomly between 1 and the number of columns.
         list_of_columns: list[int], optional
             List of columns which should get uncertainty flags.
         uncertainties_per_column: int, optional
