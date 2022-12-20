@@ -1,3 +1,4 @@
+import pandas as pd
 import csv
 from colorama import Fore  # prints warnings in red
 
@@ -23,7 +24,7 @@ class Reader:
         if len(self.type) > 4:
             print(Fore.RED + "Please enter a complete path with datatype-prefix!" + Fore.RESET)
 
-    def read(self) -> csv:
+    def read(self) -> pd.DataFrame:
         """
             Reads the input and returns a CSV object.
         """
@@ -31,7 +32,7 @@ class Reader:
         if self.type == "csv":
             try:
                 file = open(self.path, 'r', encoding='utf-8')
-                return csv.reader(file)
+                return pd.read_csv(file)
 
             except FileNotFoundError:
                 print(Fore.RED + "Warning: There is no CSV file on this path." + Fore.RESET)
