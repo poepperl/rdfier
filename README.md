@@ -47,6 +47,12 @@ Getting started
 python -m venv .venv                // nur bei erster Ausführung notwendig
 .venv\Scripts\activate
 pip install -r requirements.txt     // nur bei erster Ausführung notwendig
+```
+
+Dokumentation generieren
+------------------------
+
+```
 cd docs
 sphinx-apidoc -lfM -d 0 -o source/unco/ ../src/unco
 make html
