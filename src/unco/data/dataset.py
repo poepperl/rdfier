@@ -13,7 +13,7 @@ class Dataset:
     data : pd.DataFrame
         DataFrame wich includes the data from Reader.
     uncertainty_flags: dict
-        Dictionary to save some uncertainty flags. A flag is saved as: uncertainty_flags[(ID,column_index)] = 1
+        Dictionary to save some uncertainty flags. A flag is saved as: uncertainty_flags[ID] = list(column_indices)
     """
 
     data: pd.DataFrame
@@ -43,7 +43,7 @@ class Dataset:
 
         nrows, ncolums = self.data.shape
 
-        list_of_columns = list(dict.fromkeys(list_of_columns)) # Remove all duplicates from list
+        list_of_columns = list(set(list_of_columns)) # Remove all duplicates from list
 
         if len(list_of_columns) == 0:
             # get random number of uncertainties between 1 and the number of columns
@@ -68,12 +68,28 @@ class Dataset:
 
         uncertainty_flags = {}
         for column in uncertain_columns:
+            uncertainty_flags[column] = []
             if uncertainties_per_column < 1 or uncertainties_per_column > nrows-1:
                 uncertain_values = random.sample(range(0, nrows), random.randint(1, nrows)) # Get random row indices
             else:
                 uncertain_values = random.sample(range(0, nrows), uncertainties_per_column)
             
             for row in uncertain_values:
-                uncertainty_flags[(self.data.iat[row,0],column)] = 1
+                uncertainty_flags[column].append(self.data.iat[row,0])
 
         self.uncertainty_flags = uncertainty_flags
+
+
+    def add_alternatives(self):
+        alternatives : dict = {}
+        for column in self.uncertainty_flags:
+            values = set(self.data[self.data.columns[1]].tolist())
+            # TODO: Füge Alternativen für jede Flag hinzu
+
+    def add_likelihoods(self):
+        pass # TODO: Methode die Likelihoods zu den (bereits bestehenden Alternativen) hinzufügt.
+
+
+p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
+p.add_uncertainty_flags()
+p.add_alternatives()
