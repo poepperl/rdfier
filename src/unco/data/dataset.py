@@ -1,5 +1,6 @@
 import pandas as pd
 import random
+import numpy as np
 from unco.data import Reader
 from colorama import Fore
 
@@ -22,9 +23,11 @@ class Dataset:
 
     uncertainty_flags: dict
 
-    alternatives: dict
+    alternatives: dict = {}
 
-    NUMBER_OF_ALTERNATIVES : int = -1
+    likelihoods: dict = {}
+
+    NUMBER_OF_ALTERNATIVES : int = 2
 
     def __init__(self, path: str) -> None:
         """
@@ -88,19 +91,32 @@ class Dataset:
 
 
     def add_alternatives(self):
-        self.alternatives = {}
         for column in self.uncertainty_flags:
             values_of_column = set(self.data[self.data.columns[1]].tolist())
             for row in self.uncertainty_flags[column]:
                 set_of_alternatives = values_of_column - {self.data.iat[row,column]}
                 if self.NUMBER_OF_ALTERNATIVES < 1 or self.NUMBER_OF_ALTERNATIVES > len(set_of_alternatives):
                     self.alternatives[(row,column)] = random.sample(list(set_of_alternatives),random.randint(1,len(set_of_alternatives)))
+                else:
+                    self.alternatives[(row,column)] = random.sample(list(set_of_alternatives),self.NUMBER_OF_ALTERNATIVES)
 
     def add_likelihoods(self):
-        pass # TODO: Methode die Likelihoods zu den (bereits bestehenden Alternativen) hinzufügt.
+        for value in self.alternatives:
+            likelihoods = []
+            sum = 0
+            for alternative in self.alternatives[value]:
+                randomvalue = random.randint(1,10)
+                sum += randomvalue
+                likelihoods.append(randomvalue)
+
+            likelihoods = np.array(likelihoods)
+            likelihoods = np.divide(likelihoods,sum)
+
+            self.likelihoods[value] = likelihoods
 
 
-p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
-p.add_uncertainty_flags()
-p.add_alternatives()
-print(p.alternatives)
+# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
+# p.add_uncertainty_flags()
+# p.add_alternatives()
+# p.add_likelihoods()
+# print(p.likelihoods)
