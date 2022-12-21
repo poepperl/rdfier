@@ -13,11 +13,18 @@ class Dataset:
     data : pd.DataFrame
         DataFrame wich includes the data from Reader.
     uncertainty_flags: dict
-        Dictionary to save some uncertainty flags. A flag is saved as: uncertainty_flags[ID] = list(column_indices)
+        Dictionary to save some uncertainty flags. A flag is saved as: uncertainty_flags[column_indices] = list(row_indices)
+    alternatives: dict
+        Dictionary to save some alternatives for all uncertain values. The slternatives are saved as: alternatives[(row,column)] = list(alternatives)
     """
 
     data: pd.DataFrame
+
     uncertainty_flags: dict
+
+    alternatives: dict
+
+    NUMBER_OF_ALTERNATIVES : int = -1
 
     def __init__(self, path: str) -> None:
         """
@@ -75,16 +82,19 @@ class Dataset:
                 uncertain_values = random.sample(range(0, nrows), uncertainties_per_column)
             
             for row in uncertain_values:
-                uncertainty_flags[column].append(self.data.iat[row,0])
+                uncertainty_flags[column].append(row)
 
         self.uncertainty_flags = uncertainty_flags
 
 
     def add_alternatives(self):
-        alternatives : dict = {}
+        self.alternatives = {}
         for column in self.uncertainty_flags:
-            values = set(self.data[self.data.columns[1]].tolist())
-            # TODO: Füge Alternativen für jede Flag hinzu
+            values_of_column = set(self.data[self.data.columns[1]].tolist())
+            for row in self.uncertainty_flags[column]:
+                set_of_alternatives = values_of_column - {self.data.iat[row,column]}
+                if self.NUMBER_OF_ALTERNATIVES < 1 or self.NUMBER_OF_ALTERNATIVES > len(set_of_alternatives):
+                    self.alternatives[(row,column)] = random.sample(list(set_of_alternatives),random.randint(1,len(set_of_alternatives)))
 
     def add_likelihoods(self):
         pass # TODO: Methode die Likelihoods zu den (bereits bestehenden Alternativen) hinzufügt.
@@ -93,3 +103,4 @@ class Dataset:
 p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
 p.add_uncertainty_flags()
 p.add_alternatives()
+print(p.alternatives)
