@@ -14,6 +14,7 @@ coverage
 flake8
 pytest
 colorama # colored prints
+rdflib # rdf Library
 
 sklearn
 pandas
@@ -26,4 +27,3 @@ s3fs #used to connect to S3 like storage with pandas
 jupyter
 tqdm #progress bars
 confuse #used for config loading
-#pyarrow #used to read and write parquet files
