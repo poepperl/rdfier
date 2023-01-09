@@ -52,7 +52,7 @@ coverage.xml
 *.log
 
 # Sphinx documentation
-docs/build/
+docs/build
 docs/source/unco/
 
 # PyBuilder
