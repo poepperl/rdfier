@@ -1,7 +1,7 @@
 from unco.data.dataset import Dataset
 
 
-class RDFCreator():
+class RDFGenerator():
     """
         Class which creates an RDF-XML file.
 
@@ -30,7 +30,7 @@ class RDFCreator():
     def generate_solution_2(self) -> None:
         """ Method to generate the RDF-XML file of solution 2.
         """
-        pass #TODO: Generieren des Graphs von Lösung 2
+        
 
     def generate_solution_3(self) -> None:
         """ Method to generate the RDF-XML file of solution 3.
@@ -61,3 +61,25 @@ class RDFCreator():
         """ Method to generate the RDF-XML file of solution 8.
         """
         pass #TODO: Generieren des Graphs von Lösung 8
+
+if __name__ == "__main__":
+    dataset = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
+
+    dataset.add_uncertainty_flags()
+    generator = RDFGenerator(dataset)
+
+    # generator.generate_solution_1()
+    generator.generate_solution_2()
+    # generator.generate_solution_6()
+    # generator.generate_solution_7()
+    
+
+    # dataset.add_alternatives()
+
+    # dataset.add_likelihoods()
+    # generator = RDFGenerator(dataset)
+
+    # generator.generate_solution_3()
+    # generator.generate_solution_4()
+    # generator.generate_solution_5()
+    # generator.generate_solution_8()
