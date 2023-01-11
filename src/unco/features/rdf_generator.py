@@ -1,8 +1,8 @@
 import pandas as pd
 from typing import Literal
 from unco.data.dataset import Dataset
-from rdflib import Graph, Namespace, BNode, Literal, URIRef
-from rdflib.namespace import RDF, FOAF
+from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
+from rdflib.namespace import RDF
 
 NM = Namespace("http://nomisma.org/id/")
 NMO = Namespace("http://nomisma.org/ontology#")
@@ -16,6 +16,8 @@ class RDFGenerator():
     ----------
     dataset : Dataset
         Dataset which contains the data of the rdf graph.
+    graph : Graph
+        RDF graph which will be created.
     """
 
     def __init__(self, dataset: Dataset) -> None:
@@ -31,31 +33,32 @@ class RDFGenerator():
         self.graph.bind("nm", NM)
         self.graph.bind("nmo", NMO)
         self.graph.bind("un", UN)
-        self.graph.bind("foaf", FOAF)
 
-    def generate_solution(self,solution_id):
+    def generate_solution(self,solution_id : int):
         """ Method to generate the RDF-XML file.
+        Attributes
+        ----------
+        solution_id : int
+            Solution id, which should be generated.
         """
         coin_ids = self.dataset.data[self.dataset.data.columns[0]] # Get the list of id's
 
         for row_index, id in enumerate(coin_ids):
+
             coin = URIRef("Coin_" + str(id))
-            self.graph.add((coin, NMO.hasObjectType, NM.coin)) # Coin_X gets ObjectType Coin
+            self.graph.add((coin, NMO.hasObjectType, NM.coin)) # Coin gets ObjectType Coin
 
             for column_index in range(1, len(self.dataset.data.columns)):
+
                 if pd.notnull(self.dataset.data.iat[row_index,column_index]): # Check if value isn't NaN
-
-                    predicate = Literal("has" + str(self.dataset.data.columns[column_index]))
-
-                    object = Literal(self.dataset.data.iat[row_index,column_index])
-
                     if column_index in self.dataset.uncertainty_flags:
                         if row_index in self.dataset.uncertainty_flags[column_index]: # If current value is uncertain, do:
+
                             match solution_id:
                                 case 1:
                                     self._generate_uncertain_value_solution_1()
                                 case 2:
-                                    self._generate_uncertain_value_solution_2(coin, predicate, str(self.dataset.data.columns[column_index]) + self.dataset.data.iat[row_index,column_index])
+                                    self._generate_uncertain_value_solution_2(coin, predicate, row_index, column_index)
                                 case 3:
                                     self._generate_uncertain_value_solution_3()
                                 case 4:
@@ -69,6 +72,9 @@ class RDFGenerator():
                                 case 8:
                                     self._generate_uncertain_value_solution_8()
                             continue
+                    
+                    predicate = Literal("has" + str(self.dataset.data.columns[column_index]))
+                    object = Literal(self.dataset.data.iat[row_index,column_index])
 
                     self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 hasMaterial ar
         
@@ -77,10 +83,21 @@ class RDFGenerator():
         """
         pass #TODO: Generieren der unsicheren Werte von Lösung 1
 
-    def _generate_uncertain_value_solution_2(self, coin, predicate, nodename : str) -> None:
+    def _generate_uncertain_value_solution_2(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 2.
+        Attributes
+        ----------
+        coin : IdentifiedNode
+            Node of the coin, which gets an uncertain value.
+        row_index : int
+            Row index of the uncertain value.
+        column_index : int
+            Column index of the uncertain value.
         """
-        node = BNode(nodename)
+        node = BNode(str(self.dataset.data.columns[column_index]) + self.dataset.data.iat[row_index,column_index])
+
+        predicate = Literal("has" + str(self.dataset.data.columns[column_index]))
+        object = Literal(self.dataset.data.iat[row_index,column_index])
 
         self.graph.add((coin, NMO[predicate], node))
         self.graph.add((node, UN.hasUncertainty, NM.uncertain_value))
