@@ -116,7 +116,7 @@ class Dataset:
 
 
 # p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
-# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest.csv")
+# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
 # p.add_uncertainty_flags()
 # p.add_alternatives()
 # p.add_likelihoods()
