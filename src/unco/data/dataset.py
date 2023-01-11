@@ -27,7 +27,7 @@ class Dataset:
 
     likelihoods: dict = {}
 
-    NUMBER_OF_ALTERNATIVES : int = 2
+    NUMBER_OF_ALTERNATIVES : int = 0
 
     def __init__(self, path: str) -> None:
         """
@@ -92,7 +92,7 @@ class Dataset:
 
     def add_alternatives(self):
         for column in self.uncertainty_flags:
-            values_of_column = set(self.data[self.data.columns[1]].tolist())
+            values_of_column = set(self.data[self.data.columns[column]].tolist())
             for row in self.uncertainty_flags[column]:
                 set_of_alternatives = values_of_column - {self.data.iat[row,column]}
                 if self.NUMBER_OF_ALTERNATIVES < 1 or self.NUMBER_OF_ALTERNATIVES > len(set_of_alternatives):
@@ -116,6 +116,7 @@ class Dataset:
 
 
 # p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
+# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest.csv")
 # p.add_uncertainty_flags()
 # p.add_alternatives()
 # p.add_likelihoods()
