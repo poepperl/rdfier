@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import Literal
+from typing import Literal, Tuple
 from unco.data.dataset import Dataset
 from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
 from rdflib.namespace import RDF
@@ -30,6 +30,7 @@ class RDFGenerator():
         self.dataset = dataset
         self.graph = Graph()
 
+        self.graph.bind("rdf", RDF)
         self.graph.bind("nm", NM)
         self.graph.bind("nmo", NMO)
         self.graph.bind("un", UN)
@@ -56,9 +57,9 @@ class RDFGenerator():
 
                             match solution_id:
                                 case 1:
-                                    self._generate_uncertain_value_solution_1()
+                                    self._generate_uncertain_value_solution_1(coin, row_index, column_index)
                                 case 2:
-                                    self._generate_uncertain_value_solution_2(coin, predicate, row_index, column_index)
+                                    self._generate_uncertain_value_solution_2(coin, row_index, column_index)
                                 case 3:
                                     self._generate_uncertain_value_solution_3()
                                 case 4:
@@ -78,10 +79,31 @@ class RDFGenerator():
 
                     self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 hasMaterial ar
         
-    def _generate_uncertain_value_solution_1(self) -> None:
+    def _generate_uncertain_value_solution_1(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 1.
+        Attributes
+        ----------
+        coin : IdentifiedNode
+            Node of the coin, which gets an uncertain value.
+        row_index : int
+            Row index of the uncertain value.
+        column_index : int
+            Column index of the uncertain value.
         """
-        pass #TODO: Generieren der unsicheren Werte von Lösung 1
+        CRM = Namespace("http://erlangen-crm.org/current/")
+        BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
+        self.graph.bind("crm", CRM)
+        self.graph.bind("bmo", BMO)
+
+        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
+
+        self.graph.add((coin, NMO[predicate], NM[object]))
+        self.graph.add((node, CRM["P141_assigned"], NM[object]))
+        self.graph.add((node, CRM["P140_assigned_attribute_to"], coin))
+        self.graph.add((node, BMO["PX_Property"], URIRef(NMO[predicate])))
+        self.graph.add((node, RDF["type"], CRM["E13"]))
+        self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
+
 
     def _generate_uncertain_value_solution_2(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 2.
@@ -94,10 +116,7 @@ class RDFGenerator():
         column_index : int
             Column index of the uncertain value.
         """
-        node = BNode(str(self.dataset.data.columns[column_index]) + self.dataset.data.iat[row_index,column_index])
-
-        predicate = Literal("has" + str(self.dataset.data.columns[column_index]))
-        object = Literal(self.dataset.data.iat[row_index,column_index])
+        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
 
         self.graph.add((coin, NMO[predicate], node))
         self.graph.add((node, UN.hasUncertainty, NM.uncertain_value))
@@ -134,14 +153,20 @@ class RDFGenerator():
         """
         pass #TODO: Generieren der unsicheren Werte von Lösung 8
 
+    def _get_node_predicate_object(self, coin : IdentifiedNode, row_index : int, column_index : int) -> Tuple[BNode, Literal, Literal]:
+        node = BNode(str(self.dataset.data.columns[column_index]) + self.dataset.data.iat[row_index,column_index])
+        predicate = Literal("has" + str(self.dataset.data.columns[column_index]))
+        object = Literal(self.dataset.data.iat[row_index,column_index])
+
+        return node, predicate, object
+
 if __name__ == "__main__":
     dataset = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
 
-    dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=4)
+    dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
     generator = RDFGenerator(dataset)
 
-    # generator.generate_solution_1()
-    generator.generate_solution(2)
+    generator.generate_solution(1)
     print(generator.graph.serialize())
     # generator.generate_solution_6()
     # generator.generate_solution_7()
