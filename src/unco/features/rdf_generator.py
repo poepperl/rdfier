@@ -67,9 +67,9 @@ class RDFGenerator():
                                 case 5:
                                     self._generate_uncertain_value_solution_5()
                                 case 6:
-                                    self._generate_uncertain_value_solution_6()
+                                    self._generate_uncertain_value_solution_6(coin, row_index, column_index)
                                 case 7:
-                                    self._generate_uncertain_value_solution_7()
+                                    self._generate_uncertain_value_solution_7(coin, row_index, column_index)
                                 case 8:
                                     self._generate_uncertain_value_solution_8()
                             continue
@@ -100,7 +100,7 @@ class RDFGenerator():
         self.graph.add((coin, NMO[predicate], NM[object]))
         self.graph.add((node, CRM["P141_assigned"], NM[object]))
         self.graph.add((node, CRM["P140_assigned_attribute_to"], coin))
-        self.graph.add((node, BMO["PX_Property"], URIRef(NMO[predicate])))
+        self.graph.add((node, BMO["PX_Property"], NMO[predicate]))
         self.graph.add((node, RDF["type"], CRM["E13"]))
         self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
@@ -119,7 +119,7 @@ class RDFGenerator():
         node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
 
         self.graph.add((coin, NMO[predicate], node))
-        self.graph.add((node, UN.hasUncertainty, NM.uncertain_value))
+        self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
         self.graph.add((node, RDF.value, NM[object]))
 
 
@@ -138,15 +138,48 @@ class RDFGenerator():
         """
         pass #TODO: Generieren der unsicheren Werte von Lösung 5
 
-    def _generate_uncertain_value_solution_6(self) -> None:
+    def _generate_uncertain_value_solution_6(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 6.
+        Attributes
+        ----------
+        coin : IdentifiedNode
+            Node of the coin, which gets an uncertain value.
+        row_index : int
+            Row index of the uncertain value.
+        column_index : int
+            Column index of the uncertain value.
         """
-        pass #TODO: Generieren der unsicheren Werte von Lösung 6
+        EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
+        self.graph.bind("edtfo", EDTFO)
 
-    def _generate_uncertain_value_solution_7(self) -> None:
+        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
+
+        self.graph.add((coin, NMO[predicate], NM[object]))
+        self.graph.add((node, RDF["object"], NM[object]))
+        self.graph.add((node, RDF["subject"], coin))
+        self.graph.add((node, RDF["predicate"], NMO[predicate]))
+        self.graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
+
+
+    def _generate_uncertain_value_solution_7(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 7.
+        Attributes
+        ----------
+        coin : IdentifiedNode
+            Node of the coin, which gets an uncertain value.
+        row_index : int
+            Row index of the uncertain value.
+        column_index : int
+            Column index of the uncertain value.
         """
-        pass #TODO: Generieren der unsicheren Werte von Lösung 7
+        EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
+        self.graph.bind("edtfo", EDTFO)
+
+        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
+
+        self.graph.add((coin, NMO[predicate], node))
+        self.graph.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
+        self.graph.add((node, RDF.value, NM[object]))
 
     def _generate_uncertain_value_solution_8(self) -> None:
         """ Method to create an uncertain value of solution 8.
@@ -166,7 +199,7 @@ if __name__ == "__main__":
     dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
     generator = RDFGenerator(dataset)
 
-    generator.generate_solution(1)
+    generator.generate_solution(7)
     print(generator.graph.serialize())
     # generator.generate_solution_6()
     # generator.generate_solution_7()
