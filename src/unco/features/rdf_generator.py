@@ -1,5 +1,7 @@
+import os
 import pandas as pd
 from typing import Literal, Tuple
+from unco import UNCO_PATH
 from unco.data.dataset import Dataset
 from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
 from rdflib.namespace import RDF
@@ -29,13 +31,14 @@ class RDFGenerator():
         """
         self.dataset = dataset
         self.graph = Graph()
+        self.output_folder = os.path.join(UNCO_PATH, r"data\output")
 
         self.graph.bind("rdf", RDF)
         self.graph.bind("nm", NM)
         self.graph.bind("nmo", NMO)
         self.graph.bind("un", UN)
 
-    def generate_solution(self,solution_id : int):
+    def generate_solution(self,solution_id : int) -> None:
         """ Method to generate the RDF-XML file.
         Attributes
         ----------
@@ -78,6 +81,10 @@ class RDFGenerator():
                     object = Literal(self.dataset.data.iat[row_index,column_index])
 
                     self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 hasMaterial ar
+        
+        file = open(os.path.join(self.output_folder, str(solution_id) + ".xml"), 'w')
+        file.write(generator.graph.serialize(format="xml"))
+        file.close()
         
     def _generate_uncertain_value_solution_1(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 1.
@@ -200,7 +207,6 @@ if __name__ == "__main__":
     generator = RDFGenerator(dataset)
 
     generator.generate_solution(7)
-    print(generator.graph.serialize())
     # generator.generate_solution_6()
     # generator.generate_solution_7()
     
