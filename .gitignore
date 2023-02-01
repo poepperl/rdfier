@@ -9,9 +9,14 @@ __pycache__/
 *.egg
 /.venv
 
-# # Sphinx documentation
+# Sphinx documentation
 docs/build
 docs/source/unco/
 
-# # VS Code
+# VS Code
 .vscode/
+
+# Data
+data/input/*
+data/metadata/*
+data/output/*

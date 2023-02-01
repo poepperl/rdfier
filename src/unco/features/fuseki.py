@@ -5,6 +5,7 @@ import psutil
 import socket
 import time
 import requests
+from SPARQLWrapper import SPARQLWrapper
 from colorama import Fore
 
 class FusekiServer:
@@ -17,12 +18,16 @@ class FusekiServer:
         DataFrame wich includes the data from Reader.
     """
 
-    def __init__(self, fuseki_path: str = os.path.join(UNCO_PATH, r"src\fuseki"), mb_ram: int = 8200) -> None:
+    def __init__(self, fuseki_path: str = os.path.join(UNCO_PATH, r"src\fuseki"), mb_ram: int = 8200, data_path: str = None) -> None:
         """
         Parameters
         ----------
-        path : str
-            Path to the input-data.
+        fuseki_path : str
+            Path to the fuseki server folder.
+        mb_ram : int
+            RAM size in MB for the fuseki server.
+        data_path : str
+            Path to the data which should be uploaded.
         """
         self.FUSEKI_PATH = fuseki_path
         self.MB_RAM = mb_ram
@@ -63,9 +68,10 @@ class FusekiServer:
 
 if __name__ == "__main__":
     f = FusekiServer()
+    data = open(r'D:\Dokumente\Repositories\unco\data\output\7.rdf', 'r', encoding='utf-8').read()
+    headers = {'Content-Type': r'application/rdf+xml;charset=utf-8'}
+    newdata = requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
 
-    response = requests.post('http://localhost:3030/ds/sparql',
-        data={'query': 'ASK { ?s ?p ?o . }'})
+
+    response = requests.post('http://localhost:3030/ds/sparql', data={'query': 'SELECT * WHERE {?sub ?pred ?obj .} LIMIT 10'})
     print(response.json())
-
-    f.stop_server()
