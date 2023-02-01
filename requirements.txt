@@ -2,28 +2,16 @@
 -e ./src
 
 # external requirements
-autodoc
+# autodoc
 Sphinx
 sphinx-autobuild
-rstcheck
-docutils
-pydot
-graphviz 
+# rstcheck
+# docutils
+# pydot
+# graphviz 
 sphinx-rtd-theme
-coverage
-flake8
+# coverage
+# flake8
 pytest
-colorama # colored prints
-rdflib # rdf Library
 
-sklearn
-pandas
-icecream
-
-boto3 #used to connect to S3 like storage and AWS
-s3fs #used to connect to S3 like storage with pandas
-
-
-jupyter
 tqdm #progress bars
-confuse #used for config loading
