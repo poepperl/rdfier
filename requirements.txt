@@ -1,29 +1,18 @@
 # local package
 -e ./src
 
-# external requirements
+# doku libs
 autodoc
 Sphinx
 sphinx-autobuild
-rstcheck
-docutils
-pydot
-graphviz 
 sphinx-rtd-theme
-coverage
-flake8
+# recommonmark
+rstcheck
+# docutils
+
+# external requirements
 pytest
-colorama # colored prints
-rdflib # rdf Library
 
-sklearn
-pandas
-icecream
-
-boto3 #used to connect to S3 like storage and AWS
-s3fs #used to connect to S3 like storage with pandas
-
-
-jupyter
 tqdm #progress bars
-confuse #used for config loading
+pandas
+rdflib

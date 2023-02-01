@@ -39,7 +39,9 @@ class RDFGenerator():
         self.graph.bind("un", UN)
 
     def generate_solution(self,solution_id : int) -> None:
-        """ Method to generate the RDF-XML file.
+        """ 
+            Method to generate the RDF-XML file.
+
         Attributes
         ----------
         solution_id : int
