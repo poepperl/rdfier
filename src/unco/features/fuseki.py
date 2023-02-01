@@ -1,6 +1,6 @@
 from unco import UNCO_PATH
 import subprocess
-import os
+import requests
 import socket
 
 if __name__ == "__main__":
