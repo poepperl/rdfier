@@ -6,13 +6,12 @@ autodoc
 Sphinx
 sphinx-autobuild
 sphinx-rtd-theme
-# recommonmark
 rstcheck
-# docutils
 
 # external requirements
-pytest
-
-tqdm #progress bars
-pandas
-rdflib
+pytest # testing
+tqdm # progress bars
+pandas # data manipulation
+rdflib # rdf-graphs
+colorama # colored printings
+requests # communication between python and fuseki server
