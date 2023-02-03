@@ -54,6 +54,20 @@ class FusekiServer:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server = subprocess.Popen(self.starter_path, creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
             time.sleep(3)
+    
+    def upload_data(self, path: str) -> None:
+        if self.server == None:
+            print(Fore.YELLOW + "WARNING: Server is shut down. Please start the server." + Fore.RESET)
+            return
+        if path[-3:] == "rdf":
+            headers = {'Content-Type': r'application/rdf+xml;charset=utf-8', 'Filename' : path}
+        elif path[-3:] == "xml":
+            headers = {'Content-Type': r'text/xml;charset=utf-8'}
+        elif path[-3:] == "ttl":
+            headers = {'Content-Type': r'application/octet-stream;charset=utf-8'}
+        data = open(r'D:\Dokumente\Repositories\unco\data\output\7.rdf', 'r', encoding='utf-8').read()
+        newdata = requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
+
 
     def stop_server(self) -> None:
         """
@@ -68,10 +82,9 @@ class FusekiServer:
 
 if __name__ == "__main__":
     f = FusekiServer()
-    data = open(r'D:\Dokumente\Repositories\unco\data\output\7.rdf', 'r', encoding='utf-8').read()
-    headers = {'Content-Type': r'application/rdf+xml;charset=utf-8'}
-    newdata = requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\7.rdf")
+    # f.stop_server()
 
 
-    response = requests.post('http://localhost:3030/ds/sparql', data={'query': 'SELECT * WHERE {?sub ?pred ?obj .} LIMIT 10'})
-    print(response.json())
+    # response = requests.post('http://localhost:3030/ds/sparql', data={'query': 'SELECT * WHERE {?sub ?pred ?obj .} LIMIT 10'})
+    # print(response.json())
