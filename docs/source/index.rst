@@ -12,8 +12,7 @@ Inhalt:
 -------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    how-to-use
-   concepts/concepts
    unco/modules

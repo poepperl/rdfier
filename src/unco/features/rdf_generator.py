@@ -39,7 +39,9 @@ class RDFGenerator():
         self.graph.bind("un", UN)
 
     def generate_solution(self,solution_id : int) -> None:
-        """ Method to generate the RDF-XML file.
+        """ 
+            Method to generate the RDF-XML file.
+
         Attributes
         ----------
         solution_id : int
@@ -82,9 +84,8 @@ class RDFGenerator():
 
                     self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 hasMaterial ar
         
-        file = open(os.path.join(self.output_folder, str(solution_id) + ".xml"), 'w')
-        file.write(generator.graph.serialize(format="xml"))
-        file.close()
+        with open(os.path.join(self.output_folder, str(solution_id) + ".ttl"), 'w') as file:
+            file.write(generator.graph.serialize(format="ttl"))
         
     def _generate_uncertain_value_solution_1(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 1.

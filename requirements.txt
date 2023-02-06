@@ -1,17 +1,17 @@
 # local package
 -e ./src
 
-# external requirements
-# autodoc
+# doku libs
+autodoc
 Sphinx
 sphinx-autobuild
-# rstcheck
-# docutils
-# pydot
-# graphviz 
 sphinx-rtd-theme
-# coverage
-# flake8
-pytest
+rstcheck
 
-tqdm #progress bars
+# external requirements
+pytest # testing
+tqdm # progress bars
+pandas # data manipulation
+rdflib # rdf-graphs
+colorama # colored printings
+requests # communication between python and fuseki server
