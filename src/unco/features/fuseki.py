@@ -1,7 +1,6 @@
 import os
 import subprocess
 import psutil
-import socket
 import time
 import requests
 from unco import UNCO_PATH
@@ -43,7 +42,6 @@ class FusekiServer:
         if self.server:
             print(Fore.YELLOW + "WARNING: Server is already running." + Fore.RESET)
         else:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server = subprocess.Popen(self.starter_path, creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
             time.sleep(3)
     
@@ -69,6 +67,12 @@ class FusekiServer:
         data = open(path, 'r', encoding='utf-8').read()
         newdata = requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
 
+    def sparql_query(self, query : str):
+        """
+            Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
+        """
+        response = requests.post('http://localhost:3030/ds/sparql', data={'query': query})
+        return response.json()
 
     def stop_server(self) -> None:
         """
@@ -84,6 +88,14 @@ class FusekiServer:
 if __name__ == "__main__":
     f = FusekiServer()
     f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\7.rdf")
+    query = """
+    PREFIX nmo: <http://nomisma.org/ontology#>
+    SELECT ?name
+    WHERE {
+        ?coin nmo:hasMaterial ?name .
+    }
+    """
+    f.sparql_query(query)
     input()
     f.stop_server()
 
