@@ -149,43 +149,48 @@ class RDFGenerator():
 
         self._get_datatype_and_language()
 
-        coin_ids = self.dataset.data[self.dataset.data.columns[0]] # Get the list of id's
+        for object in self.triple_plan:
+            object_index = self.triple_plan[object]["object"].pop()
+            subject_indices = self.triple_plan[object]["subject"].copy()
 
-        for row_index, id in enumerate(coin_ids):
+            for row_index in range(len(self.dataset.data)):
+                
 
-            coin = URIRef("Coin_" + str(id))
-            self.graph.add((coin, NMO.hasObjectType, NM.coin)) # Coin gets ObjectType Coin
+                coin = URIRef("Coin_" + str(id))
+                self.graph.add((coin, NMO.hasObjectType, NM.coin)) # Coin gets ObjectType Coin
 
-            for column_index in range(1, len(self.dataset.data.columns)):
+                for column_index in range(1, len(self.dataset.data.columns)):
 
-                if pd.notnull(self.dataset.data.iat[row_index,column_index]): # Check if value isn't NaN
-                    if column_index in self.dataset.uncertainty_flags:
-                        if row_index in self.dataset.uncertainty_flags[column_index]: # If current value is uncertain, do:
+                    if pd.notnull(self.dataset.data.iat[row_index,column_index]): # Check if value isn't NaN
 
-                            match solution_id:
-                                case 1:
-                                    self._generate_uncertain_value_solution_1(coin, row_index, column_index)
-                                case 2:
-                                    self._generate_uncertain_value_solution_2(coin, row_index, column_index)
-                                case 3:
-                                    self._generate_uncertain_value_solution_3()
-                                case 4:
-                                    self._generate_uncertain_value_solution_4()
-                                case 5:
-                                    self._generate_uncertain_value_solution_5()
-                                case 6:
-                                    self._generate_uncertain_value_solution_6(coin, row_index, column_index)
-                                case 7:
-                                    self._generate_uncertain_value_solution_7(coin, row_index, column_index)
-                                case 8:
-                                    self._generate_uncertain_value_solution_8()
-                            continue
-                    
-                    predicate = Literal("has" + str(self.dataset.data.columns[column_index])) 
-                    object = Literal(self.dataset.data.iat[row_index,column_index]) 
+                        if column_index in self.dataset.uncertainty_flags:
+                            if row_index in self.dataset.uncertainty_flags[column_index]: # If current value is uncertain, do:
 
-                    self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 nmo:hasMaterial nm:ar 
-        
+                                match solution_id:
+                                    case 1:
+                                        self._generate_uncertain_value_solution_1(coin, row_index, column_index)
+                                    case 2:
+                                        self._generate_uncertain_value_solution_2(coin, row_index, column_index)
+                                    case 3:
+                                        self._generate_uncertain_value_solution_3()
+                                    case 4:
+                                        self._generate_uncertain_value_solution_4()
+                                    case 5:
+                                        self._generate_uncertain_value_solution_5()
+                                    case 6:
+                                        self._generate_uncertain_value_solution_6(coin, row_index, column_index)
+                                    case 7:
+                                        self._generate_uncertain_value_solution_7(coin, row_index, column_index)
+                                    case 8:
+                                        self._generate_uncertain_value_solution_8()
+                                continue
+                        
+                        predicate = Literal("has" + str(self.dataset.data.columns[column_index])) 
+                        object = Literal(self.dataset.data.iat[row_index,column_index]) 
+
+                        self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 nmo:hasMaterial nm:ar 
+            
+
         with open(Path(self.output_folder, str(solution_id) + ".rdf"), 'w') as file:
             file.write(generator.graph.serialize(format="xml"))
         
