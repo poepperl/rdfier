@@ -36,6 +36,8 @@ class RDFGenerator():
         self.output_folder = Path(UNCO_PATH, "data/output")
         self.prefixes : dict[str,Namespace] = {}
         self.triple_plan : dict[str, dict[str, set[int]]] = {}
+        self.column_datatypes : dict[int, str] = {}
+        self.column_languages : dict[int, str] = {}
 
     def load_prefixes(self, path : str):
         """
@@ -103,11 +105,31 @@ class RDFGenerator():
             else:
                 self.triple_plan["**"] = {"subject" : first_col_subjects, "object" : set([0])}
         
-            self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename columns
+            self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename column
 
 
+    def _get_datatype_and_language(self):
+        for index, column in enumerate(self.dataset.data):
+            new_column_name = str(column)
+
+            type_splitlist = str(column).split("^^")
+            language_splitlist = str(column).split("@")
+
+            if len(type_splitlist) == 2:
+                new_column_name = type_splitlist[0]
+                self.column_datatypes[index] = type_splitlist[1]
+
+            elif len(type_splitlist) > 2:
+                print(Fore.RED + "ERROR: Duplicate type reference (**) in " + str(column) + Fore.RESET)
+
+            elif len(language_splitlist) >= 2 and len(language_splitlist[-1]) <= 3:
+                new_column_name = new_column_name[:-len(language_splitlist[-1]) -1]
+                self.column_languages[index] = language_splitlist[-1]
+            
+            self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename column
 
 
+                
 
     def generate_solution(self,solution_id : int) -> None:
         """ 
@@ -124,6 +146,8 @@ class RDFGenerator():
         
         # Get triple_plan:
         self._generate_triple_plan()
+
+        self._get_datatype_and_language()
 
         coin_ids = self.dataset.data[self.dataset.data.columns[0]] # Get the list of id's
 
@@ -273,23 +297,25 @@ class RDFGenerator():
         pass #TODO: Generieren der unsicheren Werte von Lösung 8
 
     def _get_node_predicate_object(self, coin : IdentifiedNode, row_index : int, column_index : int) -> tuple[BNode, Literal, Literal]:
-        node = BNode(str(self.dataset.data.columns[column_index]) + self.dataset.data.iat[row_index,column_index])
+        node = BNode(str(self.dataset.data.columns[column_index]) + str(self.dataset.data.iat[row_index,column_index]))
         predicate = Literal("has" + str(self.dataset.data.columns[column_index])) 
-        object = Literal(self.dataset.data.iat[row_index,column_index]) 
+        object = Literal(str(self.dataset.data.iat[row_index,column_index])) 
 
         return node, predicate, object 
 
 if __name__ == "__main__":
     dataset = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")
 
-    # dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
+    dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
     generator = RDFGenerator(dataset)
 
     generator._generate_triple_plan()
 
-    print(generator.dataset.data.head)
+    generator._get_datatype_and_language()
 
-    # generator.generate_solution(7)
+    print(generator.column_datatypes, generator.column_languages)
+
+    generator.generate_solution(7)
     # generator.generate_solution_6()
     # generator.generate_solution_7()
     
