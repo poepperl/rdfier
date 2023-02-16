@@ -38,3 +38,5 @@ class Reader:
 
         else:
             print(Fore.RED + "Warning: Unknown File-Type!" + Fore.RESET)
+        
+        return pd.DataFrame({})

@@ -7,7 +7,7 @@ from colorama import Fore
 
 class Dataset:
     """
-        Class that adds a perturbation by creating random uncertainty.
+        Class that represents the dataset of an unco input.
 
     Attributes
     ----------

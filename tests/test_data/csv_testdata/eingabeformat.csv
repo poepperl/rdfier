@@ -1,0 +1,3 @@
+coin^^id,nmo:hasMint^^uri,nmo:hasObverse^^id**1,1__nmo:hasLegend@en,<http://nomisma.org/ontology#hasWeight>^^xsd:decimal
+21,nm:rome,11,"Habemus Papam@la, Monakko@de",3.50
+144,<https://nomisma.org/id/athens>,50,Unholy Coin,4^^xsd:integer
