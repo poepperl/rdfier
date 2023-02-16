@@ -1,5 +1,4 @@
 import pandas as pd
-import csv
 from colorama import Fore  # prints warnings in red
 
 
@@ -19,7 +18,7 @@ class Reader:
         self.initialise_type()
 
     def initialise_type(self) -> None:
-        self.type = self.path[self.path.rfind(".")+1:]
+        self.type = self.path[self.path.rfind(".")+1:].lower()
 
         if len(self.type) > 4:
             print(Fore.RED + "Please enter a complete path with datatype-prefix!" + Fore.RESET)
@@ -36,8 +35,6 @@ class Reader:
 
             except FileNotFoundError:
                 print(Fore.RED + "Warning: There is no CSV file on this path." + Fore.RESET)
-        
-        elif self.type == "pdf":
-            print(Fore.RED + "Warning: PDF not aviable." + Fore.RESET)
+
         else:
             print(Fore.RED + "Warning: Unknown File-Type!" + Fore.RESET)

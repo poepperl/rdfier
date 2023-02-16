@@ -1,9 +1,3 @@
-import os
+from pathlib import Path
 
-
-def get_unco_path():
-    unco_path = os.path.dirname(__file__)
-    return unco_path[:-9]
-
-
-UNCO_PATH = get_unco_path()
+UNCO_PATH = Path(__file__).parent.parent.parent

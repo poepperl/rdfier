@@ -57,7 +57,7 @@ class FusekiServer:
         if self.server == None:
             print(Fore.RED + "ERROR: Server is shut down. Please start the server." + Fore.RESET)
             return
-        if path[-3:] == "rdf":
+        if path[-3:] == "rdf" or path[-3:] == "xml" or path[-3:] == "txt":
             headers = {'Content-Type': r'application/rdf+xml;charset=utf-8', 'Filename' : path}
         elif path[-3:] == "ttl":
             headers = {'Content-Type': r'text/turtle;charset=utf-8'}
@@ -72,7 +72,7 @@ class FusekiServer:
             Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
         """
         response = requests.post('http://localhost:3030/ds/sparql', data={'query': query})
-        return response.json()
+        return response.text
 
     def stop_server(self) -> None:
         """
@@ -87,15 +87,15 @@ class FusekiServer:
 
 if __name__ == "__main__":
     f = FusekiServer()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\7.rdf")
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\cn_example.txt")
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
-    SELECT ?name
+    SELECT ?su ?p ?o
     WHERE {
-        ?coin nmo:hasMaterial ?name .
+        ?su ?p ?o
     }
     """
-    f.sparql_query(query)
+    print(f.sparql_query(query))
     input()
     f.stop_server()
 

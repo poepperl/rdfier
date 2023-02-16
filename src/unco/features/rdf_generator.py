@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import pandas as pd
 from typing import Literal, Tuple
 from unco import UNCO_PATH
@@ -31,7 +31,7 @@ class RDFGenerator():
         """
         self.dataset = dataset
         self.graph = Graph()
-        self.output_folder = os.path.join(UNCO_PATH, r"data\output")
+        self.output_folder = Path(UNCO_PATH, "data/output")
 
         self.graph.bind("rdf", RDF)
         self.graph.bind("nm", NM)
@@ -84,8 +84,8 @@ class RDFGenerator():
 
                     self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 hasMaterial ar
         
-        with open(os.path.join(self.output_folder, str(solution_id) + ".ttl"), 'w') as file:
-            file.write(generator.graph.serialize(format="ttl"))
+        with open(Path(self.output_folder, str(solution_id) + ".rdf"), 'w') as file:
+            file.write(generator.graph.serialize(format="xml"))
         
     def _generate_uncertain_value_solution_1(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 1.
