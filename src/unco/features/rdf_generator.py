@@ -3,7 +3,7 @@ import pandas as pd
 from unco import UNCO_PATH
 from unco.data.dataset import Dataset
 from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
-from rdflib.namespace._RDF import RDF
+from rdflib.namespace import RDF, XSD
 from colorama import Fore
 
 from unco.data.reader import Reader
@@ -11,7 +11,6 @@ from unco.data.reader import Reader
 NM = Namespace("http://nomisma.org/id/")
 NMO = Namespace("http://nomisma.org/ontology#")
 UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
-XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 class RDFGenerator():
     """
@@ -138,14 +137,40 @@ class RDFGenerator():
         return subject, predicate, object
     
 
-    def _get_datatype(self, value):
+    def _get_datatype(self, value : str):
         try:
             number = int(value)
             return "xsd:long"
         except:
             pass
+        try:
+            number = float(value)
+            return "xsd:double"
+        except:
+            pass
 
-    def _get_subject_node(self, row_index : int, column_index : int) -> IdentifiedNode:
+        if value.lower() == "true" or value.lower() == "false":
+            return "xsd:boolean"
+        else:
+            return ""
+    
+
+    def _get_uri_node(self, string : str, row_index : int, column_index : int):
+        string = string
+        if string[0] == "<" and string[-1] == ">":
+            string = string[1:-1]
+            return URIRef(string)
+        else:
+            splitlist = string.split(":")
+            if len(splitlist) == 2:
+                if splitlist[0] in self.prefixes:
+                    return self.prefixes[splitlist[0]][splitlist[1]]
+                else:
+                    print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+            else:
+                print(Fore.RED + "ERROR: Unknown URI " + string + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+
+    def _get_subject_node(self, row_index : int, column_index : int) -> URIRef | Literal | None:
         value = str(self.dataset.data.iat[row_index,column_index])
 
         splitlist = value.split("^^")
@@ -159,22 +184,11 @@ class RDFGenerator():
         else:
             datatype = self._get_datatype(value)
         
-        match self.column_datatypes[column_index]:
+        match datatype:
             case "id":
                 return URIRef(str(self.dataset.data.columns[column_index]) + "_" + value)
             case "uri":
-                if value[0] == "<" and value[-1] == ">":
-                    value = value[1:-1]
-                    return URIRef(value)
-                else:
-                    splitlist = value.split(":")
-                    if len(splitlist) == 2:
-                        if splitlist[0] in self.prefixes:
-                            return self.prefixes[splitlist[0]].splitlist[1]
-                        else:
-                            print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
-                    else:
-                        print(Fore.RED + "ERROR: Unknown URI " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                return self._get_uri_node(value, row_index, column_index)
             case "":
                 return Literal(value)
             case other:
@@ -185,11 +199,74 @@ class RDFGenerator():
                     splitlist = other.split(":")
                     if len(splitlist) == 2:
                         if splitlist[0] in self.prefixes:
-                            return Literal(value, datatype = self.prefixes[splitlist[0]].splitlist[1])
+                            return Literal(value, datatype = self.prefixes[splitlist[0]][splitlist[1]], normalize=True)
                         else:
                             print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
                     else:
                         print(Fore.RED + "ERROR: Unknown Datatype " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+        print(Fore.RED + "ERROR: Couldn't add node in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+        return None
+
+    def _get_predicate(self, column_index):
+        string = str(self.dataset.data.columns[column_index])
+        return self._get_uri_node(string, -1, column_index)
+
+    def _get_object_nodes(self, row_index : int, column_index : int) -> list[URIRef | Literal | None]:
+        wrong_splitlist = str(self.dataset.data.iat[row_index,column_index]).split(";")
+        right_splitlist = []
+        old_element = ""
+        for element in wrong_splitlist:
+            if len(element.split("\"")) % 2 == 0:
+                old_element = old_element + element
+            else:
+                if old_element != "":
+                    right_splitlist.append(old_element)
+                right_splitlist.append(element)
+        
+        nodelist = []
+        for value in wrong_splitlist:
+            splitlist = value.split("^^")
+            if len(splitlist) == 2:
+                value = splitlist[0]
+                datatype = splitlist[1]
+
+            elif column_index in self.column_datatypes:
+                datatype = self.column_datatypes[column_index]
+
+            else:
+                datatype = self._get_datatype(value)
+            
+            match datatype:
+                case "id":
+                    nodelist.append(URIRef(str(self.dataset.data.columns[column_index]) + "_" + value))
+                case "uri":
+                    nodelist.append(self._get_uri_node(value, row_index, column_index))
+                case "":
+                    lang_splitter = value.split("@")
+                    if len(lang_splitter) >= 2 and len(lang_splitter[-1]) <= 3:
+                        nodelist.append(Literal(lang_splitter[0], lang=lang_splitter[-1]))
+                    elif column_index in self.column_languages:
+                        nodelist.append(Literal(value, lang=self.column_languages[column_index]))
+                    else:
+                        nodelist.append(Literal(value))
+                case other:
+                    if other[0] == "<" and other[-1] == ">":
+                        other = other[1:-1]
+                        nodelist.append(Literal(value, datatype=other))
+                    else:
+                        splitlist = other.split(":")
+                        if len(splitlist) == 2:
+                            if splitlist[0] in self.prefixes:
+                                nodelist.append(Literal(value, datatype = self.prefixes[splitlist[0]][splitlist[1]], normalize=True))
+                            else:
+                                print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                                nodelist.append(None)
+                        else:
+                            print(Fore.RED + "ERROR: Unknown Datatype " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                            nodelist.append(None)
+                    
+        return nodelist
+
 
     def generate_solution(self,solution_id : int) -> None:
         """ 
@@ -216,39 +293,37 @@ class RDFGenerator():
             for row_index in range(len(self.dataset.data)):
                 subject = self._get_subject_node(row_index,subject_colindex)
 
-                coin = URIRef("Coin_" + str(id))
-                self.graph.add((coin, NMO.hasObjectType, NM.coin)) # Coin gets ObjectType Coin
-
-                for column_index in range(1, len(self.dataset.data.columns)):
+                for column_index in object_colindices:
 
                     if pd.notnull(self.dataset.data.iat[row_index,column_index]): # Check if value isn't NaN
+                        predicate = self._get_predicate(column_index)
+
+                        objects = self._get_object_nodes(row_index, column_index)
+
+                        for object in objects:
+                            self.graph.add((subject, predicate, object)) # Example: Coin_4 nmo:hasMaterial nm:ar
 
                         if column_index in self.dataset.uncertainty_flags:
                             if row_index in self.dataset.uncertainty_flags[column_index]: # If current value is uncertain, do:
-
-                                match solution_id:
-                                    case 1:
-                                        self._generate_uncertain_value_solution_1(coin, row_index, column_index)
-                                    case 2:
-                                        self._generate_uncertain_value_solution_2(coin, row_index, column_index)
-                                    case 3:
-                                        self._generate_uncertain_value_solution_3()
-                                    case 4:
-                                        self._generate_uncertain_value_solution_4()
-                                    case 5:
-                                        self._generate_uncertain_value_solution_5()
-                                    case 6:
-                                        self._generate_uncertain_value_solution_6(coin, row_index, column_index)
-                                    case 7:
-                                        self._generate_uncertain_value_solution_7(coin, row_index, column_index)
-                                    case 8:
-                                        self._generate_uncertain_value_solution_8()
-                                continue
-                        
-                        predicate = Literal("has" + str(self.dataset.data.columns[column_index])) 
-                        object = Literal(self.dataset.data.iat[row_index,column_index]) 
-
-                        self.graph.add((coin, NMO[predicate], NM[object])) # Example: Coin_4 nmo:hasMaterial nm:ar 
+                                pass
+                                # match solution_id:
+                                #     case 1:
+                                #         self._generate_uncertain_value_solution_1(coin, row_index, column_index)
+                                #     case 2:
+                                #         self._generate_uncertain_value_solution_2(coin, row_index, column_index)
+                                #     case 3:
+                                #         self._generate_uncertain_value_solution_3()
+                                #     case 4:
+                                #         self._generate_uncertain_value_solution_4()
+                                #     case 5:
+                                #         self._generate_uncertain_value_solution_5()
+                                #     case 6:
+                                #         self._generate_uncertain_value_solution_6(coin, row_index, column_index)
+                                #     case 7:
+                                #         self._generate_uncertain_value_solution_7(coin, row_index, column_index)
+                                #     case 8:
+                                #         self._generate_uncertain_value_solution_8()
+                                # continue 
             
 
         with open(Path(self.output_folder, str(solution_id) + ".rdf"), 'w') as file:
@@ -360,7 +435,7 @@ class RDFGenerator():
 
 
 if __name__ == "__main__":
-    dataset = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")
+    dataset = Dataset(r"C:\Users\scrum\Documents\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")
 
     dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
     generator = RDFGenerator(dataset)
@@ -369,9 +444,15 @@ if __name__ == "__main__":
 
     generator._get_datatype_and_language()
 
+    generator.load_prefixes(r"C:\Users\scrum\Documents\Repositories\unco\tests\test_data\csv_testdata\namespaces.csv")
+
+    print(generator.prefixes)
+
+    generator.generate_solution(0)
+
     print(generator.column_datatypes, generator.column_languages)
 
-    generator.generate_solution(7)
+    # generator.generate_solution(7)
     # generator.generate_solution_6()
     # generator.generate_solution_7()
     
