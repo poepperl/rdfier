@@ -11,6 +11,7 @@ from unco.data.reader import Reader
 NM = Namespace("http://nomisma.org/id/")
 NMO = Namespace("http://nomisma.org/ontology#")
 UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
+XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 class RDFGenerator():
     """
@@ -34,7 +35,7 @@ class RDFGenerator():
         self.dataset = dataset
         self.graph = Graph()
         self.output_folder = Path(UNCO_PATH, "data/output")
-        self.prefixes : dict[str,Namespace] = {}
+        self.prefixes : dict[str,Namespace] = {"xsd" : XSD}
         self.triple_plan : dict[str, dict[str, set[int]]] = {}
         self.column_datatypes : dict[int, str] = {}
         self.column_languages : dict[int, str] = {}
@@ -55,55 +56,55 @@ class RDFGenerator():
     
     def _generate_triple_plan(self):
         first_col_has_ref = (False, '')
-        first_col_subjects = set()
+        first_col_objects = set()
 
         for index, column in enumerate(self.dataset.data):
             new_column_name = column
 
             splitlist = str(new_column_name).split("**")
             if len(splitlist) == 2:
-                object_id = splitlist[-1]
+                subject_id = splitlist[-1]
                 new_column_name = splitlist[0]
 
                 if index == 0:
-                    first_col_has_ref = (True, object_id)
-
-                if object_id in self.triple_plan:
-                    if len(self.triple_plan[object_id]["object"]) > 0:
-                        print(Fore.RED + "ERROR: Duplicate object reference: " + object_id + Fore.RESET)
-                    self.triple_plan[object_id]["object"] = set([index])
-                    
-                else:
-                    self.triple_plan[object_id] = {"object" : set([index]), "subject" : set()}
-
-            elif len(splitlist) > 2:
-                print(Fore.RED + "ERROR: Column " + str(column) + " has more than one object reference marker '**'." + Fore.RESET)
-
-
-            splitlist = str(new_column_name).split("__")
-            if len(splitlist) == 2:
-                subject_id = splitlist[0]
-                new_column_name = splitlist[1]
+                    first_col_has_ref = (True, subject_id)
 
                 if subject_id in self.triple_plan:
-                    self.triple_plan[subject_id]["subject"].add(index)
-
+                    if len(self.triple_plan[subject_id]["subject"]) > 0:
+                        print(Fore.RED + "ERROR: Duplicate subject reference: " + subject_id + Fore.RESET)
+                    self.triple_plan[subject_id]["subject"] = set([index])
+                    
                 else:
                     self.triple_plan[subject_id] = {"subject" : set([index]), "object" : set()}
 
             elif len(splitlist) > 2:
-                print(Fore.RED + "ERROR: Column " + str(column) + " has more than one subject reference marker '__'." + Fore.RESET)
+                print(Fore.RED + "ERROR: Column " + str(column) + " has more than one subject reference marker '**'." + Fore.RESET)
+
+
+            splitlist = str(new_column_name).split("__")
+            if len(splitlist) == 2:
+                object_id = splitlist[0]
+                new_column_name = splitlist[1]
+
+                if object_id in self.triple_plan:
+                    self.triple_plan[object_id]["object"].add(index)
+
+                else:
+                    self.triple_plan[object_id] = {"object" : set([index]), "subject" : set()}
+
+            elif len(splitlist) > 2:
+                print(Fore.RED + "ERROR: Column " + str(column) + " has more than one object reference marker '__'." + Fore.RESET)
 
             elif index != 0:
-                first_col_subjects.add(index)
+                first_col_objects.add(index)
 
 
             if first_col_has_ref[0]:
-                self.triple_plan[first_col_has_ref[1]]["subject"].update(first_col_subjects)
+                self.triple_plan[first_col_has_ref[1]]["object"].update(first_col_objects)
                 self.triple_plan["**"] = self.triple_plan.pop(first_col_has_ref[1])
 
             else:
-                self.triple_plan["**"] = {"subject" : first_col_subjects, "object" : set([0])}
+                self.triple_plan["**"] = {"object" : first_col_objects, "subject" : set([0])}
         
             self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename column
 
@@ -129,7 +130,66 @@ class RDFGenerator():
             self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename column
 
 
-                
+    def _get_subject_predicate_object(self, row_index : int, column_index : int) -> tuple[BNode, Literal, Literal]:
+        subject = BNode(str(self.dataset.data.columns[column_index]) + str(self.dataset.data.iat[row_index,column_index]))
+        predicate = Literal("has" + str(self.dataset.data.columns[column_index])) 
+        object = Literal(str(self.dataset.data.iat[row_index,column_index])) 
+
+        return subject, predicate, object
+    
+
+    def _get_datatype(self, value):
+        try:
+            number = int(value)
+            return "xsd:long"
+        except:
+            pass
+
+    def _get_subject_node(self, row_index : int, column_index : int) -> IdentifiedNode:
+        value = str(self.dataset.data.iat[row_index,column_index])
+
+        splitlist = value.split("^^")
+        if len(splitlist) == 2:
+            value = splitlist[0]
+            datatype = splitlist[1]
+
+        elif column_index in self.column_datatypes:
+            datatype = self.column_datatypes[column_index]
+
+        else:
+            datatype = self._get_datatype(value)
+        
+        match self.column_datatypes[column_index]:
+            case "id":
+                return URIRef(str(self.dataset.data.columns[column_index]) + "_" + value)
+            case "uri":
+                if value[0] == "<" and value[-1] == ">":
+                    value = value[1:-1]
+                    return URIRef(value)
+                else:
+                    splitlist = value.split(":")
+                    if len(splitlist) == 2:
+                        if splitlist[0] in self.prefixes:
+                            return self.prefixes[splitlist[0]].splitlist[1]
+                        else:
+                            print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                    else:
+                        print(Fore.RED + "ERROR: Unknown URI " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+            case "":
+                return Literal(value)
+            case other:
+                if other[0] == "<" and other[-1] == ">":
+                    other = other[1:-1]
+                    return Literal(value, datatype=other)
+                else:
+                    splitlist = other.split(":")
+                    if len(splitlist) == 2:
+                        if splitlist[0] in self.prefixes:
+                            return Literal(value, datatype = self.prefixes[splitlist[0]].splitlist[1])
+                        else:
+                            print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                    else:
+                        print(Fore.RED + "ERROR: Unknown Datatype " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
 
     def generate_solution(self,solution_id : int) -> None:
         """ 
@@ -150,11 +210,11 @@ class RDFGenerator():
         self._get_datatype_and_language()
 
         for object in self.triple_plan:
-            object_index = self.triple_plan[object]["object"].pop()
-            subject_indices = self.triple_plan[object]["subject"].copy()
+            subject_colindex = self.triple_plan[object]["subject"].pop()
+            object_colindices = self.triple_plan[object]["object"].copy()
 
             for row_index in range(len(self.dataset.data)):
-                
+                subject = self._get_subject_node(row_index,subject_colindex)
 
                 coin = URIRef("Coin_" + str(id))
                 self.graph.add((coin, NMO.hasObjectType, NM.coin)) # Coin gets ObjectType Coin
@@ -219,7 +279,6 @@ class RDFGenerator():
         self.graph.add((node, RDF["type"], CRM["E13"]))
         self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
-
     def _generate_uncertain_value_solution_2(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 2.
         Attributes
@@ -236,7 +295,6 @@ class RDFGenerator():
         self.graph.add((coin, NMO[predicate], node))
         self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
         self.graph.add((node, RDF.value, NM[object]))
-
 
     def _generate_uncertain_value_solution_3(self) -> None:
         """ Method to create an uncertain value of solution 3.
@@ -275,7 +333,6 @@ class RDFGenerator():
         self.graph.add((node, RDF["predicate"], NMO[predicate]))
         self.graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
 
-
     def _generate_uncertain_value_solution_7(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 7.
         Attributes
@@ -301,12 +358,6 @@ class RDFGenerator():
         """
         pass #TODO: Generieren der unsicheren Werte von Lösung 8
 
-    def _get_node_predicate_object(self, coin : IdentifiedNode, row_index : int, column_index : int) -> tuple[BNode, Literal, Literal]:
-        node = BNode(str(self.dataset.data.columns[column_index]) + str(self.dataset.data.iat[row_index,column_index]))
-        predicate = Literal("has" + str(self.dataset.data.columns[column_index])) 
-        object = Literal(str(self.dataset.data.iat[row_index,column_index])) 
-
-        return node, predicate, object 
 
 if __name__ == "__main__":
     dataset = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")

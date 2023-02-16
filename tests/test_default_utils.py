@@ -15,7 +15,7 @@ def test_generate_triple_plan():
     dataset = Dataset(str(Path(UNCO_PATH, "tests/test_data/csv_testdata/eingabeformat.csv")))
     generator = RDFGenerator(dataset)
     generator._generate_triple_plan()
-    assert generator.triple_plan["**"] == {'subject': {1, 2, 4}, 'object': {0}} and '1' in generator.triple_plan
+    assert generator.triple_plan["**"] == {'object': {1, 2, 4}, 'subject': {0}} and '1' in generator.triple_plan
 
 def test_get_language_or_datatype_from_header():
     dataset = Dataset(str(Path(UNCO_PATH, "tests/test_data/csv_testdata/eingabeformat.csv")))
