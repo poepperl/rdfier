@@ -1,4 +1,5 @@
 from pathlib import Path
+from turtle import right
 import pandas as pd
 from unco import UNCO_PATH
 from unco.data.dataset import Dataset
@@ -186,7 +187,7 @@ class RDFGenerator():
         
         match datatype:
             case "id":
-                return URIRef(str(self.dataset.data.columns[column_index]) + "_" + value)
+                return BNode("r" + str(row_index) + "c" + str(column_index))
             case "uri":
                 return self._get_uri_node(value, row_index, column_index)
             case "":
@@ -217,14 +218,20 @@ class RDFGenerator():
         old_element = ""
         for element in wrong_splitlist:
             if len(element.split("\"")) % 2 == 0:
-                old_element = old_element + element
+                if len(old_element) > 0:
+                    old_element = old_element + ";" + element
+                else:
+                    old_element = old_element + element
             else:
                 if old_element != "":
                     right_splitlist.append(old_element)
                 right_splitlist.append(element)
         
+        if len(old_element) > 0:
+            right_splitlist.append(old_element)
+
         nodelist = []
-        for value in wrong_splitlist:
+        for value in right_splitlist:
             splitlist = value.split("^^")
             if len(splitlist) == 2:
                 value = splitlist[0]
@@ -238,7 +245,7 @@ class RDFGenerator():
             
             match datatype:
                 case "id":
-                    nodelist.append(URIRef(str(self.dataset.data.columns[column_index]) + "_" + value))
+                    nodelist.append(BNode("r" + str(row_index) + "c" + str(column_index)))
                 case "uri":
                     nodelist.append(self._get_uri_node(value, row_index, column_index))
                 case "":
@@ -286,9 +293,9 @@ class RDFGenerator():
 
         self._get_datatype_and_language()
 
-        for object in self.triple_plan:
-            subject_colindex = self.triple_plan[object]["subject"].pop()
-            object_colindices = self.triple_plan[object]["object"].copy()
+        for ob in self.triple_plan:
+            subject_colindex = self.triple_plan[ob]["subject"].copy().pop()
+            object_colindices = self.triple_plan[ob]["object"].copy()
 
             for row_index in range(len(self.dataset.data)):
                 subject = self._get_subject_node(row_index,subject_colindex)
@@ -435,22 +442,17 @@ class RDFGenerator():
 
 
 if __name__ == "__main__":
-    dataset = Dataset(r"C:\Users\scrum\Documents\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")
+    from pathlib import Path
+    from unco import UNCO_PATH
+
+    dataset = Dataset(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/eingabeformat.csv")))
 
     dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
     generator = RDFGenerator(dataset)
 
-    generator._generate_triple_plan()
-
-    generator._get_datatype_and_language()
-
-    generator.load_prefixes(r"C:\Users\scrum\Documents\Repositories\unco\tests\test_data\csv_testdata\namespaces.csv")
-
-    print(generator.prefixes)
+    generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/namespaces.csv")))
 
     generator.generate_solution(0)
-
-    print(generator.column_datatypes, generator.column_languages)
 
     # generator.generate_solution(7)
     # generator.generate_solution_6()
