@@ -333,8 +333,8 @@ class RDFGenerator():
                                 # continue 
             
 
-        with open(Path(self.output_folder, str(solution_id) + ".rdf"), 'w') as file:
-            file.write(generator.graph.serialize(format="xml"))
+        with open(Path(self.output_folder, str(solution_id) + ".ttl"), 'w') as file:
+            file.write(generator.graph.serialize(format="ttl"))
         
     def _generate_uncertain_value_solution_1(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
         """ Method to create an uncertain value of solution 1.
