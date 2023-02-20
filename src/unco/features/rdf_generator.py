@@ -1,17 +1,19 @@
-from pathlib import Path
-from turtle import right
 import pandas as pd
-from unco import UNCO_PATH
-from unco.data.dataset import Dataset
-from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
-from rdflib.namespace import RDF, XSD
+from pathlib import Path
 from colorama import Fore
 
+from unco import UNCO_PATH
+from unco.data.dataset import Dataset
 from unco.data.reader import Reader
 
-NM = Namespace("http://nomisma.org/id/")
-NMO = Namespace("http://nomisma.org/ontology#")
+from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
+from rdflib.namespace._RDF import RDF
+from rdflib.namespace._XSD import XSD
+
 UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
+CRM = Namespace("http://erlangen-crm.org/current/")
+BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
+NM = Namespace("http://nomisma.org/id/")
 
 class RDFGenerator():
     """
@@ -42,7 +44,7 @@ class RDFGenerator():
 
     def load_prefixes(self, path : str):
         """
-            Method to load prefixes of namespaces.
+            Method to load prefixes of namespaces and bind them to the graph.
 
         Parameters
         ----------
@@ -53,7 +55,10 @@ class RDFGenerator():
         for rowindex in range(len(namespaces)):
             self.prefixes[str(namespaces.iloc[rowindex,0]).lower()] = Namespace(str(namespaces.iloc[rowindex,1])) 
 
+        for prefix in self.prefixes:
+            self.graph.bind(prefix, self.prefixes[prefix])
     
+
     def _generate_triple_plan(self):
         first_col_has_ref = (False, '')
         first_col_objects = set()
@@ -171,6 +176,7 @@ class RDFGenerator():
             else:
                 print(Fore.RED + "ERROR: Unknown URI " + string + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
 
+
     def _get_subject_node(self, row_index : int, column_index : int) -> URIRef | Literal | None:
         value = str(self.dataset.data.iat[row_index,column_index])
 
@@ -197,7 +203,7 @@ class RDFGenerator():
 
         match datatype:
             case "id":
-                return BNode("i" + str(value) + "c" + str(column_index))
+                return BNode("i" + str(value).strip() + "c" + str(column_index))
             case "uri":
                 return self._get_uri_node(value, row_index, column_index)
             case "":
@@ -218,11 +224,13 @@ class RDFGenerator():
         print(Fore.RED + "ERROR: Couldn't add node in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
         return None
 
-    def _get_predicate(self, column_index):
-        string = str(self.dataset.data.columns[column_index])
-        return self._get_uri_node(string, -1, column_index)
 
-    def _get_object_nodes(self, row_index : int, column_index : int) -> list[URIRef | Literal | None]:
+    def _get_predicate(self, column_index) -> tuple[URIRef | Literal | None, str]:
+        string = str(self.dataset.data.columns[column_index]).strip()
+        return self._get_uri_node(string, -1, column_index), string
+
+
+    def _get_object_nodes(self, row_index : int, column_index : int) -> tuple[list[URIRef | Literal | None], list[str]]:
         wrong_splitlist = str(self.dataset.data.iat[row_index,column_index]).split(";")
         right_splitlist = []
         old_element = ""
@@ -241,6 +249,7 @@ class RDFGenerator():
             right_splitlist.append(old_element)
 
         nodelist = []
+        namelist = []
         for value in right_splitlist:
             splitlist = value.split("^^")
             if len(splitlist) == 2:
@@ -263,37 +272,50 @@ class RDFGenerator():
 
             match datatype:
                 case "id":
-                    nodelist.append(BNode("i" + str(value) + "c" + str(column_index)))
+                    nodelist.append(BNode("i" + str(value).strip() + "c" + str(column_index)))
+                    namelist.append(value)
                 case "uri":
                     nodelist.append(self._get_uri_node(value, row_index, column_index))
+                    namelist.append(value)
                 case "":
                     lang_splitter = value.split("@")
                     if len(lang_splitter) >= 2 and len(lang_splitter[-1]) <= 3:
                         nodelist.append(Literal(lang_splitter[0], lang=lang_splitter[-1]))
+                        namelist.append(value)
                     elif column_index in self.column_languages:
                         nodelist.append(Literal(value, lang=self.column_languages[column_index]))
+                        namelist.append(value)
                     else:
                         nodelist.append(Literal(value))
+                        namelist.append(value)
                 case other:
                     if other[0] == "<" and other[-1] == ">":
                         other = other[1:-1]
                         nodelist.append(Literal(value, datatype=other))
+                        namelist.append(value)
                     else:
                         splitlist = other.split(":")
                         if len(splitlist) == 2:
                             if splitlist[0] in self.prefixes:
                                 nodelist.append(Literal(value, datatype = self.prefixes[splitlist[0]][splitlist[1]], normalize=True))
+                                namelist.append(value)
                             else:
                                 print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
                                 nodelist.append(None)
+                                namelist.append("")
                         else:
                             print(Fore.RED + "ERROR: Unknown Datatype " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
                             nodelist.append(None)
+                            namelist.append("")
                     
-        return nodelist
+        return nodelist, namelist
 
 
-    def generate_solution(self,solution_id : int) -> None:
+    def _remove_special_chars(self, value : str):
+        return ''.join(c for c in value if c.isalnum())
+
+
+    def generate_solution(self,solution_id : int | None = None) -> None:
         """ 
             Method to generate the RDF-XML file.
 
@@ -302,18 +324,15 @@ class RDFGenerator():
         solution_id : int
             Solution id, which should be generated.
         """
-        # Bind namespace prefixes:
-        for prefix in self.prefixes:
-            self.graph.bind(prefix, self.prefixes[prefix])
-        
+        self._load_prefixes_of_solution(solution_id)
         # Get triple_plan:
         self._generate_triple_plan()
 
         self._get_datatype_and_language()
 
-        for ob in self.triple_plan:
-            subject_colindex = self.triple_plan[ob]["subject"].copy().pop()
-            object_colindices = self.triple_plan[ob]["object"].copy()
+        for plan in self.triple_plan:
+            subject_colindex = self.triple_plan[plan]["subject"].copy().pop()
+            object_colindices = self.triple_plan[plan]["object"].copy()
 
             for row_index in range(len(self.dataset.data)):
                 subject = self._get_subject_node(row_index,subject_colindex)
@@ -321,40 +340,60 @@ class RDFGenerator():
                 for column_index in object_colindices:
 
                     if pd.notnull(self.dataset.data.iat[row_index,column_index]): # Check if value isn't NaN
-                        predicate = self._get_predicate(column_index)
+                        predicate, name = self._get_predicate(column_index)
+                        objects, names = self._get_object_nodes(row_index, column_index)
 
-                        objects = self._get_object_nodes(row_index, column_index)
+                        for index, object in enumerate(objects):
+                            if column_index in self.dataset.uncertainty_flags and row_index in self.dataset.uncertainty_flags[column_index]: # If current value is uncertain, do:
+                                uncertainty_id = self._remove_special_chars(name + names[index])
+                                match solution_id:
+                                    case 1:
+                                        self._generate_uncertain_value_solution_1(subject, predicate, object, uncertainty_id)
+                                    case 2:
+                                        self._generate_uncertain_value_solution_2(subject, predicate, object, uncertainty_id)
+                                    case 3:
+                                        self._generate_uncertain_value_solution_3()
+                                    case 4:
+                                        self._generate_uncertain_value_solution_4()
+                                    case 5:
+                                        self._generate_uncertain_value_solution_5()
+                                    case 6:
+                                        self._generate_uncertain_value_solution_6(subject, predicate, object, uncertainty_id)
+                                    case 7:
+                                        self._generate_uncertain_value_solution_7(subject, predicate, object, uncertainty_id)
+                                    case 8:
+                                        self._generate_uncertain_value_solution_8()
+                                    case _:
+                                        self.graph.add((subject, predicate, object))
 
-                        for object in objects:
-                            self.graph.add((subject, predicate, object)) # Example: Coin_4 nmo:hasMaterial nm:ar
+                            else:
+                                    self.graph.add((subject, predicate, object))
 
-                        if column_index in self.dataset.uncertainty_flags:
-                            if row_index in self.dataset.uncertainty_flags[column_index]: # If current value is uncertain, do:
-                                pass
-                                # match solution_id:
-                                #     case 1:
-                                #         self._generate_uncertain_value_solution_1(coin, row_index, column_index)
-                                #     case 2:
-                                #         self._generate_uncertain_value_solution_2(coin, row_index, column_index)
-                                #     case 3:
-                                #         self._generate_uncertain_value_solution_3()
-                                #     case 4:
-                                #         self._generate_uncertain_value_solution_4()
-                                #     case 5:
-                                #         self._generate_uncertain_value_solution_5()
-                                #     case 6:
-                                #         self._generate_uncertain_value_solution_6(coin, row_index, column_index)
-                                #     case 7:
-                                #         self._generate_uncertain_value_solution_7(coin, row_index, column_index)
-                                #     case 8:
-                                #         self._generate_uncertain_value_solution_8()
-                                # continue 
-            
-
-        with open(Path(self.output_folder, str(solution_id) + ".ttl"), 'w') as file:
-            file.write(generator.graph.serialize(format="ttl"))
+        if solution_id:
+            filename = "graph_model_" + str(solution_id)
+        else:
+            filename = "graph"
         
-    def _generate_uncertain_value_solution_1(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
+        with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
+                file.write(generator.graph.serialize(format="xml"))
+
+    def _load_prefixes_of_solution(self, solution_id : int = None) -> None:
+        match solution_id:
+            case 1:
+                self.graph.bind("crm", CRM)
+                self.graph.bind("bmo", BMO)
+                self.graph.bind("rdf", RDF)
+                self.graph.bind("nm", NM)
+                self.prefixes["crm"] = CRM
+                self.prefixes["bmo"] = BMO
+                self.prefixes["rdf"] = RDF
+                self.prefixes["nm"] = NM
+
+            case _:
+                pass
+
+
+    def _generate_uncertain_value_solution_1(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 1.
         Attributes
         ----------
@@ -365,17 +404,11 @@ class RDFGenerator():
         column_index : int
             Column index of the uncertain value.
         """
-        CRM = Namespace("http://erlangen-crm.org/current/")
-        BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
-        self.graph.bind("crm", CRM)
-        self.graph.bind("bmo", BMO)
-
-        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
-
-        self.graph.add((coin, NMO[predicate], NM[object]))
-        self.graph.add((node, CRM["P141_assigned"], NM[object]))
-        self.graph.add((node, CRM["P140_assigned_attribute_to"], coin))
-        self.graph.add((node, BMO["PX_Property"], NMO[predicate]))
+        node = BNode(uncertainty_id)
+        self.graph.add((subject, predicate, object))
+        self.graph.add((node, CRM["P141_assigned"], object))
+        self.graph.add((node, CRM["P140_assigned_attribute_to"], subject))
+        self.graph.add((node, BMO["PX_Property"], predicate))
         self.graph.add((node, RDF["type"], CRM["E13"]))
         self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
@@ -463,26 +496,16 @@ if __name__ == "__main__":
     from pathlib import Path
     from unco import UNCO_PATH
 
-    dataset = Dataset(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/input_data.csv")))
+    # Corpus Nummorum Beispiel:
 
-    dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
-    generator = RDFGenerator(dataset)
-
-    generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/namespaces.csv")))
-
-    generator.generate_solution(0)
-
-    # generator.generate_solution(7)
-    # generator.generate_solution_6()
-    # generator.generate_solution_7()
-    
-
-    # dataset.add_alternatives()
-
-    # dataset.add_likelihoods()
+    # dataset = Dataset(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/input_data.csv")))
     # generator = RDFGenerator(dataset)
+    # generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/namespaces.csv")))
+    # generator.generate_solution()
 
-    # generator.generate_solution_3()
-    # generator.generate_solution_4()
-    # generator.generate_solution_5()
-    # generator.generate_solution_8()
+    # Uncertain Mint:
+    dataset = Dataset(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/input_data.csv")))
+    dataset.add_uncertainty_flags(list_of_columns=[1], uncertainties_per_column=2)
+    generator = RDFGenerator(dataset)
+    generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/namespaces.csv")))
+    generator.generate_solution(1)

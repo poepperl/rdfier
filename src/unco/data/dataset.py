@@ -19,16 +19,6 @@ class Dataset:
         Dictionary to save some alternatives for all uncertain values. The slternatives are saved as: alternatives[(row,column)] = list(alternatives)
     """
 
-    data: pd.DataFrame
-
-    uncertainty_flags: dict
-
-    alternatives: dict = {}
-
-    likelihoods: dict = {}
-
-    NUMBER_OF_ALTERNATIVES : int = 0
-
     def __init__(self, path: str) -> None:
         """
         Parameters
@@ -36,7 +26,11 @@ class Dataset:
         path : str
             Path to the input-data.
         """
-        self.data = Reader(path).read()
+        self.data: pd.DataFrame = Reader(path).read()
+        self.uncertainty_flags: dict = {}
+        self.alternatives: dict = {}
+        self.likelihoods: dict = {}
+        self.NUMBER_OF_ALTERNATIVES : int = 0
 
     def add_uncertainty_flags(self, number_of_uncertain_columns: int=0, list_of_columns: list[int] =[], uncertainties_per_column: int = 0) -> None:
         """ Method to create random uncertaintie flags.
