@@ -14,6 +14,7 @@ UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertain
 CRM = Namespace("http://erlangen-crm.org/current/")
 BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
+EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
 
 class RDFGenerator():
     """
@@ -60,6 +61,9 @@ class RDFGenerator():
     
 
     def _generate_triple_plan(self):
+        """
+            Method which locates the subject columns and the corresponding objects and saves it in the triple_plan.
+        """
         first_col_has_ref = (False, '')
         first_col_objects = set()
 
@@ -115,6 +119,9 @@ class RDFGenerator():
 
 
     def _get_datatype_and_language(self):
+        """
+            Method which read the datatype or language of all columns.
+        """
         for index, column in enumerate(self.dataset.data):
             new_column_name = str(column)
 
@@ -133,17 +140,17 @@ class RDFGenerator():
                 self.column_languages[index] = language_splitlist[-1]
             
             self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename column
-
-
-    def _get_subject_predicate_object(self, row_index : int, column_index : int) -> tuple[BNode, Literal, Literal]:
-        subject = BNode(str(self.dataset.data.columns[column_index]) + str(self.dataset.data.iat[row_index,column_index]))
-        predicate = Literal("has" + str(self.dataset.data.columns[column_index])) 
-        object = Literal(str(self.dataset.data.iat[row_index,column_index])) 
-
-        return subject, predicate, object
     
 
     def _get_datatype(self, value : str):
+        """
+            Method which tries to find the fitting datatype of a value.
+
+        Parameters
+        ----------
+        value : str
+            Entry of the csv table.
+        """
         try:
             number = int(value)
             return "xsd:long"
@@ -178,6 +185,16 @@ class RDFGenerator():
 
 
     def _get_subject_node(self, row_index : int, column_index : int) -> URIRef | Literal | None:
+        """
+            Method to generate and output the subject-node.
+
+        Parameters
+        ----------
+        row_index : int
+            Row index of the entry.
+        column_index : int
+            Column index of the entry.
+        """
         value = str(self.dataset.data.iat[row_index,column_index])
 
         splitlist = value.split("^^")
@@ -226,11 +243,29 @@ class RDFGenerator():
 
 
     def _get_predicate(self, column_index) -> tuple[URIRef | Literal | None, str]:
+        """
+            Method to generate and output the predicate.
+
+        Parameters
+        ----------
+        column_index : int
+            Column index of the entry.
+        """
         string = str(self.dataset.data.columns[column_index]).strip()
         return self._get_uri_node(string, -1, column_index), string
 
 
     def _get_object_nodes(self, row_index : int, column_index : int) -> tuple[list[URIRef | Literal | None], list[str]]:
+        """
+            Method to generate and output the object-node.
+
+        Parameters
+        ----------
+        row_index : int
+            Row index of the entry.
+        column_index : int
+            Column index of the entry.
+        """
         wrong_splitlist = str(self.dataset.data.iat[row_index,column_index]).split(";")
         right_splitlist = []
         old_element = ""
@@ -311,7 +346,15 @@ class RDFGenerator():
         return nodelist, namelist
 
 
-    def _remove_special_chars(self, value : str):
+    def _remove_special_chars(self, value : str) -> str:
+        """
+            Method to generate and output a node id without special characters.
+
+        Parameters
+        ----------
+        value : str
+            Value with special characters, outputs the same string without special characters.
+        """
         return ''.join(c for c in value if c.isalnum())
 
 
@@ -377,7 +420,16 @@ class RDFGenerator():
         with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
                 file.write(generator.graph.serialize(format="xml"))
 
+
     def _load_prefixes_of_solution(self, solution_id : int = None) -> None:
+        """
+            Method to load and bind the necessary prefixes for a solution.
+
+        Parameters
+        ----------
+        solution_id : int
+            Number of the solution.
+        """
         match solution_id:
             case 1:
                 self.graph.bind("crm", CRM)
@@ -388,7 +440,23 @@ class RDFGenerator():
                 self.prefixes["bmo"] = BMO
                 self.prefixes["rdf"] = RDF
                 self.prefixes["nm"] = NM
-
+            case 2:
+                self.graph.bind("rdf", RDF)
+                self.graph.bind("nm", NM)
+                self.graph.bind("un", UN)
+                self.prefixes["rdf"] = RDF
+                self.prefixes["nm"] = NM
+                self.prefixes["un"] = UN
+            case 6:
+                self.graph.bind("rdf", RDF)
+                self.graph.bind("edtfo", EDTFO)
+                self.prefixes["edtfo"] = EDTFO
+                self.prefixes["rdf"] = RDF
+            case 7:
+                self.graph.bind("rdf", RDF)
+                self.graph.bind("edtfo", EDTFO)
+                self.prefixes["edtfo"] = EDTFO
+                self.prefixes["rdf"] = RDF
             case _:
                 pass
 
@@ -412,7 +480,8 @@ class RDFGenerator():
         self.graph.add((node, RDF["type"], CRM["E13"]))
         self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
-    def _generate_uncertain_value_solution_2(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
+
+    def _generate_uncertain_value_solution_2(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 2.
         Attributes
         ----------
@@ -423,28 +492,34 @@ class RDFGenerator():
         column_index : int
             Column index of the uncertain value.
         """
-        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
-
-        self.graph.add((coin, NMO[predicate], node))
+        node = BNode(uncertainty_id)
+        self.graph.add((subject, predicate, node))
         self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
-        self.graph.add((node, RDF.value, NM[object]))
+        self.graph.add((node, RDF.value, object))
 
-    def _generate_uncertain_value_solution_3(self) -> None:
+
+    def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 3.
         """
+        # node = BNode(uncertainty_id)
         pass #TODO: Generieren der unsicheren Werte von Lösung 3
 
-    def _generate_uncertain_value_solution_4(self) -> None:
+
+    def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 4.
         """
+        # node = BNode(uncertainty_id)
         pass #TODO: Generieren der unsicheren Werte von Lösung 4
 
-    def _generate_uncertain_value_solution_5(self) -> None:
+
+    def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 5.
         """
+        # node = BNode(uncertainty_id)
         pass #TODO: Generieren der unsicheren Werte von Lösung 5
 
-    def _generate_uncertain_value_solution_6(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
+
+    def _generate_uncertain_value_solution_6(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 6.
         Attributes
         ----------
@@ -455,18 +530,16 @@ class RDFGenerator():
         column_index : int
             Column index of the uncertain value.
         """
-        EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
-        self.graph.bind("edtfo", EDTFO)
+        node = BNode(uncertainty_id)
 
-        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
-
-        self.graph.add((coin, NMO[predicate], NM[object]))
-        self.graph.add((node, RDF["object"], NM[object]))
-        self.graph.add((node, RDF["subject"], coin))
-        self.graph.add((node, RDF["predicate"], NMO[predicate]))
+        self.graph.add((subject, predicate, object))
+        self.graph.add((node, RDF["object"], object))
+        self.graph.add((node, RDF["subject"], subject))
+        self.graph.add((node, RDF["predicate"], predicate))
         self.graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
 
-    def _generate_uncertain_value_solution_7(self, coin : IdentifiedNode, row_index : int, column_index : int) -> None:
+
+    def _generate_uncertain_value_solution_7(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 7.
         Attributes
         ----------
@@ -477,18 +550,17 @@ class RDFGenerator():
         column_index : int
             Column index of the uncertain value.
         """
-        EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
-        self.graph.bind("edtfo", EDTFO)
+        node = BNode(uncertainty_id)
 
-        node, predicate, object = self._get_node_predicate_object(coin, row_index, column_index)
-
-        self.graph.add((coin, NMO[predicate], node))
+        self.graph.add((subject, predicate, node))
         self.graph.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
-        self.graph.add((node, RDF.value, NM[object]))
+        self.graph.add((node, RDF.value, object))
 
-    def _generate_uncertain_value_solution_8(self) -> None:
+
+    def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 8.
         """
+        # node = BNode(uncertainty_id)
         pass #TODO: Generieren der unsicheren Werte von Lösung 8
 
 
@@ -508,4 +580,4 @@ if __name__ == "__main__":
     dataset.add_uncertainty_flags(list_of_columns=[1], uncertainties_per_column=2)
     generator = RDFGenerator(dataset)
     generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/namespaces.csv")))
-    generator.generate_solution(1)
+    generator.generate_solution(7)
