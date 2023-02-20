@@ -179,15 +179,25 @@ class RDFGenerator():
             value = splitlist[0]
             datatype = splitlist[1]
 
+        elif len(splitlist) > 2:
+            print(Fore.RED + "ERROR: Find multiple datatypes in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+
         elif column_index in self.column_datatypes:
             datatype = self.column_datatypes[column_index]
 
         else:
             datatype = self._get_datatype(value)
         
+        try:
+            value = float(value)
+            if value == int(value):
+                value = int(value)
+        except:
+            pass
+
         match datatype:
             case "id":
-                return BNode("r" + str(row_index) + "c" + str(column_index))
+                return BNode("i" + str(value) + "c" + str(column_index))
             case "uri":
                 return self._get_uri_node(value, row_index, column_index)
             case "":
@@ -236,16 +246,24 @@ class RDFGenerator():
             if len(splitlist) == 2:
                 value = splitlist[0]
                 datatype = splitlist[1]
-
+            elif len(splitlist) > 2:
+                print(Fore.RED + "ERROR: Find multiple datatypes in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
             elif column_index in self.column_datatypes:
                 datatype = self.column_datatypes[column_index]
 
             else:
                 datatype = self._get_datatype(value)
             
+            try:
+                value = float(value)
+                if value == int(value):
+                    value = int(value)
+            except:
+                pass
+
             match datatype:
                 case "id":
-                    nodelist.append(BNode("r" + str(row_index) + "c" + str(column_index)))
+                    nodelist.append(BNode("i" + str(value) + "c" + str(column_index)))
                 case "uri":
                     nodelist.append(self._get_uri_node(value, row_index, column_index))
                 case "":
@@ -445,12 +463,12 @@ if __name__ == "__main__":
     from pathlib import Path
     from unco import UNCO_PATH
 
-    dataset = Dataset(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/eingabeformat.csv")))
+    dataset = Dataset(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/input_data.csv")))
 
     dataset.add_uncertainty_flags(list_of_columns=[2],uncertainties_per_column=1)
     generator = RDFGenerator(dataset)
 
-    generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/namespaces.csv")))
+    generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/namespaces.csv")))
 
     generator.generate_solution(0)
 
