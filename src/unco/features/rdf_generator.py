@@ -358,7 +358,7 @@ class RDFGenerator():
         return ''.join(c for c in value if c.isalnum())
 
 
-    def generate_solution(self,solution_id : int | None = None) -> None:
+    def generate_solution(self,solution_id : int | None = None, xml_format : bool = True) -> None:
         """ 
             Method to generate the RDF-XML file.
 
@@ -366,6 +366,8 @@ class RDFGenerator():
         ----------
         solution_id : int
             Solution id, which should be generated.
+        xml_format : bool
+            Output will be in XML format, otherwise Turtle.
         """
         self._load_prefixes_of_solution(solution_id)
         # Get triple_plan:
@@ -417,8 +419,12 @@ class RDFGenerator():
         else:
             filename = "graph"
         
-        with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
-                file.write(generator.graph.serialize(format="xml"))
+        if xml_format:
+            with open(Path(self.output_folder, filename + ".rdf"), 'w') as file:
+                    file.write(generator.graph.serialize(format="xml"))
+        else:
+            with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
+                    file.write(generator.graph.serialize(format="ttl"))
 
 
     def _load_prefixes_of_solution(self, solution_id : int = None) -> None:
