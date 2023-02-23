@@ -43,16 +43,20 @@ class RDFGenerator():
         self.column_datatypes : dict[int, str] = {}
         self.column_languages : dict[int, str] = {}
 
-    def load_prefixes(self, path : str):
+    def load_prefixes(self, path_data : str | pd.DataFrame):
         """
             Method to load prefixes of namespaces and bind them to the graph.
 
         Parameters
         ----------
         path : str
-            Path to the csv file with header: (prefix, namespace)
+            Path to the csv file with header: (prefix, namespace) or DataFrame of the file.
         """
-        namespaces = Reader(path).read()
+        if type(path_data) == pd.DataFrame:
+            namespaces = path_data
+        else:
+            namespaces = Reader(path_data).read()
+
         for rowindex in range(len(namespaces)):
             self.prefixes[str(namespaces.iloc[rowindex,0]).lower()] = Namespace(str(namespaces.iloc[rowindex,1])) 
 
@@ -374,6 +378,7 @@ class RDFGenerator():
         self._generate_triple_plan()
 
         self._get_datatype_and_language()
+
 
         for plan in self.triple_plan:
             subject_colindex = self.triple_plan[plan]["subject"].copy().pop()
