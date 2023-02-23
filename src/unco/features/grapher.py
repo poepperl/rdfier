@@ -1,4 +1,8 @@
+from fileinput import filename
 from pathlib import Path
+from unco import UNCO_PATH
+from colorama import Fore
+import shutil
 import requests
 
 class Grapher():
@@ -22,29 +26,26 @@ class Grapher():
     
 
     def get_illustration(self, path : str | Path):
-        # data = open(path, 'r', encoding='utf-8').read()
-        headers = {"rdf": '''<?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF
-   xmlns:nmo="http://nomisma.org/ontology#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:un="http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl"
->
-  <rdf:Description rdf:nodeID="nmohasMintnmcomama">
-    <un:hasUncertainty rdf:resource="http://nomisma.org/id/uncertain_value"/>
-    <rdf:value rdf:resource="http://nomisma.org/id/comama"/>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="icoin_1c0">
-    <nmo:hasMint rdf:nodeID="nmohasMintnmcomama"/>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="icoin_2c0">
-    <nmo:hasMint rdf:resource="http://nomisma.org/id/comama"/>
-  </rdf:Description>
-  <rdf:Description rdf:nodeID="icoin_0c0">
-    <nmo:hasMint rdf:nodeID="nmohasMintnmcomama"/>
-  </rdf:Description>
-</rdf:RDF>''', "from": "xml", "to": "png"}
-        response = requests.post('https://www.ldf.fi/service/rdf-grapher', headers=headers)
-        print(response.text)
+        """
+            Method, which downloads the graphical version of the given rdf graph. Output will be saved in "data/output/downloaded_graph.png".
+        """
+        data = open(path, 'r', encoding='utf-8').read()
+        params = {"rdf": data, "to": "png"}
+        path = str(path)
+
+        if path[-3:] == "rdf" or path[-3:] == "xml" or path[-3:] == "txt":
+            params["from"] = "xml"
+        elif path[-3:] == "ttl":
+            params["from"] = "ttl"
+        else:
+            print(Fore.RED + "ERROR: Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input." + Fore.RESET)
+            return
+        response = requests.post('https://www.ldf.fi/service/rdf-grapher', params=params, stream=True)
+
+        filename = str(Path(UNCO_PATH,"data/output/downloaded_graph.png"))
+        if response.status_code == 200:
+            with open(filename, 'wb') as f:
+                shutil.copyfileobj(response.raw, f)
 
 if __name__ == "__main__":
-    g = Grapher("")
+    g = Grapher(Path(r"D:\Dokumente\Repositories\unco\data\output\graph_model_7.rdf"))
