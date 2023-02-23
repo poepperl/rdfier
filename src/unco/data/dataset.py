@@ -19,14 +19,17 @@ class Dataset:
         Dictionary to save some alternatives for all uncertain values. The slternatives are saved as: alternatives[(row,column)] = list(alternatives)
     """
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path_data: str | pd.DataFrame) -> None:
         """
         Parameters
         ----------
         path : str
             Path to the input-data.
         """
-        self.data: pd.DataFrame = Reader(path).read()
+        if type(path_data) == pd.DataFrame:
+            self.data = path_data
+        else:
+            self.data = Reader(path_data).read()
         self.uncertainty_flags: dict = {}
         self.alternatives: dict = {}
         self.likelihoods: dict = {}
