@@ -47,6 +47,7 @@ Getting started
 python -m venv .venv                // nur bei erster Ausführung notwendig
 .venv\Scripts\activate
 pip install -r requirements.txt     // nur bei erster Ausführung notwendig
+streamlit run src/app/Startseite.py
 ```
 
 Dokumentation generieren

@@ -17,3 +17,6 @@ colorama # colored printings
 requests # communication between python and fuseki server
 pathlib
 psutil # close fuseki console
+
+# UI
+streamlit
