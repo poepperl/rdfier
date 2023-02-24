@@ -20,3 +20,6 @@ docs/source/unco/
 data/input/*
 data/metadata/*
 data/output/*
+
+# Gitkeep
+!.gitkeep
