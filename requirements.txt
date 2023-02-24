@@ -1,28 +1,19 @@
 # local package
 -e ./src
 
-# external requirements
+# doku libs
 autodoc
 Sphinx
 sphinx-autobuild
-rstcheck
-docutils
-pydot
-graphviz 
 sphinx-rtd-theme
-coverage
-flake8
-pytest
+rstcheck
 
-sklearn
-pandas
-icecream
-
-boto3 #used to connect to S3 like storage and AWS
-s3fs #used to connect to S3 like storage with pandas
-
-
-jupyter
-tqdm #progress bars
-confuse #used for config loading
-#pyarrow #used to read and write parquet files
+# external requirements
+pytest # testing
+tqdm # progress bars
+pandas # data manipulation
+rdflib # rdf-graphs
+colorama # colored printings
+requests # communication between python and fuseki server
+pathlib
+psutil # close fuseki console

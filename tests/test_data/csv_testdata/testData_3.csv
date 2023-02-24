@@ -1,0 +1,4 @@
+Subject,http://nomisma.org/ontology#hasMint,http://nomisma.org/ontology#hasMinWidth
+coin_1,http://nomisma.org/id/comama,0
+coin_2,http://nomisma.org/id/comama,1
+coin_0,http://nomisma.org/id/comama,2

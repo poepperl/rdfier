@@ -1,0 +1,1 @@
+java -Xmx8200M -jar "fuseki-server.jar" %*
