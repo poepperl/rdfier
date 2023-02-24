@@ -7,14 +7,14 @@ from unco.data.dataset import Dataset
 from unco.data.reader import Reader
 
 from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
-from rdflib.namespace._RDF import RDF
-from rdflib.namespace._XSD import XSD
 
 UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
 CRM = Namespace("http://erlangen-crm.org/current/")
 BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
 EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
+RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 class RDFGenerator():
     """
@@ -213,6 +213,14 @@ class RDFGenerator():
         else:
             datatype = self._get_datatype(value)   
 
+        try:
+            if float(value) == int(value):
+                value = int(value)
+            else:
+                value = float(value)
+        except:
+            pass
+
         match datatype:
             case "id":
                 return BNode("i" + str(value).strip() + "c" + str(column_index))
@@ -281,7 +289,7 @@ class RDFGenerator():
         nodelist = []
         namelist = []
         for value in right_splitlist:
-            splitlist = value.split("^^")
+            splitlist = str(value).split("^^")
             if len(splitlist) == 2:
                 value = splitlist[0]
                 datatype = splitlist[1]
@@ -292,13 +300,14 @@ class RDFGenerator():
 
             else:
                 datatype = self._get_datatype(value)
-            
-            # try:
-            #     value = float(value)
-            #     if value == int(value):
-            #         value = int(value)
-            # except:
-            #     pass
+
+            try:
+                if float(value) == int(value):
+                    value = int(value)
+                else:
+                    value = float(value)
+            except:
+                pass
 
             match datatype:
                 case "id":
@@ -352,6 +361,11 @@ class RDFGenerator():
         """
         return ''.join(c for c in value if c.isalnum())
 
+    def _get_sparql_prefixes(self) -> str:
+        text = ""
+        for prefix in self.prefixes:
+            text += "PREFIX " + prefix + ": <" + self.prefixes[prefix] + ">" + "\n"
+        return text
 
     def generate_solution(self,solution_id : int = 0, xml_format : bool = True) -> None:
         """ 
@@ -414,7 +428,12 @@ class RDFGenerator():
             filename = "graph_model_" + str(solution_id)
         else:
             filename = "graph"
-        
+
+        # Save sparql-prefix txt:
+        with open(Path(self.output_folder, filename + "_prefixes.txt"), 'w') as file:
+            file.write(self._get_sparql_prefixes())
+
+        # Save RDF Graph:
         if xml_format:
             with open(Path(self.output_folder, filename + ".rdf"), 'w') as file:
                     file.write(self.graph.serialize(format="xml"))

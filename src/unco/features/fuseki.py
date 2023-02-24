@@ -25,7 +25,6 @@ class FusekiServer:
         self.server = None
         self.starter_path = os.path.join(UNCO_PATH, r"src\unco\features\server_starter.bat")
         self._initialize()
-        self.start_server()
 
     def _initialize(self) -> None:
         """
@@ -87,6 +86,7 @@ class FusekiServer:
 
 if __name__ == "__main__":
     f = FusekiServer()
+    f.start_server()
     f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\cn_example.txt")
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
