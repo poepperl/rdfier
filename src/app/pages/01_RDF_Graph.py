@@ -4,6 +4,7 @@ from unco import UNCO_PATH
 from unco.data.dataset import Dataset
 from unco.features.rdf_generator import RDFGenerator
 from unco.features.grapher import Grapher
+from unco.features.fuseki import FusekiServer
 from pathlib import Path
 from PIL import Image
 
@@ -79,3 +80,20 @@ if uploaded_file:
             image = Image.open(str(Path(UNCO_PATH, "data/output/downloaded_graph.png")))
 
             graphcol.image(image, output_format="PNG",use_column_width="auto")
+        else:
+            st.code(path.read_text())
+        
+        start_fuseki = st.button("Fuseki Server starten")
+
+        if start_fuseki:
+            fuseki = FusekiServer()
+            fuseki.start_server()
+            fuseki.upload_data(path)
+            
+            qcol1, qcol2 = st.columns(2)
+            query = qcol1.text_area("Query eingeben:")
+            query_input = qcol2.file_uploader("Query hochladen:")
+
+            start_query = st.button("Query ausführen")
+            if start_query:
+                st.code(fuseki.sparql_query(query))

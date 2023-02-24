@@ -76,7 +76,7 @@ class Dataset:
         uncertainty_flags = {}
         for column in uncertain_columns:
             uncertainty_flags[column] = []
-            if uncertainties_per_column < 1 or uncertainties_per_column > nrows-1:
+            if uncertainties_per_column < 1 or uncertainties_per_column > nrows:
                 uncertain_values = random.sample(range(0, nrows), random.randint(1, nrows)) # Get random row indices
             else:
                 uncertain_values = random.sample(range(0, nrows), uncertainties_per_column)
@@ -111,10 +111,10 @@ class Dataset:
 
             self.likelihoods[value] = likelihoods
 
-
-# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
-# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
-# p.add_uncertainty_flags()
-# p.add_alternatives()
-# p.add_likelihoods()
-# print(p.likelihoods)
+if __name__ == "__main__":
+    p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\1certain2uncertainMints\input_data.csv")
+    # p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
+    p.add_uncertainty_flags(number_of_uncertain_columns=1,uncertainties_per_column=3)
+    # p.add_alternatives()
+    # p.add_likelihoods()
+    print(p.uncertainty_flags)

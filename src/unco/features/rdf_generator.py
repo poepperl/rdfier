@@ -156,13 +156,11 @@ class RDFGenerator():
             Entry of the csv table.
         """
         try:
-            number = int(value)
-            return "xsd:long"
-        except:
-            pass
-        try:
             number = float(value)
-            return "xsd:double"
+            if number == int(value):
+                return "xsd:double"
+            else:
+                return "xsd:long"
         except:
             pass
 
@@ -213,14 +211,7 @@ class RDFGenerator():
             datatype = self.column_datatypes[column_index]
 
         else:
-            datatype = self._get_datatype(value)
-        
-        try:
-            value = float(value)
-            if value == int(value):
-                value = int(value)
-        except:
-            pass
+            datatype = self._get_datatype(value)   
 
         match datatype:
             case "id":
@@ -302,12 +293,12 @@ class RDFGenerator():
             else:
                 datatype = self._get_datatype(value)
             
-            try:
-                value = float(value)
-                if value == int(value):
-                    value = int(value)
-            except:
-                pass
+            # try:
+            #     value = float(value)
+            #     if value == int(value):
+            #         value = int(value)
+            # except:
+            #     pass
 
             match datatype:
                 case "id":
@@ -362,7 +353,7 @@ class RDFGenerator():
         return ''.join(c for c in value if c.isalnum())
 
 
-    def generate_solution(self,solution_id : int | None = None, xml_format : bool = True) -> None:
+    def generate_solution(self,solution_id : int = 0, xml_format : bool = True) -> None:
         """ 
             Method to generate the RDF-XML file.
 
@@ -432,7 +423,7 @@ class RDFGenerator():
                     file.write(self.graph.serialize(format="ttl"))
 
 
-    def _load_prefixes_of_solution(self, solution_id : int = None) -> None:
+    def _load_prefixes_of_solution(self, solution_id : int = 0) -> None:
         """
             Method to load and bind the necessary prefixes for a solution.
 
