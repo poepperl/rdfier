@@ -19,14 +19,17 @@ class Dataset:
         Dictionary to save some alternatives for all uncertain values. The slternatives are saved as: alternatives[(row,column)] = list(alternatives)
     """
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path_data: str | pd.DataFrame) -> None:
         """
         Parameters
         ----------
         path : str
             Path to the input-data.
         """
-        self.data: pd.DataFrame = Reader(path).read()
+        if type(path_data) == pd.DataFrame:
+            self.data = path_data
+        else:
+            self.data = Reader(path_data).read()
         self.uncertainty_flags: dict = {}
         self.alternatives: dict = {}
         self.likelihoods: dict = {}
@@ -73,7 +76,7 @@ class Dataset:
         uncertainty_flags = {}
         for column in uncertain_columns:
             uncertainty_flags[column] = []
-            if uncertainties_per_column < 1 or uncertainties_per_column > nrows-1:
+            if uncertainties_per_column < 1 or uncertainties_per_column > nrows:
                 uncertain_values = random.sample(range(0, nrows), random.randint(1, nrows)) # Get random row indices
             else:
                 uncertain_values = random.sample(range(0, nrows), uncertainties_per_column)
@@ -108,10 +111,10 @@ class Dataset:
 
             self.likelihoods[value] = likelihoods
 
-
-# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\unittest_reader.csv")
-# p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
-# p.add_uncertainty_flags()
-# p.add_alternatives()
-# p.add_likelihoods()
-# print(p.likelihoods)
+if __name__ == "__main__":
+    p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\1certain2uncertainMints\input_data.csv")
+    # p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
+    p.add_uncertainty_flags(number_of_uncertain_columns=1,uncertainties_per_column=3)
+    # p.add_alternatives()
+    # p.add_likelihoods()
+    print(p.uncertainty_flags)
