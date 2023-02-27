@@ -8,12 +8,14 @@ from unco.data.reader import Reader
 
 from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
 
+# Standard Namespaces------------------------------------------------------------------------
+RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
 UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
 CRM = Namespace("http://erlangen-crm.org/current/")
 BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
 EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
-RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 class RDFGenerator():
@@ -37,8 +39,9 @@ class RDFGenerator():
         """
         self.dataset = dataset
         self.graph = Graph()
+        self.graph_with_uncertainties : Graph
         self.output_folder = Path(UNCO_PATH, "data/output")
-        self.prefixes : dict[str,Namespace] = {"xsd" : XSD}
+        self.prefixes : dict[str,Namespace] = {"xsd" : XSD, "rdf" : RDF, "rdfs" : RDFS}
         self.triple_plan : dict[str, dict[str, set[int]]] = {}
         self.column_datatypes : dict[int, str] = {}
         self.column_languages : dict[int, str] = {}
@@ -378,6 +381,8 @@ class RDFGenerator():
         xml_format : bool
             Output will be in XML format, otherwise Turtle.
         """
+        self.graph_with_uncertainties = self.graph
+
         self._load_prefixes_of_solution(solution_id)
         # Get triple_plan:
         self._generate_triple_plan()
@@ -419,10 +424,10 @@ class RDFGenerator():
                                     case 8:
                                         self._generate_uncertain_value_solution_8()
                                     case _:
-                                        self.graph.add((subject, predicate, object))
+                                        self.graph_with_uncertainties.add((subject, predicate, object))
 
                             else:
-                                    self.graph.add((subject, predicate, object))
+                                    self.graph_with_uncertainties.add((subject, predicate, object))
 
         if solution_id:
             filename = "graph_model_" + str(solution_id)
@@ -436,10 +441,10 @@ class RDFGenerator():
         # Save RDF Graph:
         if xml_format:
             with open(Path(self.output_folder, filename + ".rdf"), 'w') as file:
-                    file.write(self.graph.serialize(format="xml"))
+                    file.write(self.graph_with_uncertainties.serialize(format="xml"))
         else:
             with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
-                    file.write(self.graph.serialize(format="ttl"))
+                    file.write(self.graph_with_uncertainties.serialize(format="ttl"))
 
 
     def _load_prefixes_of_solution(self, solution_id : int = 0) -> None:
@@ -453,29 +458,29 @@ class RDFGenerator():
         """
         match solution_id:
             case 1:
-                self.graph.bind("crm", CRM)
-                self.graph.bind("bmo", BMO)
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("nm", NM)
+                self.graph_with_uncertainties.bind("crm", CRM)
+                self.graph_with_uncertainties.bind("bmo", BMO)
+                self.graph_with_uncertainties.bind("rdf", RDF)
+                self.graph_with_uncertainties.bind("nm", NM)
                 self.prefixes["crm"] = CRM
                 self.prefixes["bmo"] = BMO
                 self.prefixes["rdf"] = RDF
                 self.prefixes["nm"] = NM
             case 2:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("nm", NM)
-                self.graph.bind("un", UN)
+                self.graph_with_uncertainties.bind("rdf", RDF)
+                self.graph_with_uncertainties.bind("nm", NM)
+                self.graph_with_uncertainties.bind("un", UN)
                 self.prefixes["rdf"] = RDF
                 self.prefixes["nm"] = NM
                 self.prefixes["un"] = UN
             case 6:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("edtfo", EDTFO)
+                self.graph_with_uncertainties.bind("rdf", RDF)
+                self.graph_with_uncertainties.bind("edtfo", EDTFO)
                 self.prefixes["edtfo"] = EDTFO
                 self.prefixes["rdf"] = RDF
             case 7:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("edtfo", EDTFO)
+                self.graph_with_uncertainties.bind("rdf", RDF)
+                self.graph_with_uncertainties.bind("edtfo", EDTFO)
                 self.prefixes["edtfo"] = EDTFO
                 self.prefixes["rdf"] = RDF
             case _:
@@ -494,12 +499,12 @@ class RDFGenerator():
             Column index of the uncertain value.
         """
         node = BNode(uncertainty_id)
-        self.graph.add((subject, predicate, object))
-        self.graph.add((node, CRM["P141_assigned"], object))
-        self.graph.add((node, CRM["P140_assigned_attribute_to"], subject))
-        self.graph.add((node, BMO["PX_Property"], predicate))
-        self.graph.add((node, RDF["type"], CRM["E13"]))
-        self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
+        self.graph_with_uncertainties.add((subject, predicate, object))
+        self.graph_with_uncertainties.add((node, CRM["P141_assigned"], object))
+        self.graph_with_uncertainties.add((node, CRM["P140_assigned_attribute_to"], subject))
+        self.graph_with_uncertainties.add((node, BMO["PX_Property"], predicate))
+        self.graph_with_uncertainties.add((node, RDF["type"], CRM["E13"]))
+        self.graph_with_uncertainties.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
 
     def _generate_uncertain_value_solution_2(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -514,9 +519,9 @@ class RDFGenerator():
             Column index of the uncertain value.
         """
         node = BNode(uncertainty_id)
-        self.graph.add((subject, predicate, node))
-        self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
-        self.graph.add((node, RDF.value, object))
+        self.graph_with_uncertainties.add((subject, predicate, node))
+        self.graph_with_uncertainties.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
+        self.graph_with_uncertainties.add((node, RDF.value, object))
 
 
     def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -553,11 +558,11 @@ class RDFGenerator():
         """
         node = BNode(uncertainty_id)
 
-        self.graph.add((subject, predicate, object))
-        self.graph.add((node, RDF["object"], object))
-        self.graph.add((node, RDF["subject"], subject))
-        self.graph.add((node, RDF["predicate"], predicate))
-        self.graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
+        self.graph_with_uncertainties.add((subject, predicate, object))
+        self.graph_with_uncertainties.add((node, RDF["object"], object))
+        self.graph_with_uncertainties.add((node, RDF["subject"], subject))
+        self.graph_with_uncertainties.add((node, RDF["predicate"], predicate))
+        self.graph_with_uncertainties.add((node, RDF["type"], EDTFO["UncertainStatement"]))
 
 
     def _generate_uncertain_value_solution_7(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -573,9 +578,9 @@ class RDFGenerator():
         """
         node = BNode(uncertainty_id)
 
-        self.graph.add((subject, predicate, node))
-        self.graph.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
-        self.graph.add((node, RDF.value, object))
+        self.graph_with_uncertainties.add((subject, predicate, node))
+        self.graph_with_uncertainties.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
+        self.graph_with_uncertainties.add((node, RDF.value, object))
 
 
     def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
