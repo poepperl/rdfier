@@ -17,6 +17,7 @@ BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
 EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
+UNCO = Namespace("localhost:8501/id/")
 
 class RDFGenerator():
     """
@@ -41,7 +42,7 @@ class RDFGenerator():
         self.graph = Graph()
         self.graph_with_uncertainties : Graph
         self.output_folder = Path(UNCO_PATH, "data/output")
-        self.prefixes : dict[str,Namespace] = {"xsd" : XSD, "rdf" : RDF, "rdfs" : RDFS}
+        self.prefixes : dict[str,Namespace] = {"xsd" : XSD, "rdf" : RDF, "rdfs" : RDFS, "" : UNCO}
         self.triple_plan : dict[str, dict[str, set[int]]] = {}
         self.column_datatypes : dict[int, str] = {}
         self.column_languages : dict[int, str] = {}
@@ -159,11 +160,14 @@ class RDFGenerator():
             Entry of the csv table.
         """
         try:
+            number = int(value)
+            return "xsd:long"
+        except:
+            pass
+        
+        try:
             number = float(value)
-            if number == int(value):
-                return "xsd:double"
-            else:
-                return "xsd:long"
+            return "xsd:float"
         except:
             pass
 
@@ -227,6 +231,7 @@ class RDFGenerator():
         match datatype:
             case "id":
                 return BNode("i" + str(value).strip() + "c" + str(column_index))
+                # return UNCO[value]
             case "uri":
                 return self._get_uri_node(value, row_index, column_index)
             case "":
@@ -315,6 +320,7 @@ class RDFGenerator():
             match datatype:
                 case "id":
                     nodelist.append(BNode("i" + str(value).strip() + "c" + str(column_index)))
+                    # nodelist.append(UNCO[value])
                     namelist.append(value)
                 case "uri":
                     nodelist.append(self._get_uri_node(value, row_index, column_index))
@@ -412,7 +418,7 @@ class RDFGenerator():
                                     case 2:
                                         self._generate_uncertain_value_solution_2(subject, predicate, object, uncertainty_id)
                                     case 3:
-                                        self._generate_uncertain_value_solution_3()
+                                        self._generate_uncertain_value_solution_3(subject, predicate, object)
                                     case 4:
                                         self._generate_uncertain_value_solution_4()
                                     case 5:
@@ -473,6 +479,11 @@ class RDFGenerator():
                 self.prefixes["rdf"] = RDF
                 self.prefixes["nm"] = NM
                 self.prefixes["un"] = UN
+            case 3:
+                self.graph_with_uncertainties.bind("crm", CRM)
+                self.graph_with_uncertainties.bind("rdf", RDF)
+                self.prefixes["crm"] = CRM
+                self.prefixes["rdf"] = RDF
             case 6:
                 self.graph_with_uncertainties.bind("rdf", RDF)
                 self.graph_with_uncertainties.bind("edtfo", EDTFO)
@@ -524,11 +535,28 @@ class RDFGenerator():
         self.graph_with_uncertainties.add((node, RDF.value, object))
 
 
-    def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None) -> None:
         """ Method to create an uncertain value of solution 3.
         """
-        # node = BNode(uncertainty_id)
-        pass #TODO: Generieren der unsicheren Werte von Lösung 3
+        A = BNode("A3")
+        b = BNode()
+        c = BNode()
+        likelihood = 0.92
+
+        self.graph_with_uncertainties.add((A, RDF.type, CRM["R1_Reliability_Assessment"]))
+        self.graph_with_uncertainties.add((A, CRM["T1_assessed_the_reliability_of"], b))
+
+        self.graph_with_uncertainties.add((b, RDF.type, CRM["E13"]))
+        self.graph_with_uncertainties.add((b, RDF.Property, predicate))
+        self.graph_with_uncertainties.add((b, CRM["T2_assessed_the_reliability"], c))
+        self.graph_with_uncertainties.add((b, CRM["P140_assigned_the_reliability_to"], subject))
+        self.graph_with_uncertainties.add((b, CRM["P141_assigned"], object))
+
+        # Likelihood:
+        self.graph_with_uncertainties.add((c, CRM["P90_has_value"], Literal(likelihood, datatype = XSD["double"], normalize=True)))
+        self.graph_with_uncertainties.add((c, RDF.type, CRM["R2_Reliability"]))
+
+        self.graph_with_uncertainties.add((subject, predicate, object))
 
 
     def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -602,8 +630,9 @@ if __name__ == "__main__":
     # generator.generate_solution()
 
     # Uncertain Mint:
-    dataset = Dataset(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/input_data.csv")))
+    dataset = Dataset(str(Path(UNCO_PATH,r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")))
     dataset.add_uncertainty_flags(list_of_columns=[1], uncertainties_per_column=2)
     generator = RDFGenerator(dataset)
-    generator.load_prefixes(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/namespaces.csv")))
-    generator.generate_solution(7)
+    generator.load_prefixes(str(Path(UNCO_PATH,r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\namespaces.csv")))
+    
+    print(generator._get_datatype("3.50"))

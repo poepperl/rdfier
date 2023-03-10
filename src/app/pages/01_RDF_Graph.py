@@ -53,7 +53,7 @@ if uploaded_file:
         "Parameter:"
         col1, col2 = st.columns(2)
 
-        xml_format = col1.radio("RDF Format", ("XML", "Turtle"))
+        xml_format = col1.radio("RDF Format", ("Turtle", "XML"))
 
         graphical_version = col2.checkbox("Graph anzeigen lassen")
 
@@ -76,7 +76,7 @@ if uploaded_file:
 
     generate = st.button("RDF Graph generieren", on_click=generated)
 
-    if st.session_state.generate:
+    if st.session_state.generate and uploaded_prefixes:
         filename = "graph_model_"
         if options:
             dataset.add_uncertainty_flags(list_of_columns=[dataset.data.columns.get_loc(c) for c in options if c in dataset.data])
