@@ -17,6 +17,7 @@ BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
 EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
+CRMINF = Namespace("https://ontome.net/ns/crminf/")
 UNCO = Namespace("localhost:8501/id/")
 
 class RDFGenerator():
@@ -420,7 +421,7 @@ class RDFGenerator():
                                     case 3:
                                         self._generate_uncertain_value_solution_3(subject, predicate, object)
                                     case 4:
-                                        self._generate_uncertain_value_solution_4()
+                                        self._generate_uncertain_value_solution_4(subject, predicate, object, uncertainty_id)
                                     case 5:
                                         self._generate_uncertain_value_solution_5()
                                     case 6:
@@ -484,6 +485,9 @@ class RDFGenerator():
                 self.graph_with_uncertainties.bind("rdf", RDF)
                 self.prefixes["crm"] = CRM
                 self.prefixes["rdf"] = RDF
+            case 4:
+                self.graph_with_uncertainties.bind("crminf", CRMINF)
+                self.prefixes["crminf"] = CRMINF
             case 6:
                 self.graph_with_uncertainties.bind("rdf", RDF)
                 self.graph_with_uncertainties.bind("edtfo", EDTFO)
@@ -562,8 +566,13 @@ class RDFGenerator():
     def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 4.
         """
-        # node = BNode(uncertainty_id)
-        pass #TODO: Generieren der unsicheren Werte von Lösung 4
+        node = BNode(uncertainty_id)
+        
+        self.graph_with_uncertainties.add((subject, predicate, node))
+
+        self.graph_with_uncertainties.add((node, CRMINF["J5_holds_to_be"], Literal("uncertain")))
+        self.graph_with_uncertainties.add((node, RDF["type"], CRMINF["I2_Belief"]))
+        self.graph_with_uncertainties.add((node, CRMINF["J4_that"], object))
 
 
     def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:

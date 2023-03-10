@@ -21,5 +21,8 @@ data/input/*
 data/metadata/*
 data/output/*
 
+# Fuseki
+src/unco/features/server_starter.bat
+
 # Gitkeep
 !.gitkeep
