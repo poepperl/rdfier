@@ -280,26 +280,11 @@ class RDFGenerator():
         column_index : int
             Column index of the entry.
         """
-        wrong_splitlist = str(self.dataset.data.iat[row_index,column_index]).split(";")
-        right_splitlist = []
-        old_element = ""
-        for element in wrong_splitlist:
-            if len(element.split("\"")) % 2 == 0:
-                if len(old_element) > 0:
-                    old_element = old_element + ";" + element
-                else:
-                    old_element = old_element + element
-            else:
-                if old_element != "":
-                    right_splitlist.append(old_element)
-                right_splitlist.append(element)
-        
-        if len(old_element) > 0:
-            right_splitlist.append(old_element)
+        values_splitlist = str(self.dataset.data.iat[row_index,column_index]).split(";")
 
         nodelist = []
         namelist = []
-        for value in right_splitlist:
+        for value in values_splitlist:
             splitlist = str(value).split("^^")
             if len(splitlist) == 2:
                 value = splitlist[0]
@@ -324,32 +309,32 @@ class RDFGenerator():
                 case "id":
                     nodelist.append(BNode("i" + str(value).strip() + "c" + str(column_index)))
                     # nodelist.append(UNCO[value])
-                    namelist.append(value)
+                    namelist.append(str(value))
                 case "uri":
                     nodelist.append(self._get_uri_node(value, row_index, column_index))
-                    namelist.append(value)
+                    namelist.append(str(value))
                 case "":
                     lang_splitter = value.split("@")
                     if len(lang_splitter) >= 2 and len(lang_splitter[-1]) <= 3:
                         nodelist.append(Literal(lang_splitter[0], lang=lang_splitter[-1]))
-                        namelist.append(value)
+                        namelist.append(str(value))
                     elif column_index in self.column_languages:
                         nodelist.append(Literal(value, lang=self.column_languages[column_index]))
-                        namelist.append(value)
+                        namelist.append(str(value))
                     else:
                         nodelist.append(Literal(value))
-                        namelist.append(value)
+                        namelist.append(str(value))
                 case other:
                     if other[0] == "<" and other[-1] == ">":
                         other = other[1:-1]
                         nodelist.append(Literal(value, datatype=other))
-                        namelist.append(value)
+                        namelist.append(str(value))
                     else:
                         splitlist = other.split(":")
                         if len(splitlist) == 2:
                             if splitlist[0] in self.prefixes:
                                 nodelist.append(Literal(value, datatype = self.prefixes[splitlist[0]][splitlist[1]], normalize=True))
-                                namelist.append(value)
+                                namelist.append(str(value))
                             else:
                                 print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
                                 nodelist.append(None)
