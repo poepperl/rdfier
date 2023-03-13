@@ -431,7 +431,7 @@ class RDFGenerator():
                                     case 7:
                                         self._generate_uncertain_value_solution_7(subject, predicate, object, uncertainty_id)
                                     case 8:
-                                        self._generate_uncertain_value_solution_8()
+                                        self._generate_uncertain_value_solution_8(subject, predicate, object, uncertainty_id)
                                     case _:
                                         self.generated_graph.add((subject, predicate, object))
 
@@ -506,6 +506,9 @@ class RDFGenerator():
                 self.generated_graph.bind("edtfo", EDTFO)
                 self.prefixes["edtfo"] = EDTFO
                 self.prefixes["rdf"] = RDF
+            case 8:
+                self.generated_graph.bind("un", UN)
+                self.prefixes["un"] = UN
             case _:
                 pass
 
@@ -640,8 +643,11 @@ class RDFGenerator():
     def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 8.
         """
-        # node = BNode(uncertainty_id)
-        pass #TODO: Generieren der unsicheren Werte von Lösung 8
+        node = BNode(subject.n3())
+        
+        self.generated_graph.add((subject, UN["hasUncertainty"], node))
+
+        self.generated_graph.add((node, predicate, object))
 
 
     def _get_crm_properties(self):
