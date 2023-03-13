@@ -590,6 +590,9 @@ class RDFGenerator():
         likelihood = 0.92
         crm_property = "P3_uncertain_value" if predicate.n3()[1:-1] not in self.crm_properties else self.crm_properties[predicate.n3()[1:-1]]
         
+        self.generated_graph.add((CRM[crm_property], RDFS["domain"], CRM[f"PC{crm_property.split('.2')[0][1:]}_approximates"]))
+        self.generated_graph.add((CRM[crm_property], RDFS["range"], CRM["E55_Type"]))
+        
         self.generated_graph.add((subject, predicate, node))
 
         self.generated_graph.add((node, AMT["weight"], Literal(likelihood, datatype = XSD["double"], normalize=True)))
@@ -645,50 +648,50 @@ class RDFGenerator():
         nmo_prefix = "http://nomisma.org/ontology#"
 
         crm_dict = {
-            nmo_prefix + "hasCollection" : "P107_uncertain_member",
-            nmo_prefix + "hasTypeSeriesItem" : "P107_uncertain_member",
+            nmo_prefix + "hasCollection" : "P107.2_uncertain_member",
+            nmo_prefix + "hasTypeSeriesItem" : "P107.2_uncertain_member",
 
-            nmo_prefix + "hasContemporaryName" : "P102_uncertain_name_or_ethnic",
-            nmo_prefix + "hasScholarlyName" : "P102_uncertain_name_or_ethnic",
+            nmo_prefix + "hasContemporaryName" : "P102.2_uncertain_name_or_ethnic",
+            nmo_prefix + "hasScholarlyName" : "P102.2_uncertain_name_or_ethnic",
 
-            nmo_prefix + "hasDie" : "P16_uncertain_technique_or_object_used_for_creation",
-            nmo_prefix + "hasProductionObject" : "P16_uncertain_technique_or_object_used_for_creation",
-            nmo_prefix + "hasManufacture" : "P16_uncertain_technique_or_object_used_for_creation",
+            nmo_prefix + "hasDie" : "P16.2_uncertain_technique_or_object_used_for_creation",
+            nmo_prefix + "hasProductionObject" : "P16.2_uncertain_technique_or_object_used_for_creation",
+            nmo_prefix + "hasManufacture" : "P16.2_uncertain_technique_or_object_used_for_creation",
 
-            nmo_prefix + "hasCountermark" : "P103_uncertain_symbole_or_features",
-            nmo_prefix + "hasMintmark" : "P103_uncertain_symbole_or_features",
-            nmo_prefix + "hasSecondaryTreatment" : "P103_uncertain_symbole_or_features",
-            nmo_prefix + "hasPeculiarity" : "P103_uncertain_symbole_or_features",
-            nmo_prefix + "hasPeculiarityOfProduction" : "P103_uncertain_symbole_or_features",
-            nmo_prefix + "hasCorrosion" : "P103_uncertain_symbole_or_features",
-            nmo_prefix + "hasWear" : "P103_uncertain_symbole_or_features",
+            nmo_prefix + "hasCountermark" : "P103.2_uncertain_symbole_or_features",
+            nmo_prefix + "hasMintmark" : "P103.2_uncertain_symbole_or_features",
+            nmo_prefix + "hasSecondaryTreatment" : "P103.2_uncertain_symbole_or_features",
+            nmo_prefix + "hasPeculiarity" : "P103.2_uncertain_symbole_or_features",
+            nmo_prefix + "hasPeculiarityOfProduction" : "P103.2_uncertain_symbole_or_features",
+            nmo_prefix + "hasCorrosion" : "P103.2_uncertain_symbole_or_features",
+            nmo_prefix + "hasWear" : "P103.2_uncertain_symbole_or_features",
 
-            nmo_prefix + "hasObjectType" : "P67_uncertain_type",
-            nmo_prefix + "representsObjectType" : "P67_uncertain_type",
+            nmo_prefix + "hasObjectType" : "P67.2_uncertain_type",
+            nmo_prefix + "representsObjectType" : "P67.2_uncertain_type",
 
-            nmo_prefix + "hasAuthenticity" : "P138_uncertain_authenticity",
+            nmo_prefix + "hasAuthenticity" : "P138.2_uncertain_authenticity",
 
-            nmo_prefix + "hasAuthority" : "P14_uncertain_authority_or_issuer",
-            nmo_prefix + "hasIssuer" : "P14_uncertain_authority_or_issuer",
+            nmo_prefix + "hasAuthority" : "P14.2_uncertain_authority_or_issuer",
+            nmo_prefix + "hasIssuer" : "P14.2_uncertain_authority_or_issuer",
 
-            nmo_prefix + "hasMint" : "P189_uncertain_place",
-            nmo_prefix + "hasFindspot" : "P189_uncertain_place",
+            nmo_prefix + "hasMint" : "P189.2_uncertain_place",
+            nmo_prefix + "hasFindspot" : "P189.2_uncertain_place",
 
-            nmo_prefix + "hasMaterial" : "P137_uncertain_material",
+            nmo_prefix + "hasMaterial" : "P137.2_uncertain_material",
 
-            nmo_prefix + "hasContext" : "P136_uncertain_context_or_taxonomy",
+            nmo_prefix + "hasContext" : "P136.2_uncertain_context_or_taxonomy",
 
-            nmo_prefix + "hasAppearance" : "P139_uncertain_form",
-            nmo_prefix + "hasShape" : "P139_uncertain_form",
-            nmo_prefix + "hasEdge" : "P139_uncertain_form",
+            nmo_prefix + "hasAppearance" : "P139.2_uncertain_form",
+            nmo_prefix + "hasShape" : "P139.2_uncertain_form",
+            nmo_prefix + "hasEdge" : "P139.2_uncertain_form",
 
-            nmo_prefix + "hasFace" : "P19_uncertain_mode",
-            nmo_prefix + "hasObverse" : "P19_uncertain_mode",
-            nmo_prefix + "hasReverse" : "P19_uncertain_mode",
+            nmo_prefix + "hasFace" : "P19.2_uncertain_mode",
+            nmo_prefix + "hasObverse" : "P19.2_uncertain_mode",
+            nmo_prefix + "hasReverse" : "P19.2_uncertain_mode",
 
-            nmo_prefix + "hasPortrait" : "P62_uncertain_depiction",
-            nmo_prefix + "hasIconography" : "P62_uncertain_depiction",
-            nmo_prefix + "hasLegend" : "P62_uncertain_depiction"
+            nmo_prefix + "hasPortrait" : "P62.2_uncertain_depiction",
+            nmo_prefix + "hasIconography" : "P62.2_uncertain_depiction",
+            nmo_prefix + "hasLegend" : "P62.2_uncertain_depiction"
         }
         return crm_dict
     
