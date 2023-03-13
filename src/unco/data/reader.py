@@ -21,7 +21,7 @@ class Reader:
         self.type = self.path[self.path.rfind(".")+1:].lower()
 
         if len(self.type) > 4:
-            print(Fore.RED + "Please enter a complete path with datatype-prefix!" + Fore.RESET)
+            raise Exception("Please enter a complete path with datatype-prefix!")
 
     def read(self) -> pd.DataFrame:
         """
@@ -34,9 +34,9 @@ class Reader:
                 return pd.read_csv(file)
 
             except FileNotFoundError:
-                print(Fore.RED + "Warning: There is no CSV file on this path." + Fore.RESET)
+                raise Exception("Warning: There is no CSV file on this path.")
 
         else:
-            print(Fore.RED + "Warning: Unknown File-Type!" + Fore.RESET)
+            raise Exception("Warning: Unknown File-Type!")
         
         return pd.DataFrame({})

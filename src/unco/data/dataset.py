@@ -57,7 +57,7 @@ class Dataset:
             if number_of_uncertain_columns <= 0:
                 number_of_uncertain_columns = random.randrange(1, ncolums)
             elif number_of_uncertain_columns >= ncolums:
-                print(Fore.RED + "ERROR: Number of uncertan columns to high." + Fore.RESET)
+                raise IndexError("ERROR: Number of uncertain columns to high.")
                 return
 
             uncertain_columns = random.sample(range(1, ncolums), number_of_uncertain_columns)
@@ -65,10 +65,10 @@ class Dataset:
         else:
             # catch wrong inputs:
             if not(all(isinstance(n, int) for n in list_of_columns)):
-                print(Fore.RED + "ERROR: List of columns includes non int elements." + Fore.RESET)
+                raise Exception("ERROR: List of columns includes non int elements.")
                 return
             elif not(all(n < ncolums and n > 0 for n in list_of_columns)) or len(list_of_columns) > ncolums:
-                print(Fore.RED + "ERROR: Wrong column indices." + Fore.RESET)
+                raise Exception("ERROR: Wrong column indices.")
                 return
             
             uncertain_columns = list_of_columns
