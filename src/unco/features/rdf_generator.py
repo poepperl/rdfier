@@ -18,6 +18,7 @@ NM = Namespace("http://nomisma.org/id/")
 EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 CRMINF = Namespace("https://ontome.net/ns/crminf/")
+AMT = Namespace("http://academic-meta-tool.xyz/vocab#")
 UNCO = Namespace("localhost:8501/id/")
 
 class RDFGenerator():
@@ -41,12 +42,13 @@ class RDFGenerator():
         """
         self.dataset = dataset
         self.graph = Graph()
-        self.graph_with_uncertainties : Graph
+        self.generated_graph : Graph
         self.output_folder = Path(UNCO_PATH, "data/output")
         self.prefixes : dict[str,Namespace] = {"xsd" : XSD, "rdf" : RDF, "rdfs" : RDFS, "" : UNCO}
         self.triple_plan : dict[str, dict[str, set[int]]] = {}
         self.column_datatypes : dict[int, str] = {}
         self.column_languages : dict[int, str] = {}
+        self.crm_properties = {}
 
     def load_prefixes(self, path_data : str | pd.DataFrame):
         """
@@ -388,7 +390,7 @@ class RDFGenerator():
         xml_format : bool
             Output will be in XML format, otherwise Turtle.
         """
-        self.graph_with_uncertainties = self.graph
+        self.generated_graph = self.graph
 
         self._load_prefixes_of_solution(solution_id)
         # Get triple_plan:
@@ -423,7 +425,7 @@ class RDFGenerator():
                                     case 4:
                                         self._generate_uncertain_value_solution_4(subject, predicate, object, uncertainty_id)
                                     case 5:
-                                        self._generate_uncertain_value_solution_5()
+                                        self._generate_uncertain_value_solution_5(subject, predicate, object, uncertainty_id)
                                     case 6:
                                         self._generate_uncertain_value_solution_6(subject, predicate, object, uncertainty_id)
                                     case 7:
@@ -431,10 +433,10 @@ class RDFGenerator():
                                     case 8:
                                         self._generate_uncertain_value_solution_8()
                                     case _:
-                                        self.graph_with_uncertainties.add((subject, predicate, object))
+                                        self.generated_graph.add((subject, predicate, object))
 
                             else:
-                                    self.graph_with_uncertainties.add((subject, predicate, object))
+                                    self.generated_graph.add((subject, predicate, object))
 
         if solution_id:
             filename = "graph_model_" + str(solution_id)
@@ -448,10 +450,10 @@ class RDFGenerator():
         # Save RDF Graph:
         if xml_format:
             with open(Path(self.output_folder, filename + ".rdf"), 'w') as file:
-                    file.write(self.graph_with_uncertainties.serialize(format="xml"))
+                    file.write(self.generated_graph.serialize(format="xml"))
         else:
             with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
-                    file.write(self.graph_with_uncertainties.serialize(format="ttl"))
+                    file.write(self.generated_graph.serialize(format="ttl"))
 
 
     def _load_prefixes_of_solution(self, solution_id : int = 0) -> None:
@@ -465,37 +467,43 @@ class RDFGenerator():
         """
         match solution_id:
             case 1:
-                self.graph_with_uncertainties.bind("crm", CRM)
-                self.graph_with_uncertainties.bind("bmo", BMO)
-                self.graph_with_uncertainties.bind("rdf", RDF)
-                self.graph_with_uncertainties.bind("nm", NM)
+                self.generated_graph.bind("crm", CRM)
+                self.generated_graph.bind("bmo", BMO)
+                self.generated_graph.bind("rdf", RDF)
+                self.generated_graph.bind("nm", NM)
                 self.prefixes["crm"] = CRM
                 self.prefixes["bmo"] = BMO
                 self.prefixes["rdf"] = RDF
                 self.prefixes["nm"] = NM
             case 2:
-                self.graph_with_uncertainties.bind("rdf", RDF)
-                self.graph_with_uncertainties.bind("nm", NM)
-                self.graph_with_uncertainties.bind("un", UN)
+                self.generated_graph.bind("rdf", RDF)
+                self.generated_graph.bind("nm", NM)
+                self.generated_graph.bind("un", UN)
                 self.prefixes["rdf"] = RDF
                 self.prefixes["nm"] = NM
                 self.prefixes["un"] = UN
             case 3:
-                self.graph_with_uncertainties.bind("crm", CRM)
-                self.graph_with_uncertainties.bind("rdf", RDF)
+                self.generated_graph.bind("crm", CRM)
+                self.generated_graph.bind("rdf", RDF)
                 self.prefixes["crm"] = CRM
                 self.prefixes["rdf"] = RDF
             case 4:
-                self.graph_with_uncertainties.bind("crminf", CRMINF)
+                self.generated_graph.bind("crminf", CRMINF)
                 self.prefixes["crminf"] = CRMINF
+            case 5:
+                self.generated_graph.bind("amt", AMT)
+                self.generated_graph.bind("crm", CRM)
+                self.prefixes["amt"] = AMT
+                self.prefixes["crm"] = CRM
+                self.crm_properties = self._get_crm_properties()
             case 6:
-                self.graph_with_uncertainties.bind("rdf", RDF)
-                self.graph_with_uncertainties.bind("edtfo", EDTFO)
+                self.generated_graph.bind("rdf", RDF)
+                self.generated_graph.bind("edtfo", EDTFO)
                 self.prefixes["edtfo"] = EDTFO
                 self.prefixes["rdf"] = RDF
             case 7:
-                self.graph_with_uncertainties.bind("rdf", RDF)
-                self.graph_with_uncertainties.bind("edtfo", EDTFO)
+                self.generated_graph.bind("rdf", RDF)
+                self.generated_graph.bind("edtfo", EDTFO)
                 self.prefixes["edtfo"] = EDTFO
                 self.prefixes["rdf"] = RDF
             case _:
@@ -514,12 +522,12 @@ class RDFGenerator():
             Column index of the uncertain value.
         """
         node = BNode(uncertainty_id)
-        self.graph_with_uncertainties.add((subject, predicate, object))
-        self.graph_with_uncertainties.add((node, CRM["P141_assigned"], object))
-        self.graph_with_uncertainties.add((node, CRM["P140_assigned_attribute_to"], subject))
-        self.graph_with_uncertainties.add((node, BMO["PX_Property"], predicate))
-        self.graph_with_uncertainties.add((node, RDF["type"], CRM["E13"]))
-        self.graph_with_uncertainties.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
+        self.generated_graph.add((subject, predicate, object))
+        self.generated_graph.add((node, CRM["P141_assigned"], object))
+        self.generated_graph.add((node, CRM["P140_assigned_attribute_to"], subject))
+        self.generated_graph.add((node, BMO["PX_Property"], predicate))
+        self.generated_graph.add((node, RDF["type"], CRM["E13"]))
+        self.generated_graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
 
     def _generate_uncertain_value_solution_2(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -534,9 +542,9 @@ class RDFGenerator():
             Column index of the uncertain value.
         """
         node = BNode(uncertainty_id)
-        self.graph_with_uncertainties.add((subject, predicate, node))
-        self.graph_with_uncertainties.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
-        self.graph_with_uncertainties.add((node, RDF.value, object))
+        self.generated_graph.add((subject, predicate, node))
+        self.generated_graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
+        self.generated_graph.add((node, RDF.value, object))
 
 
     def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None) -> None:
@@ -547,20 +555,20 @@ class RDFGenerator():
         c = BNode()
         likelihood = 0.92
 
-        self.graph_with_uncertainties.add((A, RDF.type, CRM["R1_Reliability_Assessment"]))
-        self.graph_with_uncertainties.add((A, CRM["T1_assessed_the_reliability_of"], b))
+        self.generated_graph.add((A, RDF.type, CRM["R1_Reliability_Assessment"]))
+        self.generated_graph.add((A, CRM["T1_assessed_the_reliability_of"], b))
 
-        self.graph_with_uncertainties.add((b, RDF.type, CRM["E13"]))
-        self.graph_with_uncertainties.add((b, RDF.Property, predicate))
-        self.graph_with_uncertainties.add((b, CRM["T2_assessed_the_reliability"], c))
-        self.graph_with_uncertainties.add((b, CRM["P140_assigned_the_reliability_to"], subject))
-        self.graph_with_uncertainties.add((b, CRM["P141_assigned"], object))
+        self.generated_graph.add((b, RDF.type, CRM["E13"]))
+        self.generated_graph.add((b, RDF.Property, predicate))
+        self.generated_graph.add((b, CRM["T2_assessed_the_reliability"], c))
+        self.generated_graph.add((b, CRM["P140_assigned_the_reliability_to"], subject))
+        self.generated_graph.add((b, CRM["P141_assigned"], object))
 
         # Likelihood:
-        self.graph_with_uncertainties.add((c, CRM["P90_has_value"], Literal(likelihood, datatype = XSD["double"], normalize=True)))
-        self.graph_with_uncertainties.add((c, RDF.type, CRM["R2_Reliability"]))
+        self.generated_graph.add((c, CRM["P90_has_value"], Literal(likelihood, datatype = XSD["double"], normalize=True)))
+        self.generated_graph.add((c, RDF.type, CRM["R2_Reliability"]))
 
-        self.graph_with_uncertainties.add((subject, predicate, object))
+        self.generated_graph.add((subject, predicate, object))
 
 
     def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -568,18 +576,24 @@ class RDFGenerator():
         """
         node = BNode(uncertainty_id)
         
-        self.graph_with_uncertainties.add((subject, predicate, node))
+        self.generated_graph.add((subject, predicate, node))
 
-        self.graph_with_uncertainties.add((node, CRMINF["J5_holds_to_be"], Literal("uncertain")))
-        self.graph_with_uncertainties.add((node, RDF["type"], CRMINF["I2_Belief"]))
-        self.graph_with_uncertainties.add((node, CRMINF["J4_that"], object))
+        self.generated_graph.add((node, CRMINF["J5_holds_to_be"], Literal("uncertain")))
+        self.generated_graph.add((node, RDF["type"], CRMINF["I2_Belief"]))
+        self.generated_graph.add((node, CRMINF["J4_that"], object))
 
 
-    def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 5.
         """
-        # node = BNode(uncertainty_id)
-        pass #TODO: Generieren der unsicheren Werte von Lösung 5
+        node = BNode(uncertainty_id)
+        likelihood = 0.92
+        crm_property = "P3_uncertain_value" if predicate.n3()[1:-1] not in self.crm_properties else self.crm_properties[predicate.n3()[1:-1]]
+        
+        self.generated_graph.add((subject, predicate, node))
+
+        self.generated_graph.add((node, AMT["weight"], Literal(likelihood, datatype = XSD["double"], normalize=True)))
+        self.generated_graph.add((node, CRM[crm_property], object))
 
 
     def _generate_uncertain_value_solution_6(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -595,11 +609,11 @@ class RDFGenerator():
         """
         node = BNode(uncertainty_id)
 
-        self.graph_with_uncertainties.add((subject, predicate, object))
-        self.graph_with_uncertainties.add((node, RDF["object"], object))
-        self.graph_with_uncertainties.add((node, RDF["subject"], subject))
-        self.graph_with_uncertainties.add((node, RDF["predicate"], predicate))
-        self.graph_with_uncertainties.add((node, RDF["type"], EDTFO["UncertainStatement"]))
+        self.generated_graph.add((subject, predicate, object))
+        self.generated_graph.add((node, RDF["object"], object))
+        self.generated_graph.add((node, RDF["subject"], subject))
+        self.generated_graph.add((node, RDF["predicate"], predicate))
+        self.generated_graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
 
 
     def _generate_uncertain_value_solution_7(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -615,9 +629,9 @@ class RDFGenerator():
         """
         node = BNode(uncertainty_id)
 
-        self.graph_with_uncertainties.add((subject, predicate, node))
-        self.graph_with_uncertainties.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
-        self.graph_with_uncertainties.add((node, RDF.value, object))
+        self.generated_graph.add((subject, predicate, node))
+        self.generated_graph.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
+        self.generated_graph.add((node, RDF.value, object))
 
 
     def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
@@ -626,6 +640,58 @@ class RDFGenerator():
         # node = BNode(uncertainty_id)
         pass #TODO: Generieren der unsicheren Werte von Lösung 8
 
+
+    def _get_crm_properties(self):
+        nmo_prefix = "http://nomisma.org/ontology#"
+
+        crm_dict = {
+            nmo_prefix + "hasCollection" : "P107_uncertain_member",
+            nmo_prefix + "hasTypeSeriesItem" : "P107_uncertain_member",
+
+            nmo_prefix + "hasContemporaryName" : "P102_uncertain_name_or_ethnic",
+            nmo_prefix + "hasScholarlyName" : "P102_uncertain_name_or_ethnic",
+
+            nmo_prefix + "hasDie" : "P16_uncertain_technique_or_object_used_for_creation",
+            nmo_prefix + "hasProductionObject" : "P16_uncertain_technique_or_object_used_for_creation",
+            nmo_prefix + "hasManufacture" : "P16_uncertain_technique_or_object_used_for_creation",
+
+            nmo_prefix + "hasCountermark" : "P103_uncertain_symbole_or_features",
+            nmo_prefix + "hasMintmark" : "P103_uncertain_symbole_or_features",
+            nmo_prefix + "hasSecondaryTreatment" : "P103_uncertain_symbole_or_features",
+            nmo_prefix + "hasPeculiarity" : "P103_uncertain_symbole_or_features",
+            nmo_prefix + "hasPeculiarityOfProduction" : "P103_uncertain_symbole_or_features",
+            nmo_prefix + "hasCorrosion" : "P103_uncertain_symbole_or_features",
+            nmo_prefix + "hasWear" : "P103_uncertain_symbole_or_features",
+
+            nmo_prefix + "hasObjectType" : "P67_uncertain_type",
+            nmo_prefix + "representsObjectType" : "P67_uncertain_type",
+
+            nmo_prefix + "hasAuthenticity" : "P138_uncertain_authenticity",
+
+            nmo_prefix + "hasAuthority" : "P14_uncertain_authority_or_issuer",
+            nmo_prefix + "hasIssuer" : "P14_uncertain_authority_or_issuer",
+
+            nmo_prefix + "hasMint" : "P189_uncertain_place",
+            nmo_prefix + "hasFindspot" : "P189_uncertain_place",
+
+            nmo_prefix + "hasMaterial" : "P137_uncertain_material",
+
+            nmo_prefix + "hasContext" : "P136_uncertain_context_or_taxonomy",
+
+            nmo_prefix + "hasAppearance" : "P139_uncertain_form",
+            nmo_prefix + "hasShape" : "P139_uncertain_form",
+            nmo_prefix + "hasEdge" : "P139_uncertain_form",
+
+            nmo_prefix + "hasFace" : "P19_uncertain_mode",
+            nmo_prefix + "hasObverse" : "P19_uncertain_mode",
+            nmo_prefix + "hasReverse" : "P19_uncertain_mode",
+
+            nmo_prefix + "hasPortrait" : "P62_uncertain_depiction",
+            nmo_prefix + "hasIconography" : "P62_uncertain_depiction",
+            nmo_prefix + "hasLegend" : "P62_uncertain_depiction"
+        }
+        return crm_dict
+    
 
 if __name__ == "__main__":
     from pathlib import Path
