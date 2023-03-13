@@ -40,7 +40,7 @@ def start_stop_fuseki():
 
 # Begin webpage---------------------------------------------------------------------------
 
-st.title('RDF Grapher')
+st.title('Uncertainty Comparator')
 
 uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
 

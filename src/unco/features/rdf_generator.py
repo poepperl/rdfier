@@ -513,16 +513,18 @@ class RDFGenerator():
                 pass
 
 
-    def _generate_uncertain_value_solution_1(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_1(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 1.
         Attributes
         ----------
-        coin : IdentifiedNode
-            Node of the coin, which gets an uncertain value.
-        row_index : int
-            Row index of the uncertain value.
-        column_index : int
-            Column index of the uncertain value.
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
         """
         node = BNode(uncertainty_id)
         self.generated_graph.add((subject, predicate, object))
@@ -533,16 +535,18 @@ class RDFGenerator():
         self.generated_graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
 
-    def _generate_uncertain_value_solution_2(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_2(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 2.
         Attributes
         ----------
-        coin : IdentifiedNode
-            Node of the coin, which gets an uncertain value.
-        row_index : int
-            Row index of the uncertain value.
-        column_index : int
-            Column index of the uncertain value.
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
         """
         node = BNode(uncertainty_id)
         self.generated_graph.add((subject, predicate, node))
@@ -550,8 +554,16 @@ class RDFGenerator():
         self.generated_graph.add((node, RDF.value, object))
 
 
-    def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None) -> None:
+    def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None) -> None:
         """ Method to create an uncertain value of solution 3.
+        Attributes
+        ----------
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
         """
         A = BNode("A3")
         b = BNode()
@@ -574,8 +586,18 @@ class RDFGenerator():
         self.generated_graph.add((subject, predicate, object))
 
 
-    def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 4.
+        Attributes
+        ----------
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
         """
         node = BNode(uncertainty_id)
         
@@ -588,6 +610,16 @@ class RDFGenerator():
 
     def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 5.
+        Attributes
+        ----------
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
         """
         node = BNode(uncertainty_id)
         likelihood = 0.92
@@ -602,16 +634,18 @@ class RDFGenerator():
         self.generated_graph.add((node, CRM[crm_property], object))
 
 
-    def _generate_uncertain_value_solution_6(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_6(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 6.
         Attributes
         ----------
-        coin : IdentifiedNode
-            Node of the coin, which gets an uncertain value.
-        row_index : int
-            Row index of the uncertain value.
-        column_index : int
-            Column index of the uncertain value.
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
         """
         node = BNode(uncertainty_id)
 
@@ -622,16 +656,18 @@ class RDFGenerator():
         self.generated_graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
 
 
-    def _generate_uncertain_value_solution_7(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_7(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 7.
         Attributes
         ----------
-        coin : IdentifiedNode
-            Node of the coin, which gets an uncertain value.
-        row_index : int
-            Row index of the uncertain value.
-        column_index : int
-            Column index of the uncertain value.
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
         """
         node = BNode(uncertainty_id)
 
@@ -640,8 +676,18 @@ class RDFGenerator():
         self.generated_graph.add((node, RDF.value, object))
 
 
-    def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal | None, predicate : URIRef | Literal | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
         """ Method to create an uncertain value of solution 8.
+        Attributes
+        ----------
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
         """
         node = BNode(subject.n3())
         
@@ -651,6 +697,9 @@ class RDFGenerator():
 
 
     def _get_crm_properties(self):
+        """
+        Method which returns the dictionary for the .2 properties of solution 5.
+        """
         nmo_prefix = "http://nomisma.org/ontology#"
 
         crm_dict = {
