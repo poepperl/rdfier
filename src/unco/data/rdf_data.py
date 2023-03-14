@@ -4,7 +4,7 @@ import numpy as np
 from unco.data import Reader
 
 
-class Dataset:
+class RDFData:
     """
         Class that represents the dataset of an unco input.
 
@@ -108,7 +108,7 @@ class Dataset:
             self.likelihoods[value] = likelihoods
 
 if __name__ == "__main__":
-    p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\1certain2uncertainMints\input_data.csv")
+    p = RDFData(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\1certain2uncertainMints\input_data.csv")
     # p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
     p.add_uncertainty_flags(number_of_uncertain_columns=1,uncertainties_per_column=3)
     # p.add_alternatives()

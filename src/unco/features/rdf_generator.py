@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 
 from unco import UNCO_PATH
-from unco.data.dataset import Dataset
+from unco.data.rdf_data import RDFData
 from unco.data.reader import Reader
 
 from rdflib import Graph, Namespace, BNode, Literal, URIRef
@@ -32,7 +32,7 @@ class RDFGenerator():
         RDF graph which will be created.
     """
 
-    def __init__(self, dataset: Dataset) -> None:
+    def __init__(self, dataset: RDFData) -> None:
         """
         Parameters
         ----------
@@ -742,7 +742,7 @@ if __name__ == "__main__":
     # generator.generate_solution()
 
     # Uncertain Mint:
-    dataset = Dataset(str(Path(UNCO_PATH,r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")))
+    dataset = RDFData(str(Path(UNCO_PATH,r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv")))
     dataset.add_uncertainty_flags(list_of_columns=[1], uncertainties_per_column=2)
     generator = RDFGenerator(dataset)
     generator.load_prefixes(str(Path(UNCO_PATH,r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\namespaces.csv")))
