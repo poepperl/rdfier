@@ -63,12 +63,15 @@ class FusekiServer:
         data = open(path, 'r', encoding='utf-8').read()
         requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
 
+
     def sparql_query(self, query : str):
         """
             Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
         """
-        response = requests.post('http://localhost:3030/ds/sparql', data={'query': query})
+        headers = {"Accept" : "text/plain"}
+        response = requests.post('http://localhost:3030/ds/sparql', data={'query': query}, headers=headers)
         return response.text
+
 
     def stop_server(self) -> None:
         """
@@ -81,10 +84,11 @@ class FusekiServer:
         else:
             raise RuntimeError("Server is already stopped.")
 
+
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\cn_example.txt")
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph_model_1.rdf")
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
     SELECT ?su ?p ?o
@@ -93,7 +97,6 @@ if __name__ == "__main__":
     }
     """
     print(f.sparql_query(query))
-    input()
     f.stop_server()
 
 
