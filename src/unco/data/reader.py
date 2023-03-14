@@ -1,6 +1,4 @@
 import pandas as pd
-from colorama import Fore  # prints warnings in red
-
 
 class Reader:
     """
@@ -21,7 +19,7 @@ class Reader:
         self.type = self.path[self.path.rfind(".")+1:].lower()
 
         if len(self.type) > 4:
-            raise Exception("Please enter a complete path with datatype-prefix!")
+            raise FileNotFoundError("Please enter a complete path with datatype-prefix!")
 
     def read(self) -> pd.DataFrame:
         """
@@ -34,9 +32,9 @@ class Reader:
                 return pd.read_csv(file)
 
             except FileNotFoundError:
-                raise Exception("Warning: There is no CSV file on this path.")
+                raise FileNotFoundError("There is no CSV file on this path.")
 
         else:
-            raise Exception("Warning: Unknown File-Type!")
+            raise ValueError("Unknown File-Type!")
         
         return pd.DataFrame({})

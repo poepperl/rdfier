@@ -1,7 +1,5 @@
-from fileinput import filename
 from pathlib import Path
 from unco import UNCO_PATH
-from colorama import Fore
 import shutil
 import requests
 
@@ -38,8 +36,8 @@ class Grapher():
         elif path[-3:] == "ttl":
             params["from"] = "ttl"
         else:
-            print(Fore.RED + "ERROR: Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input." + Fore.RESET)
-            return
+            raise ValueError("Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input.")
+        
         response = requests.post('https://www.ldf.fi/service/rdf-grapher', params=params, stream=True)
 
         filename = str(Path(UNCO_PATH,"data/output/downloaded_graph.png"))

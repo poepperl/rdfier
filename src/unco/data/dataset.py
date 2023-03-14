@@ -2,7 +2,6 @@ import pandas as pd
 import random
 import numpy as np
 from unco.data import Reader
-from colorama import Fore
 
 
 class Dataset:
@@ -57,19 +56,16 @@ class Dataset:
             if number_of_uncertain_columns <= 0:
                 number_of_uncertain_columns = random.randrange(1, ncolums)
             elif number_of_uncertain_columns >= ncolums:
-                raise IndexError("ERROR: Number of uncertain columns to high.")
-                return
+                raise IndexError("Number of uncertain columns to high.")
 
             uncertain_columns = random.sample(range(1, ncolums), number_of_uncertain_columns)
 
         else:
             # catch wrong inputs:
             if not(all(isinstance(n, int) for n in list_of_columns)):
-                raise Exception("ERROR: List of columns includes non int elements.")
-                return
+                raise ValueError("List of columns includes non int elements.")
             elif not(all(n < ncolums and n > 0 for n in list_of_columns)) or len(list_of_columns) > ncolums:
-                raise Exception("ERROR: Wrong column indices.")
-                return
+                raise ValueError("Wrong column indices.")
             
             uncertain_columns = list_of_columns
 
@@ -101,7 +97,7 @@ class Dataset:
         for value in self.alternatives:
             likelihoods = []
             sum = 0
-            for alternative in self.alternatives[value]:
+            for _ in self.alternatives[value]:
                 randomvalue = random.randint(1,10)
                 sum += randomvalue
                 likelihoods.append(randomvalue)

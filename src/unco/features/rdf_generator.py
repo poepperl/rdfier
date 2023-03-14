@@ -1,12 +1,11 @@
 import pandas as pd
 from pathlib import Path
-from colorama import Fore
 
 from unco import UNCO_PATH
 from unco.data.dataset import Dataset
 from unco.data.reader import Reader
 
-from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
+from rdflib import Graph, Namespace, BNode, Literal, URIRef
 
 # Standard Namespaces------------------------------------------------------------------------
 RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
@@ -91,15 +90,14 @@ class RDFGenerator():
 
                 if subject_id in self.triple_plan:
                     if len(self.triple_plan[subject_id]["subject"]) > 0:
-                        print(Fore.RED + "ERROR: Duplicate subject reference: " + subject_id + Fore.RESET)
+                        raise SyntaxError("Duplicate subject reference")
                     self.triple_plan[subject_id]["subject"] = set([index])
                     
                 else:
                     self.triple_plan[subject_id] = {"subject" : set([index]), "object" : set()}
 
             elif len(splitlist) > 2:
-                print(Fore.RED + "ERROR: Column " + str(column) + " has more than one subject reference marker '**'." + Fore.RESET)
-
+                raise SyntaxError(f"Column {str(column)} has more than one subject reference marker '**'.")
 
             splitlist = str(new_column_name).split("__")
             if len(splitlist) == 2:
@@ -113,7 +111,7 @@ class RDFGenerator():
                     self.triple_plan[object_id] = {"object" : set([index]), "subject" : set()}
 
             elif len(splitlist) > 2:
-                print(Fore.RED + "ERROR: Column " + str(column) + " has more than one object reference marker '__'." + Fore.RESET)
+                raise SyntaxError(f"Column {str(column)} has more than one object reference marker '__'.")
 
             elif index != 0:
                 first_col_objects.add(index)
@@ -144,7 +142,7 @@ class RDFGenerator():
                 self.column_datatypes[index] = type_splitlist[1]
 
             elif len(type_splitlist) > 2:
-                print(Fore.RED + "ERROR: Duplicate type reference (**) in " + str(column) + Fore.RESET)
+                raise SyntaxError("Duplicate type reference (^^) in " + str(column))
 
             elif len(language_splitlist) >= 2 and len(language_splitlist[-1]) <= 3:
                 new_column_name = new_column_name[:-len(language_splitlist[-1]) -1]
@@ -163,13 +161,13 @@ class RDFGenerator():
             Entry of the csv table.
         """
         try:
-            number = int(value)
+            _ = int(value)
             return "xsd:long"
         except:
             pass
         
         try:
-            number = float(value)
+            _ = float(value)
             return "xsd:float"
         except:
             pass
@@ -191,9 +189,9 @@ class RDFGenerator():
                 if splitlist[0] in self.prefixes:
                     return self.prefixes[splitlist[0]][splitlist[1]]
                 else:
-                    print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                    raise ValueError(f"Unknown prefix {splitlist[0]} in column {str(column_index)} and row {str(row_index)}")
             else:
-                print(Fore.RED + "ERROR: Unknown URI " + string + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                raise ValueError(f"Unknown uri {splitlist[0]} in column {str(column_index)} and row {str(row_index)}")
 
 
     def _get_subject_node(self, row_index : int, column_index : int) -> URIRef | Literal | None:
@@ -215,7 +213,7 @@ class RDFGenerator():
             datatype = splitlist[1]
 
         elif len(splitlist) > 2:
-            print(Fore.RED + "ERROR: Find multiple datatypes in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+            raise SyntaxError(f"Find multiple datatypes in column {str(column_index)} and row {str(row_index)}")
 
         elif column_index in self.column_datatypes:
             datatype = self.column_datatypes[column_index]
@@ -249,11 +247,9 @@ class RDFGenerator():
                         if splitlist[0] in self.prefixes:
                             return Literal(value, datatype = self.prefixes[splitlist[0]][splitlist[1]], normalize=True)
                         else:
-                            print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                            raise ValueError(f"Unknown prefix {splitlist[0]} in column {str(column_index)} and row {str(row_index)}")
                     else:
-                        print(Fore.RED + "ERROR: Unknown Datatype " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
-        print(Fore.RED + "ERROR: Couldn't add node in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
-        return None
+                        raise ValueError(f"Unknown datatype {value} in column {str(column_index)} and row {str(row_index)}")
 
 
     def _get_predicate(self, column_index) -> tuple[URIRef | Literal | None, str]:
@@ -290,7 +286,7 @@ class RDFGenerator():
                 value = splitlist[0]
                 datatype = splitlist[1]
             elif len(splitlist) > 2:
-                print(Fore.RED + "ERROR: Find multiple datatypes in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
+                raise SyntaxError(f"Find multiple datatypes in column {str(column_index)} and row {str(row_index)}")
             elif column_index in self.column_datatypes:
                 datatype = self.column_datatypes[column_index]
 
@@ -336,13 +332,9 @@ class RDFGenerator():
                                 nodelist.append(Literal(value, datatype = self.prefixes[splitlist[0]][splitlist[1]], normalize=True))
                                 namelist.append(str(value))
                             else:
-                                print(Fore.RED + "ERROR: Unknown prefix " + splitlist[0] + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
-                                nodelist.append(None)
-                                namelist.append("")
+                                raise ValueError(f"Unknown prefix {splitlist[0]} in column {str(column_index)} and row {str(row_index)}")
                         else:
-                            print(Fore.RED + "ERROR: Unknown Datatype " + value + " in column " + str(column_index) + " and row " + str(row_index) + Fore.RESET)
-                            nodelist.append(None)
-                            namelist.append("")
+                            raise ValueError(f"Unknown datatype {value} in column {str(column_index)} and row {str(row_index)}")
                     
         return nodelist, namelist
 
@@ -358,11 +350,13 @@ class RDFGenerator():
         """
         return ''.join(c for c in value if c.isalnum())
 
+
     def _get_sparql_prefixes(self) -> str:
         text = ""
         for prefix in self.prefixes:
             text += "PREFIX " + prefix + ": <" + self.prefixes[prefix] + ">" + "\n"
         return text
+
 
     def generate_solution(self,solution_id : int = 0, xml_format : bool = True) -> None:
         """ 
