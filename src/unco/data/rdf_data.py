@@ -125,7 +125,7 @@ class RDFData:
             if 1 <= len(language_splitlist[-1]) <= 3:
                 return "@" + language_splitlist[-1], string[:-len(language_splitlist[-1]) -1]
             else:
-                warn(f"\033[93mEntry {language_splitlist[-1]} is not a right language acronym.\033[0m")
+                warn(f"\033[93mEntry \"{language_splitlist[-1]}\" is not a right language acronym.\033[0m")
 
         return None, string
         

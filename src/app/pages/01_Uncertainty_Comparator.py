@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
-from unco.features.rdf_graph_generator import RDFGenerator
+from unco.features.graph_generator import GraphGenerator
 from unco.features.grapher import Grapher
 from unco.features.fuseki import FusekiServer
 from pathlib import Path
@@ -47,7 +47,7 @@ def generate():
         st.session_state.solution = None
         st.session_state.filename = "graph"
     
-    generator = RDFGenerator(dataset)
+    generator = GraphGenerator(dataset)
     generator.load_prefixes(pd.read_csv(uploaded_prefixes))
     generator.generate_solution(st.session_state.solution, xml_format=(xml_format=="XML"))
 
