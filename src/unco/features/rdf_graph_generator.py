@@ -32,14 +32,14 @@ class RDFGenerator():
         RDF graph which will be created.
     """
 
-    def __init__(self, dataset: RDFData) -> None:
+    def __init__(self, rdfdata: RDFData) -> None:
         """
         Parameters
         ----------
         dataset : Dataset
             Dataset which contains the data of the rdf graph.
         """
-        self.dataset = dataset
+        self.rdfdata = rdfdata
         self.graph = Graph()
         self.generated_graph : Graph
         self.output_folder = Path(UNCO_PATH, "data/output")
@@ -68,114 +68,6 @@ class RDFGenerator():
 
         for prefix in self.prefixes:
             self.graph.bind(prefix, self.prefixes[prefix])
-    
-
-    def _generate_triple_plan(self):
-        """
-            Method which locates the subject columns and the corresponding objects and saves it in the triple_plan.
-        """
-        first_col_has_ref = (False, '')
-        first_col_objects = set()
-
-        for index, column in enumerate(self.dataset.data):
-            new_column_name = column
-
-            splitlist = str(new_column_name).split("**")
-            if len(splitlist) == 2:
-                subject_id = splitlist[-1]
-                new_column_name = splitlist[0]
-
-                if index == 0:
-                    first_col_has_ref = (True, subject_id)
-
-                if subject_id in self.triple_plan:
-                    if len(self.triple_plan[subject_id]["subject"]) > 0:
-                        raise SyntaxError("Duplicate subject reference")
-                    self.triple_plan[subject_id]["subject"] = set([index])
-                    
-                else:
-                    self.triple_plan[subject_id] = {"subject" : set([index]), "object" : set()}
-
-            elif len(splitlist) > 2:
-                raise SyntaxError(f"Column {str(column)} has more than one subject reference marker '**'.")
-
-            splitlist = str(new_column_name).split("__")
-            if len(splitlist) == 2:
-                object_id = splitlist[0]
-                new_column_name = splitlist[1]
-
-                if object_id in self.triple_plan:
-                    self.triple_plan[object_id]["object"].add(index)
-
-                else:
-                    self.triple_plan[object_id] = {"object" : set([index]), "subject" : set()}
-
-            elif len(splitlist) > 2:
-                raise SyntaxError(f"Column {str(column)} has more than one object reference marker '__'.")
-
-            elif index != 0:
-                first_col_objects.add(index)
-
-
-            if first_col_has_ref[0]:
-                self.triple_plan[first_col_has_ref[1]]["object"].update(first_col_objects)
-                self.triple_plan["**"] = self.triple_plan.pop(first_col_has_ref[1])
-
-            else:
-                self.triple_plan["**"] = {"object" : first_col_objects, "subject" : set([0])}
-        
-            self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename column
-
-
-    def _get_datatype_and_language(self):
-        """
-            Method which read the datatype or language of all columns.
-        """
-        for index, column in enumerate(self.dataset.data):
-            new_column_name = str(column)
-
-            type_splitlist = str(column).split("^^")
-            language_splitlist = str(column).split("@")
-
-            if len(type_splitlist) == 2:
-                new_column_name = type_splitlist[0]
-                self.column_datatypes[index] = type_splitlist[1]
-
-            elif len(type_splitlist) > 2:
-                raise SyntaxError("Duplicate type reference (^^) in " + str(column))
-
-            elif len(language_splitlist) >= 2 and len(language_splitlist[-1]) <= 3:
-                new_column_name = new_column_name[:-len(language_splitlist[-1]) -1]
-                self.column_languages[index] = language_splitlist[-1]
-            
-            self.dataset.data.rename({column : new_column_name}, axis=1, inplace=True) # Rename column
-    
-
-    def _get_datatype(self, value : str):
-        """
-            Method which tries to find the fitting datatype of a value.
-
-        Parameters
-        ----------
-        value : str
-            Entry of the csv table.
-        """
-        try:
-            _ = int(value)
-            return "xsd:long"
-        except:
-            pass
-        
-        try:
-            _ = float(value)
-            return "xsd:float"
-        except:
-            pass
-
-        if value.lower() == "true" or value.lower() == "false":
-            return "xsd:boolean"
-        else:
-            return ""
     
 
     def _get_uri_node(self, string : str, row_index : int, column_index : int):

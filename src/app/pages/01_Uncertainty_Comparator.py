@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
-from unco.features.rdf_generator import RDFGenerator
+from unco.features.rdf_graph_generator import RDFGenerator
 from unco.features.grapher import Grapher
 from unco.features.fuseki import FusekiServer
 from pathlib import Path

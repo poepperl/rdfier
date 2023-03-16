@@ -1,8 +1,5 @@
 import pandas as pd
-import random
-import numpy as np
-from unco.data import Reader
-
+from warnings import warn
 
 class RDFData:
     """
@@ -18,99 +15,150 @@ class RDFData:
         Dictionary to save some alternatives for all uncertain values. The slternatives are saved as: alternatives[(row,column)] = list(alternatives)
     """
 
-    def __init__(self, path_data: str | pd.DataFrame) -> None:
+    def __init__(self, dataframe: pd.DataFrame) -> None:
         """
         Parameters
         ----------
         path : str
             Path to the input-data.
         """
-        if type(path_data) == pd.DataFrame:
-            self.data = path_data
-        else:
-            self.data = Reader(path_data).read()
+        self.data = dataframe
+        self.triple_plan: dict = {}
+        self.types_and_languages: dict[tuple[int,int], list[str]] = {}
+
         self.uncertainty_flags: dict = {}
         self.alternatives: dict = {}
         self.likelihoods: dict = {}
-        self.NUMBER_OF_ALTERNATIVES : int = 0
 
-    def add_uncertainty_flags(self, number_of_uncertain_columns: int=0, list_of_columns: list[int] =[], uncertainties_per_column: int = 0) -> None:
-        """ Method to create random uncertaintie flags.
+        self._generate_triple_plan()
+        self._generate_type_and_language_plan()
+
+
+    def _generate_triple_plan(self):
+        """
+            Method which locates the subject columns and the corresponding objects and saves it in the triple_plan.
+        """
+        first_col_has_ref = (False, '')
+        first_col_objects = set()
+
+        for index, column in enumerate(self.data):
+            new_column_name = column
+
+            splitlist = str(new_column_name).split("**")
+            if len(splitlist) == 2:
+                subject_id = splitlist[-1]
+                new_column_name = splitlist[0]
+
+                if index == 0:
+                    first_col_has_ref = (True, subject_id)
+
+                if subject_id in self.triple_plan:
+                    if len(self.triple_plan[subject_id]["subject"]) > 0:
+                        raise SyntaxError("Duplicate subject reference")
+                    self.triple_plan[subject_id]["subject"] = set([index])
+                    
+                else:
+                    self.triple_plan[subject_id] = {"subject" : set([index]), "object" : set()}
+
+            elif len(splitlist) > 2:
+                raise SyntaxError(f"Column {str(column)} has more than one subject reference marker '**'.")
+
+            splitlist = str(new_column_name).split("__")
+            if len(splitlist) == 2:
+                object_id = splitlist[0]
+                new_column_name = splitlist[1]
+
+                if object_id in self.triple_plan:
+                    self.triple_plan[object_id]["object"].add(index)
+
+                else:
+                    self.triple_plan[object_id] = {"object" : set([index]), "subject" : set()}
+
+            elif len(splitlist) > 2:
+                raise SyntaxError(f"Column {str(column)} has more than one object reference marker '__'.")
+
+            elif index != 0:
+                first_col_objects.add(index)
+
+
+            if first_col_has_ref[0]:
+                self.triple_plan[first_col_has_ref[1]]["object"].update(first_col_objects)
+                self.triple_plan["**"] = self.triple_plan.pop(first_col_has_ref[1])
+
+            else:
+                self.triple_plan["**"] = {"object" : first_col_objects, "subject" : set([0])}
+        
+            self.data.rename({column : new_column_name}, axis=1, inplace=True)
+
+
+    def _generate_type_and_language_plan(self):
+        """
+            Method which read the datatype or language of all columns.
+        """
+        # Column type or language:
+        for col_index, column in enumerate(self.data):
+            column_type_language, column_name = self._get_type_language(str(column))
+
+            # Entry type or language:
+            for cell_index, cell in enumerate(self.data[column]):
+                splitlist = str(cell).split(";")
+                cell_types_languages = splitlist
+                for entry_index, entry in enumerate(splitlist):
+                    tl, _ = self._get_type_language(entry)
+
+                    cell_types_languages[entry_index] = tl if tl is not None else column_type_language if column_type_language is not None else self._get_datatype(entry)
+                
+                self.types_and_languages[(cell_index,col_index)] = cell_types_languages
+            
+            if column_name != str(column): self.data.rename({column : column_name}, axis=1, inplace=True) # Rename column
+
+
+    def _get_type_language(self, string : str) -> tuple[str,str]:
+        type_splitlist = string.split("^^")
+
+        if len(type_splitlist) >= 2:
+            return "^^" + type_splitlist[-1], string[:-len(type_splitlist[-1]) -2]
+
+        language_splitlist = string.split("@")
+
+        if len(language_splitlist) >= 2:
+            if 1 <= len(language_splitlist[-1]) <= 3:
+                return "@" + language_splitlist[-1], string[:-len(language_splitlist[-1]) -1]
+            else:
+                warn(f"\033[93mEntry {language_splitlist[-1]} is not a right language acronym.\033[0m")
+
+        return None, string
+        
+
+    def _get_datatype(self, string : str) -> str:
+        """
+            Method which outputs the fitting datatype of a value.
 
         Parameters
         ----------
-        number_of_uncertain_columns : int, optional
-            The number of columns, which get uncertainty flags. Only used, if list_of_columns is empty. By default, the number is chosen randomly between 1 and the number of columns.
-        list_of_columns: list[int], optional
-            List of columns which should get uncertainty flags.
-        uncertainties_per_column: int, optional
-            Number of uncertainties each column. By default, the number is chosen randomly each column beween 1 and the number of rows.
+        string : str
+            Entry of the csv table.
         """
+        try:
+            _ = int(string)
+            return "^^xsd:long"
+        except:
+            pass
+        
+        try:
+            _ = float(string)
+            return "^^xsd:float"
+        except:
+            pass
 
-        nrows, ncolums = self.data.shape
-
-        list_of_columns = list(set(list_of_columns)) # Remove all duplicates from list
-
-        if len(list_of_columns) == 0:
-            # get random number of uncertainties between 1 and the number of columns
-            if number_of_uncertain_columns <= 0:
-                number_of_uncertain_columns = random.randrange(1, ncolums)
-            elif number_of_uncertain_columns >= ncolums:
-                raise IndexError("Number of uncertain columns to high.")
-
-            uncertain_columns = random.sample(range(1, ncolums), number_of_uncertain_columns)
-
+        if string.lower() == "true" or string.lower() == "false":
+            return "^^xsd:boolean"
         else:
-            # catch wrong inputs:
-            if not(all(isinstance(n, int) for n in list_of_columns)):
-                raise ValueError("List of columns includes non int elements.")
-            elif not(all(n < ncolums and n > 0 for n in list_of_columns)) or len(list_of_columns) > ncolums:
-                raise ValueError("Wrong column indices.")
-            
-            uncertain_columns = list_of_columns
+            return None
+        
 
-        uncertainty_flags = {}
-        for column in uncertain_columns:
-            uncertainty_flags[column] = []
-            if uncertainties_per_column < 1 or uncertainties_per_column > nrows:
-                uncertain_values = random.sample(range(0, nrows), random.randint(1, nrows)) # Get random row indices
-            else:
-                uncertain_values = random.sample(range(0, nrows), uncertainties_per_column)
-            
-            for row in uncertain_values:
-                uncertainty_flags[column].append(row)
-
-        self.uncertainty_flags = uncertainty_flags
-
-
-    def add_alternatives(self):
-        for column in self.uncertainty_flags:
-            values_of_column = set(self.data[self.data.columns[column]].tolist())
-            for row in self.uncertainty_flags[column]:
-                set_of_alternatives = values_of_column - {self.data.iat[row,column]}
-                if self.NUMBER_OF_ALTERNATIVES < 1 or self.NUMBER_OF_ALTERNATIVES > len(set_of_alternatives):
-                    self.alternatives[(row,column)] = random.sample(list(set_of_alternatives),random.randint(1,len(set_of_alternatives)))
-                else:
-                    self.alternatives[(row,column)] = random.sample(list(set_of_alternatives),self.NUMBER_OF_ALTERNATIVES)
-
-    def add_likelihoods(self):
-        for value in self.alternatives:
-            likelihoods = []
-            sum = 0
-            for _ in self.alternatives[value]:
-                randomvalue = random.randint(1,10)
-                sum += randomvalue
-                likelihoods.append(randomvalue)
-
-            likelihoods = np.array(likelihoods)
-            likelihoods = np.divide(likelihoods,sum)
-
-            self.likelihoods[value] = likelihoods
 
 if __name__ == "__main__":
-    p = RDFData(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\1certain2uncertainMints\input_data.csv")
-    # p = Dataset(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\cointest_5.csv")
-    p.add_uncertainty_flags(number_of_uncertain_columns=1,uncertainties_per_column=3)
-    # p.add_alternatives()
-    # p.add_likelihoods()
-    print(p.uncertainty_flags)
+    file = open(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv", encoding='utf-8')
+    p = RDFData(pd.read_csv(file))
+    print(p.data, p.types_and_languages)
