@@ -482,5 +482,7 @@ if __name__ == "__main__":
     rdfdata = RDFData(pd.read_csv(file))
     generator = GraphGenerator(rdfdata)
     generator.load_prefixes(prefixes)
+    print(generator.rdfdata.data)
     generator.generate_solution(xml_format=False)
+    print(generator.rdfdata.data)
     

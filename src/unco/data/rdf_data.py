@@ -104,11 +104,13 @@ class RDFData:
                 splitlist = str(cell).split(";")
                 cell_types_languages = splitlist
                 for entry_index, entry in enumerate(splitlist):
-                    tl, _ = self._get_type_language(entry)
-
+                    tl, entry_name = self._get_type_language(entry)
+                    splitlist[entry_index] = entry_name
                     cell_types_languages[entry_index] = tl if tl is not None else column_type_language if column_type_language is not None else self._get_datatype(entry)
                 
                 self.types_and_languages[(cell_index,col_index)] = cell_types_languages
+
+                self.data.iat[cell_index,col_index] = "; ".join(splitlist) # Rename cell
             
             if column_name != str(column): self.data.rename({column : column_name}, axis=1, inplace=True) # Rename column
 
