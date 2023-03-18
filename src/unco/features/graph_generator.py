@@ -36,8 +36,8 @@ class GraphGenerator():
         """
         Parameters
         ----------
-        dataset : Dataset
-            Dataset which contains the data of the rdf graph.
+        rdfdata : RDFData
+            Object which contains the data of the rdf graph.
         """
         self.rdfdata = rdfdata
         self.graph = Graph()
@@ -52,7 +52,7 @@ class GraphGenerator():
 
         Parameters
         ----------
-        path : str
+        path_data : str
             Path to the csv file with header: (prefix, namespace) or DataFrame of the file.
         """
         if type(path_data) == pd.DataFrame:
@@ -80,6 +80,8 @@ class GraphGenerator():
         """
         self.graph = Graph()
         self._load_prefixes_of_solution(solution_id)
+        for prefix, nspaces in self.prefixes.items():
+            self.graph.bind(prefix, nspaces)
 
         for plan in self.rdfdata.triple_plan.values():
             subject_colindex = plan["subject"].copy().pop()
@@ -141,11 +143,21 @@ class GraphGenerator():
 
 
     def _get_node(self, value: str, type: str):
+        """
+        Method which returns the node of the given value and type.
+
+        Parameter
+        ---------
+        value : str
+            String of the entry of the value of the node.
+        type : str
+            String of the type or the language of the node.
+        """
         if type is None:
             return Literal(value)
         elif type[0:2] == "^^":
             if type == "^^id":
-                return BNode()
+                return BNode(value + type)
             if type == "^^uri":
                 return self._get_uri_node(value)
             else:
@@ -156,19 +168,27 @@ class GraphGenerator():
             raise ValueError(f"Could not translate type \"{type}\"")
             
     
-    def _get_uri_node(self, type: str):
-        if type[0] == "<" and type[-1] == ">":
-            type = type[1:-1]
-            return URIRef(type)
+    def _get_uri_node(self, string: str):
+        """
+        Method which return the uri node of the given type.
+
+        Parameter
+        ---------
+        string : str
+            String of the uri. Can be a uri in prefix shape or the complete uri with starting < and ending >.
+        """
+        if string[0] == "<" and string[-1] == ">":
+            string = string[1:-1]
+            return URIRef(string)
         else:
-            splitlist = type.split(":")
+            splitlist = string.split(":")
             if len(splitlist) >= 2:
                 if splitlist[0] in self.prefixes:
-                    return self.prefixes[splitlist[0]][type[len(splitlist[0]):]]
+                    return self.prefixes[splitlist[0]][string[len(splitlist[0])+1:]]
                 else:
-                    raise ValueError(f"Unknown prefix {splitlist[0]} in uri \"{type}\". To add prefixes for namespaces use the method \"load_prefixes\".")
+                    raise ValueError(f"Unknown prefix {splitlist[0]} in uri \"{string}\". To add prefixes for namespaces use the method \"load_prefixes\".")
             else:
-                raise ValueError(f"Could not find prefix in uri \"{type}\"")
+                raise ValueError(f"Could not find prefix in uri \"{string}\"")
 
 
     def _load_prefixes_of_solution(self, solution_id : int = 0) -> None:
@@ -482,7 +502,5 @@ if __name__ == "__main__":
     rdfdata = RDFData(pd.read_csv(file))
     generator = GraphGenerator(rdfdata)
     generator.load_prefixes(prefixes)
-    print(generator.rdfdata.data)
     generator.generate_solution(xml_format=False)
-    print(generator.rdfdata.data)
-    
+    print(generator.prefixes)

@@ -102,7 +102,7 @@ class RDFData:
             # Entry type or language:
             for cell_index, cell in enumerate(self.data[column]):
                 splitlist = str(cell).split(";")
-                cell_types_languages = splitlist
+                cell_types_languages = splitlist.copy()
                 for entry_index, entry in enumerate(splitlist):
                     tl, entry_name = self._get_type_language(entry)
                     splitlist[entry_index] = entry_name
@@ -161,6 +161,6 @@ class RDFData:
 
 
 if __name__ == "__main__":
-    file = open(r"D:\Dokumente\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv", encoding='utf-8')
+    file = open(r"C:\Users\scrum\Documents\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv", encoding='utf-8')
     p = RDFData(pd.read_csv(file))
     print(p.data, p.types_and_languages)
