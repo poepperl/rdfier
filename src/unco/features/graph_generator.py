@@ -429,9 +429,7 @@ class GraphGenerator():
         
         self.graph.add((subject, UN["hasUncertainty"], node))
 
-        n = self.graph.add((node, predicate, object))
-
-        self.graph.add((n, NM["hastype"], NM["star"]))
+        self.graph.add((node, predicate, object))
 
 
     def _get_crm_properties(self):
