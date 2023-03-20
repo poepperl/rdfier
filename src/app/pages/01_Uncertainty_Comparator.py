@@ -13,7 +13,7 @@ st.set_page_config(
     page_title="RDF Grapher",
     layout="wide")
 
-# Set session states--------------------------------------------------------------------
+# Set session states------------------------------------------------------------------------------------------------------------
 
 if "disabled" not in st.session_state:
     st.session_state.disabled = False
@@ -36,6 +36,9 @@ if "path" not in st.session_state:
 if "server" not in st.session_state:
     st.session_state.server = FusekiServer()
 
+if "generator" not in st.session_state:
+    st.session_state.generator = None
+
 def generate():
     rdf_data = rdfdata
     u_generator = UncertaintyGenerator(rdf_data)
@@ -50,9 +53,9 @@ def generate():
         st.session_state.solution = 0
         st.session_state.filename = "graph"
     
-    generator = GraphGenerator(rdf_data)
-    generator.load_prefixes(pd.read_csv(uploaded_prefixes))
-    generator.generate_solution(st.session_state.solution, xml_format=(xml_format=="XML"))
+    st.session_state.generator = GraphGenerator(rdf_data)
+    st.session_state.generator.load_prefixes(pd.read_csv(uploaded_prefixes))
+    st.session_state.generator.generate_solution(st.session_state.solution, xml_format=(xml_format=="XML"))
 
     if xml_format=="XML":
         st.session_state.path = Path(UNCO_PATH, "data/output/" + st.session_state.filename + ".rdf")
@@ -69,7 +72,7 @@ def start_stop_fuseki():
         st.session_state.server.upload_data(str(st.session_state.path))
         st.session_state.fuseki = True
 
-# Begin webpage---------------------------------------------------------------------------
+# Begin webpage-----------------------------------------------------------------------------------------------------------------
 
 st.title('Uncertainty Comparator')
 
@@ -103,7 +106,7 @@ if uploaded_file:
     
     uploaded_prefixes = st.file_uploader("Prefixtabelle", type=["csv"], accept_multiple_files=False)
 
-    # Graph generieren-------------------------------------------------------------------------------
+    # Graph generieren----------------------------------------------------------------------------------------------------------
 
     st.button("RDF Graph generieren", on_click=generate)
 
@@ -122,23 +125,21 @@ if uploaded_file:
         else:
             st.code(st.session_state.path.read_text())
         
-        # Fusekianbindung-------------------------------------------------------------------------------
 
-        start_fuseki = st.button("Start/Stop Fusekiserver", on_click=start_stop_fuseki)
+        # SPARQL-Queries -------------------------------------------------------------------------------------------------------
 
         sparql_prefixes = open(Path(UNCO_PATH, "data/output/" + st.session_state.filename + "_prefixes.txt")).read()
 
-        if st.session_state.fuseki:
-            qcol1, qcol2 = st.columns(2)
-            
-            query_input = qcol2.file_uploader("Query hochladen:", type=["txt", "rq"], accept_multiple_files=False)
+        qcol1, qcol2 = st.columns(2)
+        
+        query_input = qcol2.file_uploader("Query hochladen:", type=["txt", "rq"], accept_multiple_files=False)
 
-            if query_input:
-                querytext = query_input.getvalue().decode("utf-8")
-                query = qcol1.text_area("Query eingeben:", querytext)
-            else:
-                query = qcol1.text_area("Query eingeben:", sparql_prefixes + """\n\nSELECT ?su ?p ?o\nWHERE {\n    ?su ?p ?o\n}""")
+        if query_input:
+            querytext = query_input.getvalue().decode("utf-8")
+            query = qcol1.text_area("Query eingeben:", querytext)
+        else:
+            query = qcol1.text_area("Query eingeben:", sparql_prefixes + """\n\nSELECT ?su ?p ?o\nWHERE {\n    ?su ?p ?o\n}""")
 
-            start_query = st.button("Query ausführen")
-            if start_query:
-                st.code(st.session_state.server.sparql_query(query))
+        start_query = st.button("Query ausführen")
+        if start_query and st.session_state.generator is not None:
+            st.dataframe(st.session_state.generator.run_query(query), 1500, 400)

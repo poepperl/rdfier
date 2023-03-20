@@ -490,7 +490,7 @@ class GraphGenerator():
     
 
     def run_query(self, query : str) -> pd.DataFrame:
-        result = generator.graph.query(query)
+        result = self.graph.query(query)
 
         result.serialize(format="csv", destination=str(Path(self.output_folder, "query_results.csv")))
 
