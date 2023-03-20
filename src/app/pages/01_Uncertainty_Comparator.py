@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
+from unco.data.uncertainty_generator import UncertaintyGenerator
 from unco.features.graph_generator import GraphGenerator
 from unco.features.grapher import Grapher
 from unco.features.fuseki import FusekiServer
@@ -36,18 +37,20 @@ if "server" not in st.session_state:
     st.session_state.server = FusekiServer()
 
 def generate():
+    rdf_data = rdfdata
+    u_generator = UncertaintyGenerator(rdf_data)
     st.session_state.filename = "graph_model_"
     if options:
-        dataset.add_uncertainty_flags(list_of_columns=[dataset.data.columns.get_loc(c) for c in options if c in dataset.data])
+        rdf_data = u_generator.add_uncertainty_flags(list_of_columns=[rdf_data.data.columns.get_loc(c) for c in options if c in rdf_data.data])
         st.session_state.filename += str(st.session_state.solution)
     elif numb_uncertain_columns != 0 and numb_uncertain_values != 0:
-        dataset.add_uncertainty_flags(number_of_uncertain_columns=numb_uncertain_columns, uncertainties_per_column=numb_uncertain_values)
+        rdf_data = u_generator.add_uncertainty_flags(number_of_uncertain_columns=numb_uncertain_columns, uncertainties_per_column=numb_uncertain_values)
         st.session_state.filename += str(st.session_state.solution)
     else:
-        st.session_state.solution = None
+        st.session_state.solution = 0
         st.session_state.filename = "graph"
     
-    generator = GraphGenerator(dataset)
+    generator = GraphGenerator(rdf_data)
     generator.load_prefixes(pd.read_csv(uploaded_prefixes))
     generator.generate_solution(st.session_state.solution, xml_format=(xml_format=="XML"))
 
@@ -75,7 +78,7 @@ uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=F
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     st.dataframe(df, 1500, 400)
-    dataset = RDFData(df)
+    rdfdata = RDFData(df)
 
     with st.container():
         "Parameter:"
@@ -88,15 +91,15 @@ if uploaded_file:
     with st.expander("Unsicherheiten"):
         checkcol1, checkcol2, checkcol3 = st.columns(3)
         st.session_state.solution = checkcol1.selectbox("Modellierung auswählen:", (1,2,3,4,5,6,7,8))
-        numb_uncertain_columns = checkcol2.number_input("Anzahl unsicherer Spalten:", min_value=0, max_value=len(list(dataset.data.columns))-1, step=1, disabled=st.session_state.disabled)
-        numb_uncertain_values = checkcol3.number_input("Anzahl unsicherer Werte pro Spalte:", min_value=0, max_value=len(dataset.data), step=1)
+        numb_uncertain_columns = checkcol2.number_input("Anzahl unsicherer Spalten:", min_value=0, max_value=len(list(rdfdata.data.columns))-1, step=1, disabled=st.session_state.disabled)
+        numb_uncertain_values = checkcol3.number_input("Anzahl unsicherer Werte pro Spalte:", min_value=0, max_value=len(rdfdata.data), step=1)
 
         manuel = st.checkbox("Spalten manuell auswählen", key="disabled")
         options = []
         if manuel:
             options = st.multiselect(
             'Wähle die Subjektspalten aus, in denen Unsicherheit generiert werden soll:',
-            list(dataset.data.columns)[1:])
+            list(rdfdata.data.columns)[1:])
     
     uploaded_prefixes = st.file_uploader("Prefixtabelle", type=["csv"], accept_multiple_files=False)
 

@@ -10,7 +10,7 @@ class UncertaintyGenerator():
         self.rdfdata = rdfdata
         self.NUMBER_OF_ALTERNATIVES : int
 
-    def add_uncertainty_flags(self, number_of_uncertain_columns: int=0, list_of_columns: list[int] =[], uncertainties_per_column: int = 0) -> None:
+    def add_uncertainty_flags(self, number_of_uncertain_columns: int=0, list_of_columns: list[int] =[], uncertainties_per_column: int = 0) -> RDFData:
         """ Method to create random uncertaintie flags.
 
         Parameters
@@ -57,6 +57,7 @@ class UncertaintyGenerator():
                 uncertainty_flags[column].append(row)
 
         self.rdfdata.uncertainty_flags = uncertainty_flags
+        return self.rdfdata
 
 
     def add_alternatives(self):

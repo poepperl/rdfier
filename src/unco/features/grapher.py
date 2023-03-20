@@ -28,14 +28,12 @@ class Grapher():
             Method, which downloads the graphical version of the given rdf graph. Output will be saved in "data/output/downloaded_graph.png".
         """
         data = open(path, 'r', encoding='utf-8').read()
-        params = {"rdf": data, "to": "png"}
+        params = {"rdf": data}
         path = str(path)
 
         if path[-3:] == "rdf" or path[-3:] == "xml" or path[-3:] == "txt":
             params["from"] = "xml"
-        elif path[-3:] == "ttl":
-            params["from"] = "ttl"
-        else:
+        elif path[-3:] != "ttl":
             raise ValueError("Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input.")
         
         response = requests.post('https://www.ldf.fi/service/rdf-grapher', params=params, stream=True)
