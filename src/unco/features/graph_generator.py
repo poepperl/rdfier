@@ -127,7 +127,7 @@ class GraphGenerator():
                             else:
                                     self.graph.add((subject, predicate, object))
 
-        filename = "graph" if 0 < solution_id < 9 else f"graph_{solution_id}"
+        filename = f"graph_model_{solution_id}" if 0 < solution_id and solution_id < 9 else "graph"
 
         # Save sparql-prefix txt:
         with open(Path(self.output_folder, filename + "_prefixes.txt"), 'w') as file:
@@ -153,11 +153,12 @@ class GraphGenerator():
         type : str
             String of the type or the language of the node.
         """
+        value = value.strip()
         if type is None:
             return Literal(value)
         elif type[0:2] == "^^":
             if type == "^^id":
-                return BNode(value + type)
+                return BNode("id" + value)
             if type == "^^uri":
                 return self._get_uri_node(value)
             else:
@@ -486,6 +487,16 @@ class GraphGenerator():
         return crm_dict
     
 
+    def run_query(self, query : str) -> pd.DataFrame:
+        result = self.graph.query(query)
+
+        result.serialize(format="csv", destination=str(Path(self.output_folder, "query_results.csv")))
+
+        csvdata = pd.read_csv(open(Path(self.output_folder, "query_results.csv"), 'r', encoding='utf-8'))
+
+        return pd.DataFrame(csvdata)
+    
+
 if __name__ == "__main__":
     # Corpus Nummorum Beispiel:
     # file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/input_data.csv")), encoding='utf-8')
@@ -503,4 +514,14 @@ if __name__ == "__main__":
     generator = GraphGenerator(rdfdata)
     generator.load_prefixes(prefixes)
     generator.generate_solution(xml_format=False)
-    print(generator.prefixes)
+
+    test_query =    """
+                    PREFIX nmo: <http://nomisma.org/ontology#>
+
+                    SELECT ?su ?p ?o
+                    WHERE {
+                        ?su ?p ?o
+                    }
+                    """
+    
+    print(generator.run_query(test_query))

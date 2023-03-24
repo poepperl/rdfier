@@ -105,8 +105,8 @@ class RDFData:
                 cell_types_languages = splitlist.copy()
                 for entry_index, entry in enumerate(splitlist):
                     tl, entry_name = self._get_type_language(entry)
-                    splitlist[entry_index] = entry_name
-                    cell_types_languages[entry_index] = tl if tl is not None else column_type_language if column_type_language is not None else self._get_datatype(entry)
+                    splitlist[entry_index] = entry_name.strip()
+                    cell_types_languages[entry_index] = tl.strip() if tl is not None else column_type_language if column_type_language is not None else self._get_datatype(entry)
                 
                 self.types_and_languages[(cell_index,col_index)] = cell_types_languages
 
@@ -124,7 +124,7 @@ class RDFData:
         language_splitlist = string.split("@")
 
         if len(language_splitlist) >= 2:
-            if 1 <= len(language_splitlist[-1]) <= 3:
+            if 1 <= len(language_splitlist[-1]) and len(language_splitlist[-1]) <= 3:
                 return "@" + language_splitlist[-1], string[:-len(language_splitlist[-1]) -1]
             else:
                 warn(f"\033[93mEntry \"{language_splitlist[-1]}\" is not a right language acronym.\033[0m")

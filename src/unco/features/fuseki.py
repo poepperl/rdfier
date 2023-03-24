@@ -88,7 +88,7 @@ class FusekiServer:
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph_model_1.rdf")
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\input\rdfstar_example.ttl")
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
     SELECT ?su ?p ?o
