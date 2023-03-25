@@ -13,7 +13,6 @@ pytest # testing
 tqdm # progress bars
 pandas # data manipulation
 rdflib # rdf-graphs
-colorama # colored printings
 requests # communication between python and fuseki server
 pathlib
 psutil # close fuseki console
