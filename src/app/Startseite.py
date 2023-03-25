@@ -13,6 +13,8 @@ st.set_page_config(
     page_title="Uncertainty Comparator",
     layout="wide")
 
+if "origin_data" not in st.session_state:
+    st.session_state.origin_data = None
 
 if "rdfdata" not in st.session_state:
     st.session_state.rdfdata = None
@@ -39,8 +41,8 @@ st.title('Uncertainty Comparator')
 uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
 
 if uploaded_file and not st.session_state.uploaded:
-    data = pd.read_csv(uploaded_file)
-    st.session_state.rdfdata = RDFData(data)
+    st.session_state.origin_data = pd.read_csv(uploaded_file)
+    st.session_state.rdfdata = RDFData(st.session_state.origin_data.copy())
     st.session_state.uploaded = True
 
 elif st.session_state.uploaded and not uploaded_file:
@@ -53,7 +55,7 @@ elif st.session_state.uploaded and not uploaded_file:
 
 if st.session_state.rdfdata is not None:
 
-    st.dataframe(st.session_state.rdfdata.data, 1500, 400)
+    st.dataframe(st.session_state.origin_data, 1500, 400)
 
     with st.container():
         col1, col2 = st.columns(2)
@@ -91,7 +93,7 @@ if st.session_state.rdfdata is not None:
             st.session_state.data_state = (xml_format, solution, numb_uncertain_values, numb_uncertain_columns, options)
             if numb_uncertain_values != 0:
                 u_generator = UncertaintyGenerator(st.session_state.rdfdata)
-                options = [rdf_data.data.columns.get_loc(c) for c in options if c in st.session_state.rdfdata]
+                options = [rdf_data.data.columns.get_loc(c) for c in options if c in st.session_state.rdfdata.data]
 
                 rdf_data = u_generator.add_uncertainty_flags(number_of_uncertain_columns=numb_uncertain_columns, list_of_columns=options, uncertainties_per_column=numb_uncertain_values)
                 filename = "graph_model_" + str(solution)
@@ -102,7 +104,7 @@ if st.session_state.rdfdata is not None:
 
             st.session_state.generator = GraphGenerator(rdf_data)
             st.session_state.generator.load_prefixes(pd.read_csv(uploaded_prefixes))
-            st.session_state.generator.generate_solution(solution, xml_format=(xml_format=="XML"))
+            st.session_state.generator.generate_solution(solution if numb_uncertain_values != 0 else 0, xml_format=(xml_format=="XML"))
 
             if xml_format=="XML":
                 st.session_state.path = Path(UNCO_PATH, "data/output/" + filename + ".rdf")

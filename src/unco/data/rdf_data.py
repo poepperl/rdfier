@@ -101,18 +101,19 @@ class RDFData:
 
             # Entry type or language:
             for cell_index, cell in enumerate(self.data[column]):
-                splitlist = str(cell).split(";")
-                cell_types_languages = splitlist.copy()
-                for entry_index, entry in enumerate(splitlist):
-                    tl, entry_name = self._get_type_language(entry)
-                    splitlist[entry_index] = entry_name.strip()
-                    cell_types_languages[entry_index] = tl.strip() if tl is not None else column_type_language if column_type_language is not None else self._get_datatype(entry)
-                
-                self.types_and_languages[(cell_index,col_index)] = cell_types_languages
+                if pd.notnull(cell):
+                    splitlist = str(cell).split(";")
+                    cell_types_languages = splitlist.copy()
+                    for entry_index, entry in enumerate(splitlist):
+                        tl, entry_name = self._get_type_language(entry)
+                        splitlist[entry_index] = entry_name.strip()
+                        cell_types_languages[entry_index] = tl.strip() if tl is not None else column_type_language if column_type_language is not None else self._get_datatype(entry)
+                    
+                    self.types_and_languages[(cell_index,col_index)] = cell_types_languages
 
-                self.data.iat[cell_index,col_index] = "; ".join(splitlist) # Rename cell
+                    self.data.iat[cell_index,col_index] = "; ".join(splitlist) # Rename cell
             
-            if column_name != str(column): self.data.rename({column : column_name}, axis=1, inplace=True) # Rename column
+            if column_name != str(column): self.data.columns.values[col_index] = column_name # Rename column
 
 
     def _get_type_language(self, string : str) -> tuple[str,str]:
