@@ -4,7 +4,6 @@ import psutil
 import time
 import requests
 from unco import UNCO_PATH
-from colorama import Fore
 
 class FusekiServer:
     """
@@ -39,7 +38,7 @@ class FusekiServer:
             Method, which starts the fuseki server.
         """
         if self.server:
-            print(Fore.YELLOW + "WARNING: Server is already running." + Fore.RESET)
+            raise RuntimeError("Server is already running.")
         else:
             self.server = subprocess.Popen(self.starter_path, creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
             time.sleep(3)
@@ -54,24 +53,25 @@ class FusekiServer:
             Path to the file that should be uploaded.
         """
         if self.server == None:
-            print(Fore.RED + "ERROR: Server is shut down. Please start the server." + Fore.RESET)
-            return
+            raise RuntimeError("Server is shut down. Please start the server.")
         if path[-3:] == "rdf" or path[-3:] == "xml" or path[-3:] == "txt":
             headers = {'Content-Type': r'application/rdf+xml;charset=utf-8', 'Filename' : path}
         elif path[-3:] == "ttl":
             headers = {'Content-Type': r'text/turtle;charset=utf-8'}
         else:
-            print(Fore.RED + "ERROR: Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input." + Fore.RESET)
-            return
+            raise ValueError("Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input.")
         data = open(path, 'r', encoding='utf-8').read()
-        newdata = requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
+        requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
+
 
     def sparql_query(self, query : str):
         """
             Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
         """
-        response = requests.post('http://localhost:3030/ds/sparql', data={'query': query})
+        headers = {"Accept" : "text/plain"}
+        response = requests.post('http://localhost:3030/ds/sparql', data={'query': query}, headers=headers)
         return response.text
+
 
     def stop_server(self) -> None:
         """
@@ -82,12 +82,13 @@ class FusekiServer:
                 child.kill()
             self.server = None
         else:
-            print(Fore.YELLOW + "WARNING: Server already stopped." + Fore.RESET)
+            raise RuntimeError("Server is already stopped.")
+
 
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\cn_example.txt")
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\input\rdfstar_example.ttl")
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
     SELECT ?su ?p ?o
@@ -96,7 +97,6 @@ if __name__ == "__main__":
     }
     """
     print(f.sparql_query(query))
-    input()
     f.stop_server()
 
 

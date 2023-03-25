@@ -1,4 +1,4 @@
 from .reader import Reader
-from .dataset import Dataset
+from .rdf_data import RDFData
 
-__all__ = ["Reader", "Dataset"]
+__all__ = ["Reader", "RDFData"]

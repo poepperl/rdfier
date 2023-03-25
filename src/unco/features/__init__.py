@@ -1,3 +1,3 @@
-from .rdf_generator import RDFGenerator
+from .graph_generator import GraphGenerator
 
-__all__ = ["RDFGenerator"]
+__all__ = ["GraphGenerator"]
