@@ -28,13 +28,13 @@ Project Organization
 
 --------
 
-Getting started
----------------
+Installation
+------------
 
 ```shell
-python -m venv .venv                // nur bei erster Ausführung notwendig
+python -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt     // nur bei erster Ausführung notwendig
+pip install -r requirements.txt
 streamlit run src/app/Startseite.py
 ```
 
@@ -52,8 +52,8 @@ oder für die Version mit SPARQL-Schnittstelle und randomisierter Unsicherheit:
 streamlit run src/app_masterarbeit/Startseite.py
 ```
 
-Dokumentation generieren
-------------------------
+Dokumentation generieren und öffnen
+-----------------------------------
 
 ```
 cd docs
@@ -62,11 +62,4 @@ make html
 ```
 
 -> Öffne docs/build/html/index.html in Browser
-
-Create package
---------------
-
-```shell
-python src/setup.py sdist
-```
 
