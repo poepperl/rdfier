@@ -13,9 +13,6 @@ st.set_page_config(
     page_title="Uncertainty Comparator",
     layout="wide")
 
-if "origin_data" not in st.session_state:
-    st.session_state.origin_data = None
-
 if "rdfdata" not in st.session_state:
     st.session_state.rdfdata = None
 
@@ -34,6 +31,9 @@ if "path" not in st.session_state:
 if "generator" not in st.session_state:
     st.session_state.generator = None
 
+if "dataframe" not in st.session_state:
+    st.session_state.dataframe = None
+
 # Begin webpage---------------------------------------------------------------------------
 
 st.title('Uncertainty Comparator')
@@ -41,8 +41,8 @@ st.title('Uncertainty Comparator')
 uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
 
 if uploaded_file and not st.session_state.uploaded:
-    st.session_state.origin_data = pd.read_csv(uploaded_file)
-    st.session_state.rdfdata = RDFData(st.session_state.origin_data.copy())
+    st.session_state.dataframe = pd.read_csv(uploaded_file)
+    st.session_state.rdfdata = RDFData(st.session_state.dataframe.copy())
     st.session_state.uploaded = True
 
 elif st.session_state.uploaded and not uploaded_file:
@@ -55,7 +55,12 @@ elif st.session_state.uploaded and not uploaded_file:
 
 if st.session_state.rdfdata is not None:
 
-    st.dataframe(st.session_state.origin_data, 1500, 400)
+    dataframe = st.experimental_data_editor(st.session_state.dataframe)
+
+    if not dataframe.equals(st.session_state.dataframe):
+        st.session_state.rdfdata = RDFData(dataframe.copy())
+        st.session_state.dataframe = dataframe
+        st.session_state.data_state = (0,0,0,0,0)
 
     with st.container():
         col1, col2 = st.columns(2)
@@ -64,7 +69,7 @@ if st.session_state.rdfdata is not None:
 
         graphical_version = col2.checkbox("Graph anzeigen lassen")
 
-    with st.expander("Unsicherheiten"):
+    with st.expander("Generiere Unsicherheiten"):
         checkcol1, checkcol2, checkcol3 = st.columns(3)
         solution = checkcol1.selectbox("Modellierung auswählen:", (1,2,3,4,5,6,7,8))
         numb_uncertain_values = checkcol3.number_input("Anzahl unsicherer Werte pro Spalte:", min_value=0, max_value=len(st.session_state.rdfdata.data), step=1)

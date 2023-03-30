@@ -73,7 +73,7 @@ if st.session_state.rdfdata is not None:
 
     if generate:
         st.session_state.generate = True
-        st.session_state.data_state = (0,0,0,0,0)
+        st.session_state.turtle = None
 
     if st.session_state.generate:
         if (xml_format == "Turtle") != st.session_state.turtle:
