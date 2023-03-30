@@ -42,14 +42,14 @@ UNCO starten
 ------------
 ```shell
 .venv\Scripts\activate
-streamlit run src/app/Startseite.py
+streamlit run src/app/UNCO.py
 ```
 
 oder für die Version mit SPARQL-Schnittstelle und randomisierter Unsicherheit:
 
 ```shell
 .venv\Scripts\activate
-streamlit run src/app_masterarbeit/Startseite.py
+streamlit run src/app_masterarbeit/UNCO.py
 ```
 
 Dokumentation generieren und öffnen
