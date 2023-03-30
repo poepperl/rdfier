@@ -6,37 +6,25 @@ Project Organization
 --------------------
 
     ├── data
-    │   ├── external       <- Daten von externen Quellen.
-    │   ├── interim        <- Ordner für zwischengespeicherte Daten.
-    │   ├── processed      <- Verarbeitete Daten.
-    │   └── raw            <- Original Daten.
-    │  
-    ├── docker             <- Hier werden die Docker Container abgelegt.
+    │   ├── input           <- Daten von externen Quellen.
+    │   └── output          <- Verarbeitete Daten.
     |
-    ├── docs               <- Unsere Dokumenation von TOS.
+    ├── docs                <- Unsere Dokumenation von UNCO.
     │  
-    ├── models             <- Von TOS genutzte Modelle.
-    │  
-    ├── notebooks          <- Jupyter notebooks.
-    │  
-    ├── references         <- Weitere hilfreiche Materialien.
-    │  
-    ├── reports            <- Generierte Analysen.
-    │  
-    ├── src                <- Source code, um TOS zu benutzen.
-    |   ├── setup.py       <- Macht das Projekt durch pip installierbar (pip install -e .).
-    |   ├── scripts        <- Skripte die nicht zu TOS gehören.
-    |   ├── unco           <- Das ist UNCO!
-    │       ├── data                <- Skripte/Klassen zum bearbeiten, analysieren oder generieren von Daten.
-    │       ├── features            <- Skripte/Klassen, um aus Rohdaten Features für Modelle zu generieren.
-    │       ├── models              <- Skripte, um Modelle zu trainieren und einzusetzen.
-    │       └── visualization       <- Skripte für die Visualisierung von Ergebnissen.
+    ├── src                 <- Source code, um UNCO zu benutzen.
+    |   ├── setup.py            <- Macht das Projekt durch pip installierbar (pip install -e .).
+    |   ├── app                 <- Streamlit Webpage zum bedienen von UNCO.
+    |   ├── app_masterarbeit    <- Streamlit Webpage inklusive uncertainty-generator und SPARQL-Schnittstelle.
+    |   ├── fuseki              <- Fuseki Server für Benchmarktests.
+    |   ├── unco                <- Das ist UNCO!
+    │       ├── data                <- Skripte/Klassen zum Bearbeiten, Analysieren oder Generieren von Daten.
+    │       └── features            <- Features von UNCO.
     |
-    ├── tests              <- Unittests.
+    ├── tests               <- Unittests.
     |
-    ├── requirements.txt   <- Für die Entwicklungsumgebung erforderliche Module.
+    ├── requirements.txt    <- Für die Entwicklungsumgebung erforderliche Module.
     |
-    ├── README.md          <- Dieses Dokument.
+    └── README.md           <- Dieses Dokument.
 
 --------
 
@@ -48,6 +36,20 @@ python -m venv .venv                // nur bei erster Ausführung notwendig
 .venv\Scripts\activate
 pip install -r requirements.txt     // nur bei erster Ausführung notwendig
 streamlit run src/app/Startseite.py
+```
+
+UNCO starten
+------------
+```shell
+.venv\Scripts\activate
+streamlit run src/app/Startseite.py
+```
+
+oder für die Version mit SPARQL-Schnittstelle und randomisierter Unsicherheit:
+
+```shell
+.venv\Scripts\activate
+streamlit run src/app_masterarbeit/Startseite.py
 ```
 
 Dokumentation generieren
