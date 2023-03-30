@@ -136,10 +136,10 @@ class GraphGenerator():
         # Save RDF Graph:
         if xml_format:
             with open(Path(self.output_folder, filename + ".rdf"), 'w') as file:
-                    file.write(self.graph.serialize(format="xml"))
+                    file.write(self.graph.serialize(format='pretty-xml'))
         else:
             with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
-                    file.write(self.graph.serialize(format="ttl"))
+                    file.write(self.graph.serialize(format="turtle"))
 
 
     def _get_node(self, value: str, type: str):

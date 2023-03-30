@@ -56,6 +56,7 @@ if st.session_state.rdfdata is not None:
     if not dataframe.equals(st.session_state.dataframe):
         st.session_state.rdfdata = RDFData(dataframe.copy())
         st.session_state.dataframe = dataframe
+        st.session_state.turtle = None
 
     with st.container():
         col1, col2 = st.columns(2)
