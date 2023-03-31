@@ -5,7 +5,6 @@ from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
 from unco.features.graph_generator import GraphGenerator
 from unco.features.grapher import Grapher
-from unco.features.fuseki import FusekiServer
 from pathlib import Path
 from PIL import Image
 
