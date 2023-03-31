@@ -10,7 +10,7 @@ from pathlib import Path
 from PIL import Image
 
 st.set_page_config(
-    page_title="Uncertainty Comparator",
+    page_title="RDFier",
     layout="wide")
 
 if "rdfdata" not in st.session_state:
@@ -33,7 +33,8 @@ if "dataframe" not in st.session_state:
 
 # Begin webpage---------------------------------------------------------------------------
 
-st.title('Uncertainty Comparator')
+st.title('RDFier')
+st.subheader("A RDF Mapper")
 
 uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
 

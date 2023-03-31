@@ -1,5 +1,5 @@
-UNCO
-====
+RDFier
+======
 
 
 Project Organization
@@ -9,16 +9,16 @@ Project Organization
     │   ├── input           <- Daten von externen Quellen.
     │   └── output          <- Verarbeitete Daten.
     |
-    ├── docs                <- Unsere Dokumenation von UNCO.
+    ├── docs                <- Unsere Dokumenation von RDFier.
     │  
-    ├── src                 <- Source code, um UNCO zu benutzen.
+    ├── src                 <- Source code, um RDFier zu benutzen.
     |   ├── setup.py            <- Macht das Projekt durch pip installierbar (pip install -e .).
-    |   ├── app                 <- Streamlit Webpage zum bedienen von UNCO.
+    |   ├── app                 <- Streamlit Webpage zum bedienen von RDFier.
     |   ├── app_masterarbeit    <- Streamlit Webpage inklusive uncertainty-generator und SPARQL-Schnittstelle.
     |   ├── fuseki              <- Fuseki Server für Benchmarktests.
-    |   ├── unco                <- Das ist UNCO!
+    |   ├── unco                <- Das ist der RDFier!
     │       ├── data                <- Skripte/Klassen zum Bearbeiten, Analysieren oder Generieren von Daten.
-    │       └── features            <- Features von UNCO.
+    │       └── features            <- Features von RDFier.
     |
     ├── tests               <- Unittests.
     |
@@ -35,21 +35,13 @@ Installation
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-streamlit run src/app/Startseite.py
 ```
 
-UNCO starten
-------------
+RDFier starten
+--------------
 ```shell
 .venv\Scripts\activate
-streamlit run src/app/UNCO.py
-```
-
-oder für die Version mit SPARQL-Schnittstelle und randomisierter Unsicherheit:
-
-```shell
-.venv\Scripts\activate
-streamlit run src/app_masterarbeit/UNCO.py
+streamlit run src/app/RDFier.py
 ```
 
 Dokumentation generieren und öffnen

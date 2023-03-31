@@ -67,7 +67,7 @@ if st.session_state.rdfdata is not None:
 
         xml_format = col1.radio("RDF Format", ("Turtle", "XML"))
 
-        graphical_version = col2.checkbox("Graphische Darstellung")
+        graphical_version = col2.checkbox("Graphische Darstellung", value=True)
 
     with st.expander("Generiere Unsicherheiten"):
         checkcol1, checkcol2, checkcol3 = st.columns(3)
