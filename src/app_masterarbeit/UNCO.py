@@ -67,7 +67,7 @@ if st.session_state.rdfdata is not None:
 
         xml_format = col1.radio("RDF Format", ("Turtle", "XML"))
 
-        graphical_version = col2.checkbox("Graph anzeigen lassen")
+        graphical_version = col2.checkbox("Graphische Darstellung")
 
     with st.expander("Generiere Unsicherheiten"):
         checkcol1, checkcol2, checkcol3 = st.columns(3)
@@ -83,7 +83,7 @@ if st.session_state.rdfdata is not None:
             'Wähle die Subjektspalten aus, in denen Unsicherheit generiert werden soll:',
             list(st.session_state.rdfdata.data.columns)[1:])
 
-    uploaded_prefixes = st.file_uploader("Prefixtabelle", type=["csv"], accept_multiple_files=False)
+    uploaded_prefixes = st.file_uploader("Präfixtabelle", type=["csv"], accept_multiple_files=False)
 
     # Graph generieren-------------------------------------------------------------------------------
 
