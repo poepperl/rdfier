@@ -9,6 +9,10 @@ class RDFData:
     ----------
     data : pd.DataFrame
         DataFrame wich includes the data from Reader.
+    triple_plan: dict
+        Dictionary to save which columns are interpreted as subjects and their corresponding object columns. 
+    types_and_languages: dict
+        Dictionary to save the datatype or language of a value.
     uncertainty_flags: dict
         Dictionary to save some uncertainty flags. A flag is saved as: uncertainty_flags[column_indices] = list(row_indices)
     alternatives: dict
@@ -19,8 +23,8 @@ class RDFData:
         """
         Parameters
         ----------
-        path : str
-            Path to the input-data.
+        dataframe : pd.DataFrame
+            Dataframe of the data which gets pseudorandom uncertainty.
         """
         self.data = dataframe
         self.triple_plan: dict = {}
@@ -36,7 +40,7 @@ class RDFData:
 
     def _generate_triple_plan(self):
         """
-            Method which locates the subject columns and the corresponding objects and saves it in the triple_plan.
+            Method which locates the subject columns and the corresponding objects and save them in the triple_plan.
         """
         first_col_has_ref = (False, '')
         first_col_objects = set()
@@ -93,7 +97,7 @@ class RDFData:
 
     def _generate_type_and_language_plan(self):
         """
-            Method which read the datatype or language of all columns.
+            Method which read the datatype/language of all columns.
         """
         # Column type or language:
         for col_index, column in enumerate(self.data):
@@ -117,6 +121,9 @@ class RDFData:
 
 
     def _get_type_language(self, string : str) -> tuple[str,str]:
+        """
+        Method which extracts the type/language of a string.
+        """
         type_splitlist = string.split("^^")
 
         if len(type_splitlist) >= 2:
@@ -135,12 +142,12 @@ class RDFData:
 
     def _get_datatype(self, string : str) -> str:
         """
-            Method which outputs the fitting datatype of a value.
+            Method which tries to find the best fitting datatype of a value.
 
         Parameters
         ----------
         string : str
-            Entry of the csv table.
+            Value which should get a datatype.
         """
         try:
             _ = int(string)
