@@ -1,57 +1,51 @@
-UNCO
-====
+RDFier
+======
 
 
 Project Organization
 --------------------
 
     ├── data
-    │   ├── external       <- Daten von externen Quellen.
-    │   ├── interim        <- Ordner für zwischengespeicherte Daten.
-    │   ├── processed      <- Verarbeitete Daten.
-    │   └── raw            <- Original Daten.
-    │  
-    ├── docker             <- Hier werden die Docker Container abgelegt.
+    │   ├── input           <- Daten von externen Quellen.
+    │   └── output          <- Verarbeitete Daten.
     |
-    ├── docs               <- Unsere Dokumenation von TOS.
+    ├── docs                <- Unsere Dokumenation von RDFier.
     │  
-    ├── models             <- Von TOS genutzte Modelle.
-    │  
-    ├── notebooks          <- Jupyter notebooks.
-    │  
-    ├── references         <- Weitere hilfreiche Materialien.
-    │  
-    ├── reports            <- Generierte Analysen.
-    │  
-    ├── src                <- Source code, um TOS zu benutzen.
-    |   ├── setup.py       <- Macht das Projekt durch pip installierbar (pip install -e .).
-    |   ├── scripts        <- Skripte die nicht zu TOS gehören.
-    |   ├── unco           <- Das ist UNCO!
-    │       ├── data                <- Skripte/Klassen zum bearbeiten, analysieren oder generieren von Daten.
-    │       ├── features            <- Skripte/Klassen, um aus Rohdaten Features für Modelle zu generieren.
-    │       ├── models              <- Skripte, um Modelle zu trainieren und einzusetzen.
-    │       └── visualization       <- Skripte für die Visualisierung von Ergebnissen.
+    ├── src                 <- Source code, um RDFier zu benutzen.
+    |   ├── setup.py            <- Macht das Projekt durch pip installierbar (pip install -e .).
+    |   ├── app                 <- Streamlit Webpage zum bedienen von RDFier.
+    |   ├── app_masterarbeit    <- Streamlit Webpage inklusive uncertainty-generator und SPARQL-Schnittstelle.
+    |   ├── fuseki              <- Fuseki Server für Benchmarktests.
+    |   ├── unco                <- Das ist der RDFier!
+    │       ├── data                <- Skripte/Klassen zum Bearbeiten, Analysieren oder Generieren von Daten.
+    │       └── features            <- Features von RDFier.
     |
-    ├── tests              <- Unittests.
+    ├── tests               <- Unittests.
     |
-    ├── requirements.txt   <- Für die Entwicklungsumgebung erforderliche Module.
+    ├── requirements.txt    <- Für die Entwicklungsumgebung erforderliche Module.
     |
-    ├── README.md          <- Dieses Dokument.
+    └── README.md           <- Dieses Dokument.
 
 --------
 
-Getting started
----------------
+Installation
+------------
 
 ```shell
-python -m venv .venv                // nur bei erster Ausführung notwendig
+python -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt     // nur bei erster Ausführung notwendig
-streamlit run src/app/Startseite.py
+pip install -r requirements.txt
 ```
 
-Dokumentation generieren
-------------------------
+RDFier starten
+--------------
+```shell
+.venv\Scripts\activate
+streamlit run src/app/RDFier.py
+```
+
+Dokumentation generieren und öffnen
+-----------------------------------
 
 ```
 cd docs
@@ -60,11 +54,4 @@ make html
 ```
 
 -> Öffne docs/build/html/index.html in Browser
-
-Create package
---------------
-
-```shell
-python src/setup.py sdist
-```
 

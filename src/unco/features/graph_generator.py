@@ -1,11 +1,9 @@
 import pandas as pd
 from pathlib import Path
-
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
-from unco.data.reader import Reader
-
 from rdflib import Graph, Namespace, BNode, Literal, URIRef
+
 
 # Standard Namespaces------------------------------------------------------------------------
 RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
@@ -26,10 +24,16 @@ class GraphGenerator():
 
     Attributes
     ----------
-    dataset : Dataset
-        Dataset which contains the data of the rdf graph.
+    rdfdata : RDFData
+        RDFData which contains the data of the rdf graph.
     graph : Graph
         RDF graph which will be created.
+    OUTPUT_FOLDER : Path
+        Constant which holds the output path.
+    prefixes : dict
+        Dictionary which contains the prefixes and namespaces which binds to the graph.
+    crm_properties : dict
+        Dictionary which contains the .2 properties of solution 5.
     """
 
     def __init__(self, rdfdata: RDFData) -> None:
@@ -41,7 +45,7 @@ class GraphGenerator():
         """
         self.rdfdata = rdfdata
         self.graph = Graph()
-        self.output_folder = Path(UNCO_PATH, "data/output")
+        self.OUTPUT_FOLDER = Path(UNCO_PATH, "data/output")
         self.prefixes : dict[str,Namespace] = {"xsd" : XSD, "rdf" : RDF, "rdfs" : RDFS, "" : UNCO}
         self.crm_properties = {}
 
@@ -58,7 +62,7 @@ class GraphGenerator():
         if type(path_data) == pd.DataFrame:
             namespaces = path_data
         else:
-            namespaces = Reader(path_data).read()
+            namespaces = pd.read_csv(path_data)
 
         for rowindex in range(len(namespaces)):
             self.prefixes[str(namespaces.iloc[rowindex,0]).lower()] = Namespace(str(namespaces.iloc[rowindex,1])) 
@@ -130,16 +134,16 @@ class GraphGenerator():
         filename = f"graph_model_{solution_id}" if 0 < solution_id and solution_id < 9 else "graph"
 
         # Save sparql-prefix txt:
-        with open(Path(self.output_folder, filename + "_prefixes.txt"), 'w') as file:
+        with open(Path(self.OUTPUT_FOLDER, filename + "_prefixes.txt"), 'w') as file:
             file.write("".join("PREFIX " + prefix + ": <" + self.prefixes[prefix] + ">" + "\n" for prefix in self.prefixes))
 
         # Save RDF Graph:
         if xml_format:
-            with open(Path(self.output_folder, filename + ".rdf"), 'w') as file:
-                    file.write(self.graph.serialize(format="xml"))
+            with open(Path(self.OUTPUT_FOLDER, filename + ".rdf"), 'w') as file:
+                    file.write(self.graph.serialize(format='pretty-xml'))
         else:
-            with open(Path(self.output_folder, filename + ".ttl"), 'w') as file:
-                    file.write(self.graph.serialize(format="ttl"))
+            with open(Path(self.OUTPUT_FOLDER, filename + ".ttl"), 'w') as file:
+                    file.write(self.graph.serialize(format="turtle"))
 
 
     def _get_node(self, value: str, type: str):
@@ -490,9 +494,9 @@ class GraphGenerator():
     def run_query(self, query : str) -> pd.DataFrame:
         result = self.graph.query(query)
 
-        result.serialize(format="csv", destination=str(Path(self.output_folder, "query_results.csv")))
+        result.serialize(format="csv", destination=str(Path(self.OUTPUT_FOLDER, "query_results.csv")))
 
-        csvdata = pd.read_csv(open(Path(self.output_folder, "query_results.csv"), 'r', encoding='utf-8'))
+        csvdata = pd.read_csv(open(Path(self.OUTPUT_FOLDER, "query_results.csv"), 'r', encoding='utf-8'))
 
         return pd.DataFrame(csvdata)
     

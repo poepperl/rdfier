@@ -5,7 +5,14 @@ from unco.data.rdf_data import RDFData
 
 
 class UncertaintyGenerator():
+    """
+    Class which generates pseudorandom uncertainty for a RDFData.
 
+    Attributes
+    ----------
+    rdfdata : RDFData
+        The RDFData, which should get the uncertainties.
+    """
     def __init__(self, rdfdata : RDFData) -> None:
         self.rdfdata = rdfdata
         self.NUMBER_OF_ALTERNATIVES : int

@@ -9,7 +9,8 @@ class Grapher():
 
     Attributes
     ----------
-    
+    path : Path
+        Path to the rdf data which should get a graphical version.
     """
 
     def __init__(self, path: str | Path) -> None:
@@ -26,6 +27,10 @@ class Grapher():
     def get_illustration(self, path : str | Path):
         """
             Method, which downloads the graphical version of the given rdf graph. Output will be saved in "data/output/downloaded_graph.png".
+        Attributes
+        ----------
+        path : Path
+            Path to the rdf data which should get a graphical version.
         """
         data = open(path, 'r', encoding='utf-8').read()
         params = {"rdf": data}
