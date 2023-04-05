@@ -105,7 +105,8 @@ class GraphGenerator():
                         objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i]) for i, value in enumerate(obj_names)]
 
                         for index, object in enumerate(objects):
-                            if column_index in self.rdfdata.uncertainty_flags and row_index in self.rdfdata.uncertainty_flags[column_index]: # If current value is uncertain, do:
+                            
+                            if (row_index,column_index) in self.rdfdata.uncertainties:
                                 uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
 
                                 match solution_id:

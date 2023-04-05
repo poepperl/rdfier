@@ -30,9 +30,7 @@ class RDFData:
         self.triple_plan: dict = {}
         self.types_and_languages: dict[tuple[int,int], list[str]] = {}
 
-        self.uncertainty_flags: dict = {}
-        self.alternatives: dict = {}
-        self.likelihoods: dict = {}
+        self.uncertainties : dict = {}
 
         self._generate_triple_plan()
         self._generate_type_and_language_plan()
