@@ -100,20 +100,18 @@ if st.session_state.rdfdata is not None:
                 options = [rdf_data.data.columns.get_loc(c) for c in options if c in st.session_state.rdfdata.data]
 
                 rdf_data = u_generator.add_uncertainty_flags(number_of_uncertain_columns=numb_uncertain_columns, list_of_columns=options, uncertainties_per_column=numb_uncertain_values)
-                filename = "graph_model_" + str(solution)
             
             else:
                 rdf_data = st.session_state.rdfdata
-                filename = "graph"
 
             st.session_state.generator = GraphGenerator(rdf_data)
             st.session_state.generator.load_prefixes(pd.read_csv(uploaded_prefixes))
             st.session_state.generator.generate_solution(solution if numb_uncertain_values != 0 else 0, xml_format=(xml_format=="XML"))
 
             if xml_format=="XML":
-                st.session_state.path = Path(UNCO_PATH, "data/output/" + filename + ".rdf")
+                st.session_state.path = Path(UNCO_PATH, "data/output/graph.rdf")
             else:
-                st.session_state.path = Path(UNCO_PATH, "data/output/" + filename + ".ttl")
+                st.session_state.path = Path(UNCO_PATH, "data/output/graph.ttl")
 
 
         if graphical_version:

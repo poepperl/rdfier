@@ -33,6 +33,7 @@ class RDFData:
         self.uncertainties : dict = {}
 
         self._generate_triple_plan()
+        self._load_uncertainties()
         self._generate_type_and_language_plan()
 
 
@@ -60,7 +61,7 @@ class RDFData:
                     self.triple_plan[subject_id]["subject"] = set([index])
                     
                 else:
-                    self.triple_plan[subject_id] = {"subject" : set([index]), "object" : set()}
+                    self.triple_plan[subject_id] = {"subject" : set([index]), "objects" : set(), "uncertainty" : set()}
 
             elif len(splitlist) > 2:
                 raise SyntaxError(f"Column {str(column)} has more than one subject reference marker '**'.")
@@ -70,11 +71,12 @@ class RDFData:
                 object_id = splitlist[0]
                 new_column_name = splitlist[1]
 
-                if object_id in self.triple_plan:
-                    self.triple_plan[object_id]["object"].add(index)
-
+                if len(us := new_column_name.split("^^")) > 1 and us[-1][:11] == "uncertainty":
+                    self.triple_plan[object_id]["uncertainty"].add(index)
+                elif object_id in self.triple_plan:
+                    self.triple_plan[object_id]["objects"].add(index)
                 else:
-                    self.triple_plan[object_id] = {"object" : set([index]), "subject" : set()}
+                    self.triple_plan[object_id] = {"objects" : set([index]), "subject" : set()}
 
             elif len(splitlist) > 2:
                 raise SyntaxError(f"Column {str(column)} has more than one object reference marker '__'.")
@@ -84,16 +86,76 @@ class RDFData:
 
 
             if first_col_has_ref[0]:
-                self.triple_plan[first_col_has_ref[1]]["object"].update(first_col_objects)
+                self.triple_plan[first_col_has_ref[1]]["objects"].update(first_col_objects)
                 self.triple_plan["**"] = self.triple_plan.pop(first_col_has_ref[1])
 
             else:
-                self.triple_plan["**"] = {"object" : first_col_objects, "subject" : set([0])}
+                self.triple_plan["**"] = {"objects" : first_col_objects, "subject" : set([0])}
         
             self.data.rename({column : new_column_name}, axis=1, inplace=True)
 
 
-    def _generate_type_and_language_plan(self):
+    def _load_uncertainties(self):
+        for plan in self.triple_plan.values():
+            sub_column = next(iter(plan["subject"]))
+            if "uncertainty" in plan:
+                if l := len(plan["uncertainty"])==1:
+                    unc_column = next(iter(plan["uncertainty"]))
+                    for row_index in range(len(self.data)):
+                        uncertainties = self._get_uncertainty_dict(str(self.data.iat[row_index,sub_column]), str(self.data.iat[row_index,unc_column]))
+                        if uncertainties : self.uncertainties[(row_index,sub_column)] = uncertainties
+                elif l > 1:
+                    raise SyntaxError(f"Subject-column {self.data.columns[sub_column]} has more than one uncertainty-column.")
+            
+    def _get_uncertainty_dict(self, subject : str, uncertainty : str) -> dict:
+        # {(1,2):{"mode":"a", "likelihoods":[0.5,0.1,0.4]}}
+        uncertainty = uncertainty.strip().lower()
+        sub_splitlist = subject.split(";")
+        unc_splitlist = uncertainty.split(";")
+
+        if uncertainty == "c":
+            return dict()
+        elif uncertainty == "ou" and len(sub_splitlist)==1:
+            return {"mode":"ou"}
+        elif uncertainty == "a" and len(sub_splitlist)>1:
+            return {"mode":"a"}
+        elif uncertainty == "au":
+            return {"mode":"au"}
+        elif uncertainty == "u":
+            return {"mode":"u"}
+        elif len(unc_splitlist) == 1:
+            try:
+                numb = float(uncertainty)
+                if numb == 0:
+                    return {"mode":"u"}
+                elif numb == 1:
+                    return dict()
+                elif 0 < numb < 1:
+                    {"mode":"ou", "likelihoods":[numb]}
+                else:
+                    warn(f"\033[93mUncertainty \"{uncertainty}\" out of bounds. No uncertainty will be transmit.\033[0m")
+            except:
+                pass
+        elif len(sub_splitlist) == len(unc_splitlist):
+            try:
+                unc_splitlist = [float(elem) for elem in unc_splitlist]
+            except:
+                pass
+            if all(isinstance(n, float) for n in unc_splitlist):
+                if sum(unc_splitlist) == 1:
+                    return {"mode":"a", "likelihoods":unc_splitlist}
+                elif 0 <= sum(unc_splitlist) < 1:
+                    return {"mode":"au", "likelihoods":unc_splitlist}
+            warn(f"\033[93mUnknown distribution \"{uncertainty}\". No uncertainties will be transmit.\033[0m")
+            return dict()
+        elif len(sub_splitlist) != len(unc_splitlist):
+            warn(f"\033[93mEntry \"{subject}\" hasn't the correct number of uncertainties \"{uncertainty}\". No uncertainties will be transmit.\033[0m")
+            return dict()
+        else:
+            warn(f"\033[93mEntry \"{subject}\" hasn't identiefiable uncertainties \"{uncertainty}\". No uncertainties will be transmit.\033[0m")
+            return dict()
+
+    def _generate_type_and_language_plan(self) -> None:
         """
             Method which read the datatype/language of all columns.
         """

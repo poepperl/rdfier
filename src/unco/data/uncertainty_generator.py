@@ -29,7 +29,6 @@ class UncertaintyGenerator():
         uncertainties_per_column: int, optional
             Number of uncertainties each column. By default, the number is chosen randomly each column beween 1 and the number of rows.
         """
-        # {(1,2):{"mode":"a", "alternatives":["a","b","c"], "likelihoods":[0.5,0.1,0.4]}}
         nrows, ncolums = self.rdfdata.data.shape
 
         list_of_columns = list(set(list_of_columns)) # Remove all duplicates from list

@@ -71,7 +71,7 @@ class GraphGenerator():
             self.graph.bind(prefix, self.prefixes[prefix])
     
 
-    def generate_solution(self,solution_id : int = 0, xml_format : bool = True) -> None:
+    def generate_solution(self,solution_id : int = 2, xml_format : bool = True) -> None:
         """ 
             Method to generate the RDF-XML file.
 
@@ -89,7 +89,7 @@ class GraphGenerator():
 
         for plan in self.rdfdata.triple_plan.values():
             subject_colindex = plan["subject"].copy().pop()
-            object_colindices = plan["object"].copy()
+            object_colindices = plan["objects"].copy()
 
             for row_index in range(len(self.rdfdata.data)):
                 subject = self._get_node(str(self.rdfdata.data.iat[row_index,subject_colindex]), self.rdfdata.types_and_languages[(row_index,subject_colindex)][0])
@@ -105,7 +105,6 @@ class GraphGenerator():
                         objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i]) for i, value in enumerate(obj_names)]
 
                         for index, object in enumerate(objects):
-                            
                             if (row_index,column_index) in self.rdfdata.uncertainties:
                                 uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
 
@@ -132,7 +131,7 @@ class GraphGenerator():
                             else:
                                     self.graph.add((subject, predicate, object))
 
-        filename = f"graph_model_{solution_id}" if 0 < solution_id and solution_id < 9 else "graph"
+        filename = "graph"
 
         # Save sparql-prefix txt:
         with open(Path(self.OUTPUT_FOLDER, filename + "_prefixes.txt"), 'w') as file:
