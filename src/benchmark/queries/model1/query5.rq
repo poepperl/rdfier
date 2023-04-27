@@ -1,0 +1,8 @@
+SELECT ?s ?p ?o
+WHERE {
+    ?s ?p ?o .
+    ?b crm:P140_assigned_attribute_to ?s;
+    bmo:PX_likelihood nm:uncertain_value; 
+    bmo:PX_Property ?p;
+    crm:P141_assigned ?o.
+} 

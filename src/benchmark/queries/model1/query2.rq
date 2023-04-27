@@ -1,0 +1,4 @@
+SELECT ?s
+WHERE {
+    ?s nmo:hasMint nm:comama.
+}

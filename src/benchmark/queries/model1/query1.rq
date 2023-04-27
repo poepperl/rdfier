@@ -1,0 +1,8 @@
+SELECT ?s
+WHERE {
+    ?s nmo:hasMint nm:comama . 
+    FILTER NOT EXISTS {
+        {?b crm:P140_assigned_attribute_to ?s}
+        {?b ?f nm:uncertain_value .}
+    }
+}
