@@ -1,3 +1,5 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+
 SELECT ?s ?o
 WHERE {
     ?s nmo:hasMint ?o.

@@ -1,3 +1,4 @@
-coin^^uri,nmo:hasMint^^uri,nmo:hasObverse^^id**1,1__nmo:hasLegend@en**2,<http://nomisma.org/ontology#hasWeight>,2__hasCertainties^^uncertainty
-afe:5388,nm:rome,11,"Habemus Papam@la; Monakko@de",3.50,0.4;0.6
-afe:2180,<http://nomisma.org/id/narbo>,50,Unholy Coin,4^^xsd:integer,0
+coin^^uri,nmo:hasMint^^uri**3,nmo:hasObverse^^id**1,1__nmo:hasLegend@en**2,<http://nomisma.org/ontology#hasWeight>,2__hasCertainties^^uncertainty,3__hasCertainties^^uncertainty
+afe:5388,nm:rome,11,"Habemus Papam@la; Monakko@de",3.50,0.4;0.6,1
+afe:2180,<http://nomisma.org/id/narbo>,50,Unholy Coin,4^^xsd:integer,0,0
+afe:1100,,,,2,,

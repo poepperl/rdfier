@@ -1,8 +1,15 @@
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
 SELECT ?s ?p ?o
 WHERE {
     ?s ?p ?o .
-    ?b crm:P140_assigned_attribute_to ?s;
-    bmo:PX_likelihood nm:uncertain_value; 
-    bmo:PX_Property ?p;
-    crm:P141_assigned ?o.
-} 
+    ?b crm:P140_assigned_attribute_to ?s ;
+        crm:P141_assigned ?o ;
+        bmo:PX_Property ?p ;
+        a crm:E13 ;
+        bmo:PX_likelihood nm:uncertain_value .
+}

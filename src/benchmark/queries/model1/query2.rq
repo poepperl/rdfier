@@ -1,4 +1,6 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+
 SELECT ?s
 WHERE {
-    ?s nmo:hasMint nm:comama.
+    ?s nmo:hasMint ?o.
 }

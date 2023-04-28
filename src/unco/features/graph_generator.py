@@ -1,3 +1,4 @@
+from genericpath import exists
 import pandas as pd
 from pathlib import Path
 from unco import UNCO_PATH
@@ -9,7 +10,8 @@ from rdflib import Graph, Namespace, BNode, Literal, URIRef
 RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
 UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
-CRM = Namespace("http://erlangen-crm.org/current/")
+# CRM = Namespace("http://erlangen-crm.org/current/")
+CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
 BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
 EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
@@ -71,7 +73,7 @@ class GraphGenerator():
             self.graph.bind(prefix, self.prefixes[prefix])
     
 
-    def generate_solution(self,solution_id : int = 2, xml_format : bool = True) -> None:
+    def generate_solution(self,solution_id : int = 1, xml_format : bool = True) -> None:
         """ 
             Method to generate the RDF-XML file.
 
@@ -92,44 +94,46 @@ class GraphGenerator():
             object_colindices = plan["objects"].copy()
 
             for row_index in range(len(self.rdfdata.data)):
-                subject = self._get_node(str(self.rdfdata.data.iat[row_index,subject_colindex]), self.rdfdata.types_and_languages[(row_index,subject_colindex)][0])
 
-                for column_index in object_colindices:
+                if pd.notnull(self.rdfdata.data.iat[row_index,subject_colindex]):
+                    subject = self._get_node(str(self.rdfdata.data.iat[row_index,subject_colindex]), self.rdfdata.types_and_languages[(row_index,subject_colindex)][0])
 
-                    entry = self.rdfdata.data.iat[row_index,column_index]
-                    if pd.notnull(entry): # Check if value isn't NaN
-                        pred_name = str(self.rdfdata.data.columns[column_index])
-                        predicate = self._get_node(pred_name, "^^uri")
+                    for column_index in object_colindices:
 
-                        obj_names = str(entry).split(";")
-                        objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i]) for i, value in enumerate(obj_names)]
+                        entry = self.rdfdata.data.iat[row_index,column_index]
+                        if pd.notnull(entry): # Check if value isn't NaN
+                            pred_name = str(self.rdfdata.data.columns[column_index])
+                            predicate = self._get_node(pred_name, "^^uri")
 
-                        for index, object in enumerate(objects):
-                            if (row_index,column_index) in self.rdfdata.uncertainties:
-                                uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
+                            obj_names = str(entry).split(";")
+                            objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i]) for i, value in enumerate(obj_names)]
 
-                                match solution_id:
-                                    case 1:
-                                        self._generate_uncertain_value_solution_1(subject, predicate, object, uncertainty_id)
-                                    case 2:
-                                        self._generate_uncertain_value_solution_2(subject, predicate, object, uncertainty_id)
-                                    case 3:
-                                        self._generate_uncertain_value_solution_3(subject, predicate, object)
-                                    case 4:
-                                        self._generate_uncertain_value_solution_4(subject, predicate, object, uncertainty_id)
-                                    case 5:
-                                        self._generate_uncertain_value_solution_5(subject, predicate, object, uncertainty_id)
-                                    case 6:
-                                        self._generate_uncertain_value_solution_6(subject, predicate, object, uncertainty_id)
-                                    case 7:
-                                        self._generate_uncertain_value_solution_7(subject, predicate, object, uncertainty_id)
-                                    case 8:
-                                        self._generate_uncertain_value_solution_8(subject, predicate, object, uncertainty_id)
-                                    case _:
+                            for index, object in enumerate(objects):
+                                if (row_index,column_index) in self.rdfdata.uncertainties:
+                                    uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
+
+                                    match solution_id:
+                                        case 1:
+                                            self._generate_uncertain_value_solution_1(subject, predicate, object, uncertainty_id)
+                                        case 2:
+                                            self._generate_uncertain_value_solution_2(subject, predicate, object, uncertainty_id)
+                                        case 3:
+                                            self._generate_uncertain_value_solution_3(subject, predicate, object)
+                                        case 4:
+                                            self._generate_uncertain_value_solution_4(subject, predicate, object, uncertainty_id)
+                                        case 5:
+                                            self._generate_uncertain_value_solution_5(subject, predicate, object, uncertainty_id)
+                                        case 6:
+                                            self._generate_uncertain_value_solution_6(subject, predicate, object, uncertainty_id)
+                                        case 7:
+                                            self._generate_uncertain_value_solution_7(subject, predicate, object, uncertainty_id)
+                                        case 8:
+                                            self._generate_uncertain_value_solution_8(subject, predicate, object, uncertainty_id)
+                                        case _:
+                                            self.graph.add((subject, predicate, object))
+
+                                else:
                                         self.graph.add((subject, predicate, object))
-
-                            else:
-                                    self.graph.add((subject, predicate, object))
 
         filename = "graph"
 
