@@ -155,6 +155,7 @@ class RDFData:
             warn(f"\033[93mEntry \"{subject}\" hasn't identiefiable uncertainties \"{uncertainty}\". No uncertainties will be transmit.\033[0m")
             return dict()
 
+
     def _generate_type_and_language_plan(self) -> None:
         """
             Method which read the datatype/language of all columns.
