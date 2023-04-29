@@ -11,27 +11,11 @@ st.set_page_config(
     page_title="RDFier",
     layout="wide")
 
-# if "rdfdata" not in st.session_state:
-#     st.session_state.rdfdata = None
-
-# if "generate" not in st.session_state:
-#     st.session_state.generate = False
-
-if "uploaded" not in st.session_state:
-    st.session_state.uploaded = False
-
-# if "turtle" not in st.session_state:
-#     st.session_state.turtle = None
-
-# if "generator" not in st.session_state:
-#     st.session_state.generator = None
-
-if "dataframe" not in st.session_state:
-    st.session_state.dataframe = None
-
 def update():
     st.session_state.rdfdata = RDFData(st.session_state.dataframe.copy())
-    st.session_state.turtle = None
+
+def activate_rerun():
+    st.session_state.rerun = True
 
 # Begin webpage---------------------------------------------------------------------------
 
@@ -41,10 +25,9 @@ st.subheader("A RDF Mapper")
 uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
 
 if not uploaded_file:
+    st.session_state.dataframe = None
     st.session_state.generate = False
     st.session_state.rdfdata = None
-    st.session_state.turtle = None
-    st.session_state.generator = None
 
 else:
     st.session_state.dataframe = st.experimental_data_editor(pd.read_csv(uploaded_file), on_change=update)
@@ -58,7 +41,7 @@ else:
 
         graphical_version = col2.checkbox("Show graphical version", value=True)
 
-        solution = col2.selectbox("Select model:", (1,2,3,4,5,6,7,8))
+        solution = col2.selectbox("Select model:", (1,2,3,4,5,6,7,8), on_change=activate_rerun)
 
     uploaded_prefixes = st.file_uploader("Prefixes", type=["csv"], accept_multiple_files=False)
 
@@ -68,14 +51,14 @@ else:
 
     if generate:
         st.session_state.generate = True
-        st.session_state.turtle = None
+        st.session_state.rerun = True
 
     if st.session_state.generate:
-        if (xml_format == "Turtle") != st.session_state.turtle:
-            st.session_state.data_state = (xml_format == "Turtle")
-            st.session_state.generator = GraphGenerator(st.session_state.rdfdata)
-            st.session_state.generator.load_prefixes(pd.read_csv(uploaded_prefixes))
-            st.session_state.generator.generate_solution(solution_id=solution,xml_format=(xml_format=="XML"))
+        if st.session_state.rerun:
+            st.session_state.rerun = False
+            generator = GraphGenerator(st.session_state.rdfdata)
+            generator.load_prefixes(pd.read_csv(uploaded_prefixes))
+            generator.generate_solution(solution_id=solution,xml_format=(xml_format=="XML"))
 
         
         path = Path(UNCO_PATH, "data/output/graph" + (".ttl" if xml_format=="Turtle" else ".rdf"))

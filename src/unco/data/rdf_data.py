@@ -1,4 +1,5 @@
 import pandas as pd
+from math import isnan
 from warnings import warn
 
 class RDFData:
@@ -132,7 +133,7 @@ class RDFData:
                     return dict()
                 elif 0 < numb < 1:
                     {"mode":"ou", "likelihoods":[numb]}
-                else:
+                elif not numb.isnan():
                     warn(f"\033[93mUncertainty \"{uncertainty}\" out of bounds. No uncertainty will be transmit.\033[0m")
             except:
                 pass
