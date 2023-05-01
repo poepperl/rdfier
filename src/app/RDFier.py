@@ -28,10 +28,10 @@ if not uploaded_file:
     st.session_state.dataframe = None
     st.session_state.generate = False
     st.session_state.rdfdata = None
-
+    st.session_state.rerun = True
 else:
-    st.session_state.dataframe = st.experimental_data_editor(pd.read_csv(uploaded_file), on_change=update)
-    if st.session_state.rdfdata is None:
+    st.session_state.dataframe = st.experimental_data_editor(pd.read_csv(uploaded_file), on_change=activate_rerun)
+    if st.session_state.rerun:
         update()
 
     with st.container():
