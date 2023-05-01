@@ -62,7 +62,7 @@ class RDFData:
                     self.triple_plan[subject_id]["subject"] = set([index])
                     
                 else:
-                    self.triple_plan[subject_id] = {"subject" : set([index]), "objects" : set(), "uncertainty" : set()}
+                    self.triple_plan[subject_id] = {"subject" : set([index]), "objects" : set(), "certainties" : set()}
 
             elif len(splitlist) > 2:
                 raise SyntaxError(f"Column {str(column)} has more than one subject reference marker '**'.")
@@ -72,8 +72,8 @@ class RDFData:
                 object_id = splitlist[0]
                 new_column_name = splitlist[1]
 
-                if len(us := new_column_name.split("^^")) > 1 and us[-1][:11] == "uncertainty":
-                    self.triple_plan[object_id]["uncertainty"].add(index)
+                if len(us := new_column_name.split("^^")) > 1 and us[-1][:11] == "certainty":
+                    self.triple_plan[object_id]["certainties"].add(index)
                 elif object_id in self.triple_plan:
                     self.triple_plan[object_id]["objects"].add(index)
                 else:
@@ -98,15 +98,15 @@ class RDFData:
 
     def _load_uncertainties(self):
         for plan in self.triple_plan.values():
-            sub_column = next(iter(plan["subject"]))
-            if "uncertainty" in plan:
-                if l := len(plan["uncertainty"])==1:
-                    unc_column = next(iter(plan["uncertainty"]))
+            if "certainties" in plan:
+                sub_column = next(iter(plan["subject"]))
+                if (l := len(plan["certainties"]))==1:
+                    unc_column = next(iter(plan["certainties"]))
                     for row_index in range(len(self.data)):
                         uncertainties = self._get_uncertainty_dict(str(self.data.iat[row_index,sub_column]), str(self.data.iat[row_index,unc_column]))
                         if uncertainties : self.uncertainties[(row_index,sub_column)] = uncertainties
                 elif l > 1:
-                    raise SyntaxError(f"Subject-column {self.data.columns[sub_column]} has more than one uncertainty-column.")
+                    raise SyntaxError(f"Subject-column {self.data.columns[sub_column]} has more than one certainty-column.")
             
     def _get_uncertainty_dict(self, subject : str, uncertainty : str) -> dict:
         # {(1,2):{"mode":"a", "likelihoods":[0.5,0.1,0.4]}}
@@ -127,14 +127,13 @@ class RDFData:
         elif len(unc_splitlist) == 1:
             try:
                 numb = float(uncertainty)
-                if numb == 0:
-                    return {"mode":"u"}
+                if 0 <= numb < 1:
+                    return {"mode":"ou", "likelihoods":[numb]}
                 elif numb == 1:
                     return dict()
-                elif 0 < numb < 1:
-                    {"mode":"ou", "likelihoods":[numb]}
                 elif not numb.isnan():
                     warn(f"\033[93mUncertainty \"{uncertainty}\" out of bounds. No uncertainty will be transmit.\033[0m")
+                    return dict()
             except:
                 pass
         elif len(sub_splitlist) == len(unc_splitlist):
