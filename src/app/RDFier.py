@@ -37,7 +37,7 @@ else:
     with st.container():
         col1, col2 = st.columns(2)
 
-        xml_format = col1.radio("RDF format", ("Turtle", "XML"))
+        xml_format = col1.radio("RDF Format", ("Turtle", "XML"))
 
         graphical_version = col2.checkbox("Show graphical version", value=True)
 
