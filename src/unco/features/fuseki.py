@@ -88,14 +88,22 @@ class FusekiServer:
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\input\rdfstar_example.ttl")
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.ttl")
+    # time.sleep(4)
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
-    SELECT ?su ?p ?o
-    WHERE {
-        ?su ?p ?o
-    }
+    PREFIX nm: <http://nomisma.org/id/>
+    PREFIX afe: <http://afe.dainst.org/coin?afeid=>
+    PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
+
+    SELECT ?s { ?s nmo:hasMint nm:comama }
     """
+    # SELECT ?s { ?s nmo:hasMint nm:comama }
+
+    # SELECT ?s { <<?s nmo:hasMint nm:comama>> un:hasUncertainty nm:uncertain_value }
+
+    # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
+    
     print(f.sparql_query(query))
     f.stop_server()
 

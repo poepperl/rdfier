@@ -1,20 +1,16 @@
 import streamlit as st
 import pandas as pd
+from pathlib import Path
+from PIL import Image
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
-from unco.features.graph_generator import GraphGenerator
 from unco.features.grapher import Grapher
-from unco.features.fuseki import FusekiServer
-from pathlib import Path
-from PIL import Image
+from unco.features.graph_generator import GraphGenerator
 
 st.set_page_config(
     page_title="Uncertainty Comparator",
     layout="wide")
-
-if "origin_data" not in st.session_state:
-    st.session_state.origin_data = None
 
 if "rdfdata" not in st.session_state:
     st.session_state.rdfdata = None
@@ -34,6 +30,9 @@ if "path" not in st.session_state:
 if "generator" not in st.session_state:
     st.session_state.generator = None
 
+if "dataframe" not in st.session_state:
+    st.session_state.dataframe = None
+
 # Begin webpage---------------------------------------------------------------------------
 
 st.title('Uncertainty Comparator')
@@ -41,8 +40,8 @@ st.title('Uncertainty Comparator')
 uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
 
 if uploaded_file and not st.session_state.uploaded:
-    st.session_state.origin_data = pd.read_csv(uploaded_file)
-    st.session_state.rdfdata = RDFData(st.session_state.origin_data.copy())
+    st.session_state.dataframe = pd.read_csv(uploaded_file)
+    st.session_state.rdfdata = RDFData(st.session_state.dataframe.copy())
     st.session_state.uploaded = True
 
 elif st.session_state.uploaded and not uploaded_file:
@@ -55,16 +54,21 @@ elif st.session_state.uploaded and not uploaded_file:
 
 if st.session_state.rdfdata is not None:
 
-    st.dataframe(st.session_state.origin_data, 1500, 400)
+    dataframe = st.experimental_data_editor(st.session_state.dataframe)
+
+    if not dataframe.equals(st.session_state.dataframe):
+        st.session_state.rdfdata = RDFData(dataframe.copy())
+        st.session_state.dataframe = dataframe
+        st.session_state.data_state = (0,0,0,0,0)
 
     with st.container():
         col1, col2 = st.columns(2)
 
         xml_format = col1.radio("RDF Format", ("Turtle", "XML"))
 
-        graphical_version = col2.checkbox("Graph anzeigen lassen")
+        graphical_version = col2.checkbox("Graphische Darstellung", value=True)
 
-    with st.expander("Unsicherheiten"):
+    with st.expander("Generiere Unsicherheiten"):
         checkcol1, checkcol2, checkcol3 = st.columns(3)
         solution = checkcol1.selectbox("Modellierung auswählen:", (1,2,3,4,5,6,7,8))
         numb_uncertain_values = checkcol3.number_input("Anzahl unsicherer Werte pro Spalte:", min_value=0, max_value=len(st.session_state.rdfdata.data), step=1)
@@ -78,7 +82,7 @@ if st.session_state.rdfdata is not None:
             'Wähle die Subjektspalten aus, in denen Unsicherheit generiert werden soll:',
             list(st.session_state.rdfdata.data.columns)[1:])
 
-    uploaded_prefixes = st.file_uploader("Prefixtabelle", type=["csv"], accept_multiple_files=False)
+    uploaded_prefixes = st.file_uploader("Präfixtabelle", type=["csv"], accept_multiple_files=False)
 
     # Graph generieren-------------------------------------------------------------------------------
 
@@ -96,20 +100,18 @@ if st.session_state.rdfdata is not None:
                 options = [rdf_data.data.columns.get_loc(c) for c in options if c in st.session_state.rdfdata.data]
 
                 rdf_data = u_generator.add_uncertainty_flags(number_of_uncertain_columns=numb_uncertain_columns, list_of_columns=options, uncertainties_per_column=numb_uncertain_values)
-                filename = "graph_model_" + str(solution)
             
             else:
                 rdf_data = st.session_state.rdfdata
-                filename = "graph"
 
             st.session_state.generator = GraphGenerator(rdf_data)
             st.session_state.generator.load_prefixes(pd.read_csv(uploaded_prefixes))
             st.session_state.generator.generate_solution(solution if numb_uncertain_values != 0 else 0, xml_format=(xml_format=="XML"))
 
             if xml_format=="XML":
-                st.session_state.path = Path(UNCO_PATH, "data/output/" + filename + ".rdf")
+                st.session_state.path = Path(UNCO_PATH, "data/output/graph.rdf")
             else:
-                st.session_state.path = Path(UNCO_PATH, "data/output/" + filename + ".ttl")
+                st.session_state.path = Path(UNCO_PATH, "data/output/graph.ttl")
 
 
         if graphical_version:

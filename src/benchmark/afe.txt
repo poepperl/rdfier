@@ -1,0 +1,48 @@
+coinfind hat Spalten:
+id, Function, FindSpot, Place, AdminDivision, Material, Mint, Mint2, Period, Denomination, Denomination2, FindCategory, CoinImage, CoinImage2, DateFrom, DateTo, DateWritten, MintMark, Countermark, Weight, DiameterMin, DiameterMax, DieAxis, ObverseReverse, FindCircumstances, YearFound, OriginalSeen, InternalNotes, Cleaned, Remarks, Material_Uncertainty, DateFrom_Uncertainty, DateTo_Uncertainty, Weight_Uncertainty, DiameterMin_Uncertainty, DiameterMax_Uncertainty, DieAxis_Uncertainty, Findcategory_Uncertainty, Function_Uncertainty, Period_Uncertainty, Denomination_Uncertainty, Mint_Uncertainty, YearFound_Uncertainty, Wear_Fs, Wear_Fs_Uncertainty, Wear_Bs, Wear_Bs_Uncertainty, Corrosion_Fs, Corrosion_Fs_Uncertainty, Corrosion_Bs, Corrosion_Bs_Uncertainty, CoinImage_Uncertainty, Culture, Status, Status_Uncertainty, CoinType, CoinType_Uncertainty, Culture_Uncertainty, Approved, Public, Deleted, Coin_Quantity, Coin_Quantity_Uncertainty, ObverseDescription, ReverseDescription, ObverseLegend, ReverseLegend
+
+Dazu passende Nomisma Properties:
+hasFindspot, hasMaterial, hasMint, hasDenomination, hasStartDate, hasEndDate, hasMintMark, hasCountermark, hasWeight, hasMinDiameter, hasMaxDiameter, (hasDie hasAxis), hasObverse, hasReverse, (Obverse and Revers: hasWear, hasCorrosion, hasLegend)
+
+Uncertainty Spalten:
+hasMaterial, hasStartDate, hasEndDate, hasWeight, hasMinDiameter, hasMaxDiameter, (hasDie hasAxis), hasDenomination, hasMint, (Obverse and Revers: hasWear, hasCorrosion)
+
+SQL für alle relevanten Spalten:
+SELECT id,
+    FindSpot,
+    Material,
+    Mint,
+    Mint2,
+    Denomination,
+    Denomination2,
+    DateFrom,
+    DateTo,
+    MintMark,
+    Countermark,
+    Weight,
+    DiameterMin,
+    DiameterMax,
+    DieAxis,
+    ObverseReverse,
+    Wear_Fs,
+    Wear_Bs,
+    Corrosion_Fs,
+    Corrosion_Bs,
+    ObverseLegend,
+    ReverseLegend,
+    Material_Uncertainty,
+    DateFrom_uncertainty,
+    DateTo_Uncertainty,
+    Weight_Uncertainty,
+    DiameterMin_Uncertainty,
+    DiameterMax_Uncertainty,
+    DieAxis_Uncertainty,
+    Denomination_Uncertainty,
+    Mint_Uncertainty,
+    Wear_Fs_Uncertainty,
+    Wear_Bs_Uncertainty,
+    Corrosion_Fs_Uncertainty,
+    Corrosion_Bs_Uncertainty
+FROM coinfind
+WHERE public = 1
+ORDER BY co.id;

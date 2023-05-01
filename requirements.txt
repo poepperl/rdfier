@@ -18,4 +18,4 @@ pathlib
 psutil # close fuseki console
 
 # UI
-streamlit
+streamlit == 1.22.0
