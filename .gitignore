@@ -17,8 +17,6 @@ docs/source/unco/
 .vscode/
 
 # Data
-data/input/*
-data/metadata/*
 data/output/*
 
 # Fuseki
