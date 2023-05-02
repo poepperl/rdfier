@@ -48,5 +48,6 @@ class Grapher():
             with open(filename, 'wb') as f:
                 shutil.copyfileobj(response.raw, f)
 
+
 if __name__ == "__main__":
     g = Grapher(Path(r"D:\Dokumente\Repositories\unco\data\output\graph_model_7.rdf"))

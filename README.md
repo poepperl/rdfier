@@ -30,7 +30,7 @@ Project Organization
 Installation
 ------------
 Windows:
-Required installations: python 3.10 or higher.
+Required installations: python 3.10 or higher. To install the project please start "installation.bat" or use the following command lines:
 ```shell
 python -m venv .venv
 .venv\Scripts\activate
