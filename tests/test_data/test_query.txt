@@ -1,6 +1,0 @@
-PREFIX nmo: <http://nomisma.org/ontology#>
-
-SELECT ?su ?p ?o
-WHERE {
-    ?su ?p ?o
-}

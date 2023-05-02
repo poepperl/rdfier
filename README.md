@@ -6,52 +6,48 @@ Project Organization
 --------------------
 
     ├── data
-    │   ├── input           <- Daten von externen Quellen.
-    │   └── output          <- Verarbeitete Daten.
+    │   └── output          <- Output files.
     |
-    ├── docs                <- Unsere Dokumenation von RDFier.
+    ├── docs                <- The documentation of RDFier.
     │  
-    ├── src                 <- Source code, um RDFier zu benutzen.
-    |   ├── setup.py            <- Macht das Projekt durch pip installierbar (pip install -e .).
-    |   ├── app                 <- Streamlit Webpage zum bedienen von RDFier.
-    |   ├── app_masterarbeit    <- Streamlit Webpage inklusive uncertainty-generator und SPARQL-Schnittstelle.
-    |   ├── fuseki              <- Fuseki Server für Benchmarktests.
-    |   ├── unco                <- Das ist der RDFier!
-    │       ├── data                <- Skripte/Klassen zum Bearbeiten, Analysieren oder Generieren von Daten.
-    │       └── features            <- Features von RDFier.
+    ├── src
+    |   ├── setup.py            <- Makes project pip-installable (pip install -e .).
+    |   ├── app                 <- Streamlit webpage of the RDFier.
+    |   ├── app_unco            <- Streamlit webpage includes a method to create pseudorandom uncertainties.
+    |   ├── fuseki              <- Fuseki server for benchmarktests.
+    |   ├── unco                <- This is the RDFier!
+    │       ├── data
+    │       └── features
     |
-    ├── tests               <- Unittests.
+    ├── tests               <- Tests and test data.
     |
-    ├── requirements.txt    <- Für die Entwicklungsumgebung erforderliche Module.
+    ├── requirements.txt    <- Required python libraries.
     |
-    └── README.md           <- Dieses Dokument.
+    └── README.md           <- This document.
 
 --------
 
 Installation
 ------------
-
+Windows:
+Required installations: python 3.10 or higher.
 ```shell
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-RDFier starten
---------------
+Linux:
+Required installations: python3 and python3.10-venv.
 ```shell
-.venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+Start RDFier
+------------
+```shell
 streamlit run src/app/RDFier.py
 ```
-
-Dokumentation generieren und öffnen
------------------------------------
-
-```
-cd docs
-sphinx-apidoc -lfM -d 0 -o source/unco/ ../src/unco
-make html
-```
-
--> Öffne docs/build/html/index.html in Browser
 
