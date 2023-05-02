@@ -2,11 +2,12 @@
 -e ./src
 
 # doku libs
-autodoc
-Sphinx
-sphinx-autobuild
-sphinx-rtd-theme
-rstcheck
+#wheel
+#autodoc
+#Sphinx
+#sphinx-autobuild
+#sphinx-rtd-theme
+#rstcheck
 
 # external requirements
 pytest # testing
