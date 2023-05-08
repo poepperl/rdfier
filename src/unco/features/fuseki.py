@@ -88,15 +88,18 @@ class FusekiServer:
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.ttl")
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.rdf")
     # time.sleep(4)
     query = """
-    PREFIX nmo: <http://nomisma.org/ontology#>
-    PREFIX nm: <http://nomisma.org/id/>
-    PREFIX afe: <http://afe.dainst.org/coin?afeid=>
-    PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
+    PREFIX bsp: <http://beispiel.com/>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-    SELECT ?s { ?s nmo:hasMint nm:comama }
+    SELECT ?o
+    WHERE {
+        ?b bsp:beinhaltet ?o . 
+        ?b rdf:type bsp:warenkorb .
+        ?b bsp:erstelltVon bsp:Luca .
+    }
     """
     # SELECT ?s { ?s nmo:hasMint nm:comama }
 
