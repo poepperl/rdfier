@@ -3,6 +3,8 @@ from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
 from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
+from time import time
+
 
 class Benchmark:
     """
@@ -32,6 +34,7 @@ class Benchmark:
         self.rdfdata = rdfdata
         self.prefixes_path = prefixes_path
         self.graph_generator : GraphGenerator
+        self.NUMB_LOOPS = 8
 
     def _generate_graph_with_model(self, model_id : int) -> None:
         self.graph_generator = GraphGenerator(self.rdfdata)
@@ -51,23 +54,46 @@ class Benchmark:
         model_id : int
             Model id of the implemented model.
         """
-        if (query_path := Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}")).is_dir():
+        if (query_path := Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}.rq")).is_file():
             query = query_path.read_text()
             return self.graph_generator.run_query(query)
         else:
             print(f"Warning: Doesn't found query{query_id} for model {model_id}.")
             return pd.DataFrame()
+        
+    
+    def start_benchmark(self):
+        time_results = dict()
+        for model_numb in range(1,9):
+            self._generate_graph_with_model(model_numb)
+            query_times = dict()
+            for query_numb in range(1,6):
+                loop = []
+                for _ in range(self.NUMB_LOOPS):
+                    start_time = time()
+                    _ = self.run_query_of_model(query_numb,model_numb)
+                    time_difference = time() - start_time
+                    loop.append(time_difference)
+                query_times[query_numb] = loop
+            time_results[model_numb] = query_times
+        
+        return time_results
 
 
 if __name__ == "__main__":
-    file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/eingabeformat.csv")), encoding='utf-8')
-    prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/namespaces.csv"))
+    # file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/eingabeformat.csv")), encoding='utf-8')
+    # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/namespaces.csv"))
 
-    rdfdata = RDFData(pd.read_csv(file))
-    generator = GraphGenerator(rdfdata)
-    generator.load_prefixes(prefixes)
-    generator.generate_solution(xml_format=False)
+    # rdfdata = RDFData(pd.read_csv(file))
+    # generator = GraphGenerator(rdfdata)
+    # generator.load_prefixes(prefixes)
+    # generator.generate_solution(xml_format=False)
 
-    test_query = Path(UNCO_PATH,"src/benchmark/queries/model1/query5.rq").read_text()
+    # test_query = Path(UNCO_PATH,"src/benchmark/queries/model1/query5.rq").read_text()
     
-    print(generator.run_query(test_query))
+    # print(generator.run_query(test_query))
+
+    input = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
+    rdfdata = RDFData(pd.read_csv(input))
+    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv")))
+    print(bench.start_benchmark())
