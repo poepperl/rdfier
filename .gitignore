@@ -18,6 +18,7 @@ docs/source/unco/
 
 # Data
 data/output/*
+tests/testdata/*
 
 # Fuseki
 src/unco/features/server_starter.bat
