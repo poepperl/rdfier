@@ -88,17 +88,14 @@ class FusekiServer:
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.rdf")
+    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.ttl")
     # time.sleep(4)
     query = """
     PREFIX bsp: <http://beispiel.com/>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-    SELECT ?o
+    SELECT ?s
     WHERE {
-        ?b bsp:beinhaltet ?o . 
-        ?b rdf:type bsp:warenkorb .
-        ?b bsp:erstelltVon bsp:Luca .
+        << ?s bsp:fliegtNach ?o >> bsp:dauer 1.4 .
     }
     """
     # SELECT ?s { ?s nmo:hasMint nm:comama }

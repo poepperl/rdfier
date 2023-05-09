@@ -46,3 +46,43 @@ SELECT id,
 FROM coinfind
 WHERE public = 1
 ORDER BY co.id;
+
+SQL aller Nomisma-Daten:
+SELECT cf.id,
+    material.Nomisma AS "nmo:hasMaterial",
+    Mint,
+    Mint2,
+    Denomination,
+    Denomination2,
+    DateFrom,
+    DateTo,
+    MintMark,
+    Countermark,
+    Weight,
+    DiameterMin,
+    DiameterMax,
+    DieAxis,
+    ObverseReverse,
+    Wear_Fs,
+    Wear_Bs,
+    Corrosion_Fs,
+    Corrosion_Bs,
+    ObverseLegend,
+    ReverseLegend,
+    Material_Uncertainty,
+    DateFrom_uncertainty,
+    DateTo_Uncertainty,
+    Weight_Uncertainty,
+    DiameterMin_Uncertainty,
+    DiameterMax_Uncertainty,
+    DieAxis_Uncertainty,
+    Denomination_Uncertainty,
+    Mint_Uncertainty,
+    Wear_Fs_Uncertainty,
+    Wear_Bs_Uncertainty,
+    Corrosion_Fs_Uncertainty,
+    Corrosion_Bs_Uncertainty
+FROM coinfind AS cf, material
+WHERE public = 1 and
+    material.id = cf.Material
+ORDER BY cf.id;
