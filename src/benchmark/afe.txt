@@ -48,27 +48,32 @@ WHERE public = 1
 ORDER BY co.id;
 
 SQL aller Nomisma-Daten:
-SELECT cf.id,
-    material.Nomisma AS "nmo:hasMaterial",
-    Mint,
-    Mint2,
-    Denomination,
-    Denomination2,
-    DateFrom,
-    DateTo,
-    MintMark,
-    Countermark,
-    Weight,
-    DiameterMin,
-    DiameterMax,
-    DieAxis,
-    ObverseReverse,
-    Wear_Fs,
-    Wear_Bs,
-    Corrosion_Fs,
-    Corrosion_Bs,
-    ObverseLegend,
-    ReverseLegend,
+SELECT cf.id AS "Coin^^uri",
+	findspot.Link AS "nmo:hasFindspot^^uri",
+    material.Nomisma AS "nmo:hasMaterial^^uri",
+    mint1.Nomisma AS "nmo:hasMint^^uri",
+    mint2.Nomisma AS "nmo:hasMint2^^uri",
+    denomination1.Nomisma AS "nmo:hasDenomination^^uri",
+    denomination2.Nomisma AS "nmo:hasDenomination2^^uri",
+    DateFrom AS "nmo:hasStartDate^^xsd:gYear",
+    DateTo AS "nmo:hasEndDate^^xsd:gYear",
+    MintMark AS "nmo:hasMintMark",
+    Countermark AS "nmo:hasCountermark",
+    Weight AS "nmo:hasWeight",
+    DiameterMin AS "nmo:hasMinDiameter",
+    DiameterMax AS "nmo:hasMaxDiameter",
+    DieAxis AS "nmo:hasDie^^id**1",
+    DieAxis AS "1__nmo:hasAxis",
+    ObverseReverse AS "nmo:hasObverse^^id**2",
+    ObverseReverse AS "nmo:hasReverse^^id**3",
+    ObverseReverse AS "2__nmo:hasContext",
+    ObverseReverse AS "3__nmo:hasContext",
+    Wear_Fs AS "2__nmo:hasWear",
+    Wear_Bs AS "3__nmo:hasWear",
+    Corrosion_Fs AS "2__nmo:hasCorrosion",
+    Corrosion_Bs AS "3__nmo:hasCorrosion",
+    ObverseLegend AS "2__nmo:hasLegend",
+    ReverseLegend AS "3__nmo:hasLegend",
     Material_Uncertainty,
     DateFrom_uncertainty,
     DateTo_Uncertainty,
@@ -82,7 +87,15 @@ SELECT cf.id,
     Wear_Bs_Uncertainty,
     Corrosion_Fs_Uncertainty,
     Corrosion_Bs_Uncertainty
-FROM coinfind AS cf, material
-WHERE public = 1 and
-    material.id = cf.Material
+FROM coinfind AS cf
+LEFT JOIN material ON cf.Material = material.id
+LEFT JOIN mint AS mint1 ON cf.Mint = mint1.id
+LEFT JOIN mint AS mint2 ON cf.Mint2 = mint2.id
+LEFT JOIN denomination AS denomination1 ON cf.Denomination = denomination1.id
+LEFT JOIN denomination AS denomination2 ON cf.Denomination2 = denomination2.id
+LEFT JOIN findspot ON cf.FindSpot = findspot.id
 ORDER BY cf.id;
+
+Manuelle Korrekturen:
+ * In LibreOffice laden und direkt speichern
+ * Bei afe:5002 muss in der Legende von Obverse die Anführungszeichen entfernt werden bzw. auf zwei reduziert werden
