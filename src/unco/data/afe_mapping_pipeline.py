@@ -1,6 +1,5 @@
 import pandas as pd
 from pathlib import Path
-from unco import UNCO_PATH
 
 def change_afe_coin_id(dataframe : pd.DataFrame) -> pd.DataFrame:
     """
@@ -52,8 +51,8 @@ def combine_mint_and_denomination(dataframe : pd.DataFrame) -> pd.DataFrame:
         dataframe : pd.DataFrame
             Dataframe which should be updated
     """
-    dataframe["nmo:hasMint^^uri"] = dataframe[["nmo:hasMint^^uri","nmo:hasMint2^^uri"]].apply(lambda x: "; ".join(str(x)) if pd.notna(x[1]) else x[0], axis =1)
-    dataframe["nmo:hasDenomination^^uri"] = dataframe[["nmo:hasDenomination^^uri","nmo:hasDenomination2^^uri"]].apply(lambda x: "; ".join(str(x)) if pd.notna(x[1]) else x[0], axis =1)
+    dataframe["nmo:hasMint^^uri"] = dataframe[["nmo:hasMint^^uri","nmo:hasMint2^^uri"]].apply(lambda x: "; ".join(x) if pd.notna(x[1]) and pd.notna(x[0]) else x[0], axis =1)
+    dataframe["nmo:hasDenomination^^uri"] = dataframe[["nmo:hasDenomination^^uri","nmo:hasDenomination2^^uri"]].apply(lambda x: "; ".join(x) if pd.notna(x[1]) and pd.notna(x[0]) else x[0], axis =1)
 
     return dataframe.drop(["nmo:hasMint2^^uri","nmo:hasDenomination2^^uri"],axis=1)
 
@@ -127,9 +126,29 @@ def remove_wrong_context_from_reverse(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).replace(";", "|") if pd.notna(x) else pd.NA)
     return dataframe
 
+
+def change_gYear_format(dataframe : pd.DataFrame) -> pd.DataFrame:
+    """
+        Takes float entries of gyear columns and change them to int.
+    
+        Parameters:
+        -----------
+        dataframe : pd.DataFrame
+            Dataframe which should be updated
+    """
+    col_list = [col for col in dataframe.columns if "^^xsd:gYear" in str(col)]
+    for column in col_list:
+        dataframe[column] = dataframe[column].apply(lambda x: int(x) if pd.notna(x) else pd.NA)
+
+    return dataframe
+
 if __name__ == "__main__":
-    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public.csv"))
-    dataframe = dataframe.drop([f"Unnamed: {numb}" for numb in range(39,54)],axis=1)
+    from unco import UNCO_PATH
+    from unco.data.rdf_data import RDFData
+    from unco.features.graph_generator import GraphGenerator
+
+    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_withoutUncertainties.csv"))
+    # dataframe = dataframe.drop([f"Unnamed: {numb}" for numb in range(39,54)],axis=1)
 
     dataframe = change_afe_coin_id(dataframe)
     dataframe = change_findspot(dataframe)
@@ -138,6 +157,15 @@ if __name__ == "__main__":
     dataframe = remove_wrong_context_from_obverse(dataframe)
     dataframe = remove_wrong_context_from_reverse(dataframe)
     dataframe = simplify_all_id_columns(dataframe)
+    dataframe = change_gYear_format(dataframe)
 
     print(dataframe)
     dataframe.to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed.csv"))
+
+    rdf_data = RDFData(dataframe)
+
+    gg = GraphGenerator(rdf_data)
+
+    gg.load_prefixes(str(Path(UNCO_PATH,r"tests\testdata\afe\namespaces.csv")))
+
+    gg.generate_solution()
