@@ -93,7 +93,7 @@ class RDFData:
             else:
                 self.triple_plan["**"] = {"objects" : first_col_objects, "subject" : set([0])}
         
-            self.data.rename({column : new_column_name}, axis=1, inplace=True)
+            # self.data.rename({column : new_column_name}, axis=1, inplace=True)
 
 
     def _load_uncertainties(self):
