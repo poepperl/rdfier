@@ -60,7 +60,7 @@ class FusekiServer:
             headers = {'Content-Type': r'text/turtle;charset=utf-8'}
         else:
             raise ValueError("Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input.")
-        data = open(path, 'r', encoding='utf-8').read()
+        data = open(path, 'r', encoding='latin1').read()
         requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
 
 
@@ -91,11 +91,12 @@ if __name__ == "__main__":
     f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.ttl")
     # time.sleep(4)
     query = """
-    PREFIX bsp: <http://beispiel.com/>
+    PREFIX nmo: <http://nomisma.org/ontology#>
+    PREFIX nm: <http://nomisma.org/id/>
 
     SELECT ?s
     WHERE {
-        << ?s bsp:fliegtNach ?o >> bsp:dauer 1.4 .
+        ?s nmo:hasMint nm:rome .
     }
     """
     # SELECT ?s { ?s nmo:hasMint nm:comama }

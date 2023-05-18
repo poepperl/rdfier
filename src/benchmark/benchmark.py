@@ -93,7 +93,7 @@ if __name__ == "__main__":
     
     # print(generator.run_query(test_query))
 
-    input = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
+    input = open(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
-    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv")))
+    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\afe\namespaces.csv")))
     print(bench.start_benchmark())
