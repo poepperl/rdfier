@@ -110,30 +110,31 @@ class GraphGenerator():
 
                             for index, object in enumerate(objects):
                                 if (row_index,column_index) in self.rdfdata.uncertainties:
-                                    uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
+                                    # uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
+                                    uncertainty_id = subject.n3() + pred_name
                                     if solution_id in [3,4,5]:
                                         if "likelihoods" in self.rdfdata.uncertainties[(row_index,column_index)]:
                                             weight = self.rdfdata.uncertainties[(row_index,column_index)]["likelihoods"][index]
                                         else:
                                             weight = 0.5
-                                            print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough the model {solution_id} needs them. Weight 0.5 will be taken instead.")
+                                            print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough model {solution_id} needs some. Weight 0.5 will be taken instead.")
                                     match solution_id:
                                         case 1:
-                                            self._generate_uncertain_value_solution_1(subject, predicate, object, uncertainty_id)
+                                            self._generate_uncertain_value_solution_1(subject, predicate, object)
                                         case 2:
-                                            self._generate_uncertain_value_solution_2(subject, predicate, object, uncertainty_id)
+                                            self._generate_uncertain_value_solution_2(subject, predicate, object)
                                         case 3:
                                             self._generate_uncertain_value_solution_3(subject, predicate, object, weight)
                                         case 4:
-                                            self._generate_uncertain_value_solution_4(subject, predicate, object, weight, uncertainty_id)
+                                            self._generate_uncertain_value_solution_4(subject, predicate, object, weight, uncertainty_id, len(obj_names)!=1)
                                         case 5:
-                                            self._generate_uncertain_value_solution_5(subject, predicate, object, weight, uncertainty_id)
+                                            self._generate_uncertain_value_solution_5(subject, predicate, object, weight)
                                         case 6:
-                                            self._generate_uncertain_value_solution_6(subject, predicate, object, uncertainty_id)
+                                            self._generate_uncertain_value_solution_6(subject, predicate, object)
                                         case 7:
-                                            self._generate_uncertain_value_solution_7(subject, predicate, object, uncertainty_id)
+                                            self._generate_uncertain_value_solution_7(subject, predicate, object)
                                         case 8:
-                                            self._generate_uncertain_value_solution_8(subject, predicate, object, uncertainty_id)
+                                            self._generate_uncertain_value_solution_8(subject, predicate, object)
                                         case _:
                                             self.graph.add((subject, predicate, object))
 
@@ -236,6 +237,7 @@ class GraphGenerator():
                 self.graph.bind("rdf", RDF)
                 self.prefixes["crm"] = CRM
                 self.prefixes["rdf"] = RDF
+                self.graph.add((BNode("A3"), RDF.type, CRM["R1_Reliability_Assessment"]))
             case 4:
                 self.graph.bind("crminf", CRMINF)
                 self.prefixes["crminf"] = CRMINF
@@ -262,7 +264,7 @@ class GraphGenerator():
                 pass
 
 
-    def _generate_uncertain_value_solution_1(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_1(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
         """ Method to create an uncertain value of solution 1.
         Attributes
         ----------
@@ -275,7 +277,7 @@ class GraphGenerator():
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
         """
-        node = BNode(uncertainty_id)
+        node = BNode()
         self.graph.add((subject, predicate, object))
         self.graph.add((node, CRM["P141_assigned"], object))
         self.graph.add((node, CRM["P140_assigned_attribute_to"], subject))
@@ -284,7 +286,7 @@ class GraphGenerator():
         self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
 
-    def _generate_uncertain_value_solution_2(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_2(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
         """ Method to create an uncertain value of solution 2.
         Attributes
         ----------
@@ -297,13 +299,13 @@ class GraphGenerator():
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
         """
-        node = BNode(uncertainty_id)
+        node = BNode()
         self.graph.add((subject, predicate, node))
         self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
         self.graph.add((node, RDF.value, object))
 
 
-    def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, weight : float) -> None:
+    def _generate_uncertain_value_solution_3(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal, weight : float) -> None:
         """ Method to create an uncertain value of solution 3.
         Attributes
         ----------
@@ -316,12 +318,10 @@ class GraphGenerator():
         weight : float
             Weight or likelihood of the certainty.
         """
-        A = BNode("A3")
         b = BNode()
         c = BNode()
 
-        self.graph.add((A, RDF.type, CRM["R1_Reliability_Assessment"]))
-        self.graph.add((A, CRM["T1_assessed_the_reliability_of"], b))
+        self.graph.add((BNode("A3"), CRM["T1_assessed_the_reliability_of"], b))
 
         self.graph.add((b, RDF.type, CRM["E13"]))
         self.graph.add((b, RDF.Property, predicate))
@@ -336,7 +336,7 @@ class GraphGenerator():
         self.graph.add((subject, predicate, object))
 
 
-    def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, weight : float, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal, weight : float, uncertainty_id : str, has_alternatives : bool) -> None:
         """ Method to create an uncertain value of solution 4.
         Attributes
         ----------
@@ -350,22 +350,34 @@ class GraphGenerator():
             Weight or likelihood of the certainty.
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
+        has_alternatives : bool
+            Boolean value to mark, if the entry has other alternatives or not.
         """
-        node = BNode(uncertainty_id)
+        if has_alternatives:
+            b = BNode(uncertainty_id)
+            c = BNode()
+
+            self.graph.add((subject,predicate,b))
+            self.graph.add((b,RDF.type,CRMINF["I5_Inference_Making"]))
+            self.graph.add((b,CRMINF["J2"],c))
+        else:
+            c = BNode()
+
+            self.graph.add((subject,predicate,c))
+
 
         if weight>0.5:
             level = "more likely"
         else:
             level = "uncertain"
-        
-        self.graph.add((subject, predicate, node))
-
-        self.graph.add((node, CRMINF["J5_holds_to_be"], Literal(level)))
-        self.graph.add((node, RDF["type"], CRMINF["I2_Belief"]))
-        self.graph.add((node, CRMINF["J4_that"], object))
 
 
-    def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, weight : float, uncertainty_id : str) -> None:
+        self.graph.add((c, CRMINF["J5_holds_to_be"], Literal(level)))
+        self.graph.add((c, RDF["type"], CRMINF["I2_Belief"]))
+        self.graph.add((c, CRMINF["J4_that"], object))
+
+
+    def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal, weight : float) -> None:
         """ Method to create an uncertain value of solution 5.
         Attributes
         ----------
@@ -380,8 +392,8 @@ class GraphGenerator():
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
         """
-        node = BNode(uncertainty_id)
-        crm_property = "P3_uncertain_value" if predicate.n3()[1:-1] not in self.crm_properties else self.crm_properties[predicate.n3()[1:-1]]
+        node = BNode()
+        crm_property = "P3.2_uncertain_value" if predicate.n3()[1:-1] not in self.crm_properties else self.crm_properties[predicate.n3()[1:-1]]
         
         self.graph.add((CRM[crm_property], RDFS["domain"], CRM[f"PC{crm_property.split('.2')[0][1:]}_approximates"]))
         self.graph.add((CRM[crm_property], RDFS["range"], CRM["E55_Type"]))
@@ -392,7 +404,7 @@ class GraphGenerator():
         self.graph.add((node, CRM[crm_property], object))
 
 
-    def _generate_uncertain_value_solution_6(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_6(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
         """ Method to create an uncertain value of solution 6.
         Attributes
         ----------
@@ -405,7 +417,7 @@ class GraphGenerator():
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
         """
-        node = BNode(uncertainty_id)
+        node = BNode()
 
         self.graph.add((subject, predicate, object))
         self.graph.add((node, RDF["object"], object))
@@ -414,7 +426,7 @@ class GraphGenerator():
         self.graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
 
 
-    def _generate_uncertain_value_solution_7(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_7(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
         """ Method to create an uncertain value of solution 7.
         Attributes
         ----------
@@ -427,14 +439,14 @@ class GraphGenerator():
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
         """
-        node = BNode(uncertainty_id)
+        node = BNode()
 
         self.graph.add((subject, predicate, node))
         self.graph.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
         self.graph.add((node, RDF.value, object))
 
 
-    def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal | None, predicate : URIRef | None, object : URIRef | Literal | None, uncertainty_id : str) -> None:
+    def _generate_uncertain_value_solution_8(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
         """ Method to create an uncertain value of solution 8.
         Attributes
         ----------

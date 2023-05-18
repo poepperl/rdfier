@@ -17,6 +17,7 @@ rdflib # rdf-graphs
 requests # communication between python and fuseki server
 pathlib
 psutil # close fuseki console
+matplotlib
 
 # UI
 streamlit == 1.22.0

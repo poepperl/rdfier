@@ -1,5 +1,4 @@
 import pandas as pd
-from math import isnan
 from warnings import warn
 
 class RDFData:
@@ -165,7 +164,7 @@ class RDFData:
             column_type_language, column_name = self._get_type_language(str(column))
 
             # Entry type or language:
-            for cell_index, cell in enumerate(self.data[column]):
+            for cell_index, cell in enumerate(self.data.iloc[:,col_index]):
                 if pd.notnull(cell):
                     splitlist = str(cell).split(";")
                     cell_types_languages = splitlist.copy()
@@ -185,6 +184,8 @@ class RDFData:
         """
         Method which extracts the type/language of a string.
         """
+        greek2latin = str.maketrans('ΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω・','AaBbGgDdEeZzHhJjIiKkLlMmNnXxOoPpRrSssTtUuFfQqYyWw.')
+        string = string.translate(greek2latin)
         type_splitlist = string.split("^^")
 
         if len(type_splitlist) >= 2:
@@ -230,6 +231,7 @@ class RDFData:
 
 
 if __name__ == "__main__":
-    file = open(r"C:\Users\scrum\Documents\Repositories\unco\tests\test_data\csv_testdata\eingabeformat.csv", encoding='utf-8')
-    p = RDFData(pd.read_csv(file))
-    print(p.data, p.types_and_languages)
+    from unco import UNCO_PATH
+    from pathlib import Path
+    file = open(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed.csv"),encoding="utf-8")
+    p = RDFData(pd.read_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed.csv")))

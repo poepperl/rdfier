@@ -91,12 +91,12 @@ if __name__ == "__main__":
     f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.ttl")
     # time.sleep(4)
     query = """
-    PREFIX nmo: <http://nomisma.org/ontology#>
-    PREFIX nm: <http://nomisma.org/id/>
-    PREFIX afe: <http://afe.dainst.org/coin?afeid=>
-    PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
+    PREFIX bsp: <http://beispiel.com/>
 
-    SELECT ?s { ?s nmo:hasMint nm:comama }
+    SELECT ?s
+    WHERE {
+        << ?s bsp:fliegtNach ?o >> bsp:dauer 1.4 .
+    }
     """
     # SELECT ?s { ?s nmo:hasMint nm:comama }
 
