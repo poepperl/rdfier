@@ -161,6 +161,8 @@ if __name__ == "__main__":
     print(dataframe)
     dataframe.to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed.csv"),index=False)
 
+    dataframe.sample(n=8).to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed_8rows.csv"),index=False)
+
     rdf_data = RDFData(dataframe)
 
     print(len(rdf_data.types_and_languages), (12,16) in rdf_data.types_and_languages)
