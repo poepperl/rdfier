@@ -1,0 +1,20 @@
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?subject (group_concat(distinct ?o;separator=", ") as ?objects) ?certainty
+WHERE {
+    {?subject nmo:hasMint ?b .
+    ?b un:hasUncertainty nm:uncertain_value .
+    ?b rdf:value ?o .
+    BIND("uncertain" AS ?certainty)}
+    UNION
+    {
+        ?subject nmo:hasMint ?o.
+    FILTER NOT EXISTS {
+        ?o un:hasUncertainty nm:uncertain_value .
+    }
+        BIND("certain" AS ?certainty)
+    }
+}
+GROUP BY ?subject ?certainty
