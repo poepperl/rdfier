@@ -4,14 +4,15 @@ PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?s ?o
+SELECT ?subject (group_concat(distinct ?o;separator=", ") as ?objects)
 WHERE {
-    ?s nmo:hasMint ?o . 
+    ?subject nmo:hasMint ?o.
     FILTER NOT EXISTS {
-        ?b crm:P140_assigned_attribute_to ?s ;
-            crm:P141_assigned ?o ;
+        ?b crm:P140_assigned_attribute_to ?subject ;
+            crm:P141_assigned ?object ;
             bmo:PX_Property nmo:hasMint ;
             a crm:E13 ;
             bmo:PX_likelihood nm:uncertain_value .
     }
 }
+GROUP BY ?subject

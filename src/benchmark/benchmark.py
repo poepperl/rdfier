@@ -93,7 +93,8 @@ if __name__ == "__main__":
     
     # print(generator.run_query(test_query))
 
-    input = open(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,r"tests\testdata\eingabeformat.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\afe\namespaces.csv")))
-    print(bench.start_benchmark())
+    bench._generate_graph_with_model(1)
+    print(bench.run_query_of_model(5,1))
