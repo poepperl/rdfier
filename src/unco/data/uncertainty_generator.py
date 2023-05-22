@@ -17,55 +17,63 @@ class UncertaintyGenerator():
         self.rdfdata = rdfdata
         self.NUMBER_OF_ALTERNATIVES : int
 
-    def add_pseudorand_uncertainty_flags(self, number_of_uncertain_columns: int=0, list_of_columns: list[int] =[], uncertainties_per_column: int = 0) -> RDFData:
+    def add_pseudorand_uncertainty_flags(self, list_of_columns: list[int] =[], min_uncertainties_per_column: int = 0, max_uncertainties_per_column: int = 2) -> RDFData:
         """ Method to create random uncertaintie flags.
 
         Parameters
         ----------
-        number_of_uncertain_columns : int, optional
-            The number of columns, which get uncertainty flags. Only used, if list_of_columns is empty. By default, the number is chosen randomly between 1 and the number of columns.
         list_of_columns: list[int], optional
             List of columns which should get uncertainty flags.
-        uncertainties_per_column: int, optional
-            Number of uncertainties each column. By default, the number is chosen randomly each column beween 1 and the number of rows.
+        min_uncertainties_per_column: int, optional
+            Minimal number of uncertainties each column.
+        max_uncertainties_per_column: int, optional
+            Maximal number of uncertainties each column.
         """
-        nrows, ncolums = self.rdfdata.data.shape
+        object_set = set()
+        for plan in self.rdfdata.triple_plan.values():
+            object_set = object_set.union(plan["objects"])
+        
+        for plan in self.rdfdata.triple_plan.values():
+            if plan["objects"]:
+                object_set = object_set.difference(plan["subject"])
 
+        nrows = self.rdfdata.data.shape[0]
         list_of_columns = list(set(list_of_columns)) # Remove all duplicates from list
 
         if len(list_of_columns) == 0:
-            # get random number of uncertainties between 1 and the number of columns
-            if number_of_uncertain_columns < 0:
-                number_of_uncertain_columns = random.randrange(1, ncolums)
-            elif number_of_uncertain_columns >= ncolums:
-                raise IndexError("Number of uncertain columns to high.")
-
-            uncertain_columns = random.sample(range(1, ncolums), number_of_uncertain_columns)
+            # return current rdfdata if no column was selected
+            return self.rdfdata
 
         else:
             # catch wrong inputs:
-            if not(all(isinstance(n, int) for n in list_of_columns)):
-                raise ValueError("List of columns includes none integers.")
-            elif not(all(0 < n < ncolums for n in list_of_columns)) or len(list_of_columns) > ncolums:
+            if not(all(n in object_set for n in list_of_columns)):
                 raise ValueError("Wrong column indices.")
             
             uncertain_columns = list_of_columns
 
-        uncertainty_flags = {}
-        for column in uncertain_columns:
-            if uncertainties_per_column < 1 or uncertainties_per_column > nrows:
-                uncertain_values = random.sample(range(0, nrows), random.randint(1, nrows)) # Get random row indices
-            else:
-                uncertain_values = random.sample(range(0, nrows), uncertainties_per_column)
-            
-            for row in uncertain_values:
-                if len(str(self.rdfdata.data.iat[row,column]).split(";")) == 1:
-                    uncertainty_flags[(row,column)] = {"mode":"ou"}
-                else:
-                    uncertainty_flags[(row,column)] = {"mode":"a"}
-                
+        if min_uncertainties_per_column < 0 or max_uncertainties_per_column < 1 or min_uncertainties_per_column > max_uncertainties_per_column:
+            raise ValueError("Wrong bounds for uncertainties.")
 
-        self.rdfdata.uncertainties = uncertainty_flags
+        current_uncertainties = [[] for _ in self.rdfdata.data]
+        for entry in self.rdfdata.uncertainties:
+            current_uncertainties[entry[1]].append(entry[0])
+
+        for column in uncertain_columns:
+            numb_additional_uncertainties = random.randint(min_uncertainties_per_column,max_uncertainties_per_column) - len(current_uncertainties[column])
+
+            if numb_additional_uncertainties < 1:
+                continue
+            
+            uncertain_rows = [i for i in range(1, nrows) if i not in current_uncertainties[column]]
+            uncertain_rows = random.sample(uncertain_rows, numb_additional_uncertainties) # Get random row indices
+            
+            for row in uncertain_rows:
+                if len(str(self.rdfdata.data.iat[row,column]).split(";")) == 1:
+                    self.rdfdata.uncertainties[(row,column)] = {"mode":"ou"}
+                else:
+                    self.rdfdata.uncertainties[(row,column)] = {"mode":"a"}
+
+        print(self.rdfdata.uncertainties)
         return self.rdfdata
     
 
@@ -149,7 +157,7 @@ if __name__ == "__main__":
 
     rdfdata = RDFData(pd.read_csv(file))
     g = UncertaintyGenerator(rdfdata=rdfdata)
-    print(g.add_pseudorand_alternatives().data)
+    print(g.add_pseudorand_uncertainty_flags(list_of_columns=[1]).data)
 
 """
 Bei Generierung von uncertainty flags dürfen nur Spalten in Fragen kommen, die ausschließlich Objekte beinhalten.
