@@ -69,7 +69,7 @@ class UncertaintyGenerator():
         return self.rdfdata
     
 
-    def add_pseudorand_alternatives(self, min_number_of_alternatives : int = 1, max_number_of_alternatives : int = 2, list_of_columns: list[int] =[]) -> RDFData:
+    def add_pseudorand_alternatives(self, min_number_of_alternatives : int = 1, max_number_of_alternatives : int = 3, list_of_columns: list[int] =[]) -> RDFData:
         """ Method to add alternatives to the existing uncertainty flags.
 
         Parameters
@@ -97,6 +97,14 @@ class UncertaintyGenerator():
 
         if len(list_of_columns) == 0:
             list_of_columns = list(range(len(self.rdfdata.data.columns)))
+    	
+        list_of_column_entries = []
+        for column in list_of_columns:
+            values_of_column = set(self.rdfdata.data.iloc[:,column].tolist())
+            values_of_column = [str(entry).split(";") for entry in values_of_column]
+            values_of_column = {element for sublist in values_of_column for element in sublist}
+            values_of_column = [val for val in values_of_column if val != "nan"]
+            list_of_column_entries.append(values_of_column)
         
         for (row,column) in self.rdfdata.uncertainties:
             if column in list_of_columns:
@@ -107,11 +115,31 @@ class UncertaintyGenerator():
 
                 if numb_additional_alternatives < 1:
                     continue
-                
-                values_of_column = set(self.rdfdata.data.iloc[:,column].tolist())
-                print(list_of_columns)
+
+                values_of_column = [str(entry).strip() for entry in list_of_column_entries[column] if entry not in current_values]
+
+                if numb_additional_alternatives > len(values_of_column):
+                    print(f"Warning: Couldn't find {numb_additional_alternatives+len(current_values)} different entries in column {column}. Set the higher bound to {len(values_of_column)+len(current_values)}.")
+                    numb_additional_alternatives = len(values_of_column)
+
+                current_values += random.sample(values_of_column, numb_additional_alternatives)
+
+                self.rdfdata.data.iat[row,column] = "; ".join(current_values)
+
+                likelihoods = []
+                sum = 0
+                for _ in current_values:
+                    randomvalue = random.randint(1,10)
+                    sum += randomvalue
+                    likelihoods.append(randomvalue)
+
+                likelihoods = np.array(likelihoods)
+                likelihoods = np.around(np.divide(likelihoods,sum),decimals=2)
+
+                self.rdfdata.uncertainties[(row,column)]["likelihoods"] = likelihoods
         
         return self.rdfdata
+
 
 if __name__ == "__main__":
     from unco import UNCO_PATH
@@ -125,5 +153,4 @@ if __name__ == "__main__":
 
 """
 Bei Generierung von uncertainty flags dürfen nur Spalten in Fragen kommen, die ausschließlich Objekte beinhalten.
-Es sollen in values_of_column alle nan Werte entfernt werden.
 """
