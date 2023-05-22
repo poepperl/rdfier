@@ -90,6 +90,8 @@ class GraphGenerator():
             self.graph.bind(prefix, nspaces)
 
         for plan in self.rdfdata.triple_plan.values():
+            if not plan["objects"]:
+                continue
             subject_colindex = plan["subject"].copy().pop()
             object_colindices = plan["objects"].copy()
 
