@@ -327,8 +327,8 @@ class GraphGenerator():
 
         self.graph.add((b, RDF.type, CRM["E13"]))
         self.graph.add((b, RDF.Property, predicate))
-        self.graph.add((b, CRM["T2_assessed_the_reliability"], c))
-        self.graph.add((b, CRM["P140_assigned_the_reliability_to"], subject))
+        self.graph.add((b, CRM["T2_assessed_as_reliability"], c))
+        self.graph.add((b, CRM["P140_assigned_attribute_to"], subject))
         self.graph.add((b, CRM["P141_assigned"], object))
 
         # Likelihood:

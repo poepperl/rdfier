@@ -1,0 +1,25 @@
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+
+SELECT ?subject ?predicate ?object
+WHERE {
+    {?subject ?predicate ?object .}
+    MINUS {
+        ?subject crm:P141_assigned ?o1 ;
+            crm:P140_assigned_attribute_to ?o2 ;
+            crm:T2_assessed_as_reliability ?o3 ;
+            rdf:Property ?o4 ;
+            a crm:E13 .
+    }
+    MINUS {
+        ?subject a crm:R2_Reliability ;
+            crm:P90_has_value ?certainty .
+        ?b crm:T2_assessed_as_reliability ?subject ;
+            a crm:E13 .
+    }
+    MINUS {
+        ?subject crm:T1_assessed_the_reliability_of ?o1 ;
+            a crm:R1_Reliability_Assessment .
+    }
+}

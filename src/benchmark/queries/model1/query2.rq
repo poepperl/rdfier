@@ -4,7 +4,7 @@ PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?subject (group_concat(distinct ?o;separator=", ") as ?objects)
+SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
 WHERE {
     ?subject nmo:hasMint ?o.
     ?b crm:P140_assigned_attribute_to ?subject ;
