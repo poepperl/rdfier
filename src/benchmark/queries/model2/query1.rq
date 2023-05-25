@@ -1,5 +1,6 @@
 PREFIX nm: <http://nomisma.org/id/>
 PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
 
 SELECT ?subject (group_concat(distinct ?o;separator=", ") as ?objects)
 WHERE {

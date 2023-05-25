@@ -57,6 +57,7 @@ class Benchmark:
         if (query_path := Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}.rq")).is_file():
             query = query_path.read_text()
             return self.graph_generator.run_query(query)
+            # return self.graph_generator.graph.query(query).serialize(destination=str(Path(UNCO_PATH,r"data\output\query_results.csv")),format="xml")
         else:
             print(f"Warning: Doesn't found query{query_id} for model {model_id}.")
             return pd.DataFrame()
@@ -96,5 +97,6 @@ if __name__ == "__main__":
     input = open(Path(UNCO_PATH,r"tests\testdata\eingabeformat.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\namespaces.csv")))
-    bench._generate_graph_with_model(2)
-    print(bench.run_query_of_model(3,2))
+    model = 2
+    bench._generate_graph_with_model(model)
+    print(bench.run_query_of_model(5,model))
