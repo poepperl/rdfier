@@ -248,6 +248,8 @@ class GraphGenerator():
             case 5:
                 self.graph.bind("amt", AMT)
                 self.graph.bind("crm", CRM)
+                self.graph.bind("rdfs", RDFS)
+                self.prefixes["rdfs"] = RDFS
                 self.prefixes["amt"] = AMT
                 self.prefixes["crm"] = CRM
                 self.crm_properties = self._get_crm_properties()

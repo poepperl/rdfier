@@ -8,6 +8,14 @@ SELECT ?subject ?predicate ?object
 WHERE {
     ?subject ?predicate ?object .
     MINUS {
+        ?subject ?predicate ?o.
+        ?b crm:P140_assigned_attribute_to ?subject ;
+            crm:P141_assigned ?o ;
+            bmo:PX_Property ?predicate ;
+            a crm:E13 ;
+            bmo:PX_likelihood nm:uncertain_value .
+    }
+    MINUS {
         ?subject crm:P140_assigned_attribute_to ?b1 ;
             crm:P141_assigned ?b2 ;
             bmo:PX_Property ?b3 ;

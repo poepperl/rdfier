@@ -5,15 +5,6 @@ PREFIX crminf: <https://ontome.net/ns/crminf/>
 SELECT ?subject ?predicate ?object
 WHERE {
     {?subject ?predicate ?object .}
-    UNION {
-        ?subject ?predicate ?a .
-        ?a crminf:J2_concluded_that ?b ;
-            a crminf:I5_Inference_Making .
-        ?b crminf:J4_that ?object ;
-            crminf:J5_holds_to_be ?certainty ;
-            crminf:I4_Proposition_Set ?proposetion ;
-            a crminf:I2_Belief .
-    }
     MINUS {
         ?object crminf:J2_concluded_that ?b ;
             a crminf:I5_Inference_Making .

@@ -1,0 +1,14 @@
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX amt: <http://academic-meta-tool.xyz/vocab#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+
+SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+WHERE {
+    ?subject nmo:hasMint ?o.
+    FILTER NOT EXISTS {
+        ?o amt:weight ?certainty ;
+            crm:P189.2_uncertain_place ?b .
+    }
+}
+GROUP BY ?subject

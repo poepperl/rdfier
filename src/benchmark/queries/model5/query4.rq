@@ -1,0 +1,67 @@
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX amt: <http://academic-meta-tool.xyz/vocab#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+
+SELECT ?subject ?predicate ?object
+WHERE {
+    {?subject ?predicate ?object .}
+    MINUS {
+        ?subject ?predicate ?object .
+        ?object amt:weight ?c1 ;
+            ?p2 ?o1 .
+        VALUES (?p2) {
+            (crm:P189.2_uncertain_place)
+            (crm:P107.2_uncertain_member)
+            (crm:P102.2_uncertain_name_or_ethnic)
+            (crm:P16.2_uncertain_technique_or_object_used_for_creation)
+            (crm:P103.2_uncertain_symbole_or_features)
+            (crm:P67.2_uncertain_type)
+            (crm:P138.2_uncertain_authenticity)
+            (crm:P14.2_uncertain_authority_or_issuer)
+            (crm:P137.2_uncertain_material)
+            (crm:P136.2_uncertain_context_or_taxonomy)
+            (crm:P139.2_uncertain_form)
+            (crm:P19.2_uncertain_mode)
+            (crm:P62.2_uncertain_depiction)
+        }
+    }
+    MINUS {
+        ?subject amt:weight ?c2 ;
+            ?p3 ?o2 .
+        VALUES (?p3) {
+            (crm:P189.2_uncertain_place)
+            (crm:P107.2_uncertain_member)
+            (crm:P102.2_uncertain_name_or_ethnic)
+            (crm:P16.2_uncertain_technique_or_object_used_for_creation)
+            (crm:P103.2_uncertain_symbole_or_features)
+            (crm:P67.2_uncertain_type)
+            (crm:P138.2_uncertain_authenticity)
+            (crm:P14.2_uncertain_authority_or_issuer)
+            (crm:P137.2_uncertain_material)
+            (crm:P136.2_uncertain_context_or_taxonomy)
+            (crm:P139.2_uncertain_form)
+            (crm:P19.2_uncertain_mode)
+            (crm:P62.2_uncertain_depiction)
+        }
+    }
+    MINUS {
+        ?subject rdfs:domain ?o3 ;
+            rdfs:range crm:E55_Type .
+        VALUES (?subject) {
+            (crm:P189.2_uncertain_place)
+            (crm:P107.2_uncertain_member)
+            (crm:P102.2_uncertain_name_or_ethnic)
+            (crm:P16.2_uncertain_technique_or_object_used_for_creation)
+            (crm:P103.2_uncertain_symbole_or_features)
+            (crm:P67.2_uncertain_type)
+            (crm:P138.2_uncertain_authenticity)
+            (crm:P14.2_uncertain_authority_or_issuer)
+            (crm:P137.2_uncertain_material)
+            (crm:P136.2_uncertain_context_or_taxonomy)
+            (crm:P139.2_uncertain_form)
+            (crm:P19.2_uncertain_mode)
+            (crm:P62.2_uncertain_depiction)
+        }
+    }
+}

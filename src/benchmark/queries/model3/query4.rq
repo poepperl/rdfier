@@ -6,6 +6,16 @@ SELECT ?subject ?predicate ?object
 WHERE {
     {?subject ?predicate ?object .}
     MINUS {
+        ?a crm:T1_assessed_the_reliability_of ?b ;
+            a crm:R1_Reliability_Assessment .
+        ?b crm:P141_assigned ?object ;
+            crm:P140_assigned_attribute_to ?subject ;
+            crm:T2_assessed_as_reliability ?c ;
+            rdf:Property ?predicate ;
+            a crm:E13 .
+        ?c a crm:R2_Reliability .
+    }
+    MINUS {
         ?subject crm:P141_assigned ?o1 ;
             crm:P140_assigned_attribute_to ?o2 ;
             crm:T2_assessed_as_reliability ?o3 ;
