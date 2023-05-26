@@ -97,6 +97,6 @@ if __name__ == "__main__":
     input = open(Path(UNCO_PATH,r"tests\testdata\eingabeformat.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\namespaces.csv")))
-    model = 7
+    model = 8
     bench._generate_graph_with_model(model)
-    print(bench.run_query_of_model(5,model))
+    print(bench.run_query_of_model(4,model))
