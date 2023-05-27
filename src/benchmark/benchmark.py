@@ -99,4 +99,4 @@ if __name__ == "__main__":
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\namespaces.csv")))
     model = 8
     bench._generate_graph_with_model(model)
-    print(bench.run_query_of_model(4,model))
+    print(bench.run_query_of_model(5,model))
