@@ -1,4 +1,3 @@
-PREFIX nm: <http://nomisma.org/id/>
 PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
 
@@ -9,8 +8,7 @@ WHERE {
         ?b nmo:hasMint ?o .
         BIND("uncertain" AS ?certainty)
     }
-    UNION
-    {
+    UNION {
         ?subject nmo:hasMint ?o.
         FILTER NOT EXISTS {
             ?a un:hasUncertainty ?subject .

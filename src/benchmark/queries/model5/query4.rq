@@ -1,11 +1,12 @@
-PREFIX nm: <http://nomisma.org/id/>
-PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX amt: <http://academic-meta-tool.xyz/vocab#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 
 SELECT ?subject ?predicate ?object
 WHERE {
-    {?subject ?predicate ?object .}
+    {
+        ?subject ?predicate ?object .
+    }
     MINUS {
         ?subject ?predicate ?object .
         ?object amt:weight ?c1 ;

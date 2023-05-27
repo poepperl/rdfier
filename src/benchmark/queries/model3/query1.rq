@@ -1,6 +1,6 @@
-PREFIX nm: <http://nomisma.org/id/>
 PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
 WHERE {

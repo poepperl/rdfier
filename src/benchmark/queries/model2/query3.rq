@@ -5,16 +5,17 @@ PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.o
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects) ?certainty
 WHERE {
-    {?subject nmo:hasMint ?b .
-    ?b un:hasUncertainty nm:uncertain_value ;
-        rdf:value ?o .
-    BIND("uncertain" AS ?certainty)}
-    UNION
     {
-        ?subject nmo:hasMint ?o.
-    FILTER NOT EXISTS {
-        ?o un:hasUncertainty nm:uncertain_value .
+        ?subject nmo:hasMint ?b .
+        ?b un:hasUncertainty nm:uncertain_value ;
+            rdf:value ?o .
+        BIND("uncertain" AS ?certainty)
     }
+    UNION {
+        ?subject nmo:hasMint ?o.
+        FILTER NOT EXISTS {
+            ?o un:hasUncertainty nm:uncertain_value .
+        }
         BIND("certain" AS ?certainty)
     }
 }

@@ -1,5 +1,3 @@
-PREFIX nm: <http://nomisma.org/id/>
-PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX amt: <http://academic-meta-tool.xyz/vocab#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 

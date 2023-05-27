@@ -1,4 +1,4 @@
-PREFIX nm: <http://nomisma.org/id/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 
@@ -15,19 +15,18 @@ WHERE {
         ?c a crm:R2_Reliability ;
             crm:P90_has_value ?certainty .
     }
-    UNION
-    {
+    UNION {
         ?subject nmo:hasMint ?o.
-    FILTER NOT EXISTS {
-        ?b crm:P141_assigned ?o ;
-            crm:P140_assigned_attribute_to ?subject ;
-            crm:T2_assessed_as_reliability ?c ;
-            rdf:Property nmo:hasMint ;
-            a crm:E13 .
-        ?c a crm:R2_Reliability .
-        ?a crm:T1_assessed_the_reliability_of ?b ;
-            a crm:R1_Reliability_Assessment .
-    }
+        FILTER NOT EXISTS {
+            ?b crm:P141_assigned ?o ;
+                crm:P140_assigned_attribute_to ?subject ;
+                crm:T2_assessed_as_reliability ?c ;
+                rdf:Property nmo:hasMint ;
+                a crm:E13 .
+            ?c a crm:R2_Reliability .
+            ?a crm:T1_assessed_the_reliability_of ?b ;
+                a crm:R1_Reliability_Assessment .
+        }
         BIND("1" AS ?certainty)
     }
 }

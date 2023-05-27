@@ -6,7 +6,7 @@ PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.o
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
 WHERE {
     ?subject nmo:hasMint ?b .
-    ?b un:hasUncertainty nm:uncertain_value .
-    ?b rdf:value ?o .
+    ?b un:hasUncertainty nm:uncertain_value ;
+        rdf:value ?o .
 }
 GROUP BY ?subject

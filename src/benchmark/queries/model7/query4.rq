@@ -1,11 +1,11 @@
-PREFIX nm: <http://nomisma.org/id/>
-PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX edtfo: <https://periodo.github.io/edtf-ontology/edtfo.ttl>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject ?predicate ?object
 WHERE {
-    {?subject ?predicate ?object .}
+    {
+        ?subject ?predicate ?object .
+    }
     MINUS {
         ?subject ?predicate ?objekt .
         ?objekt rdf:type edtfo:ApproximateStatement ;

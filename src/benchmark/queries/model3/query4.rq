@@ -1,10 +1,11 @@
-PREFIX nm: <http://nomisma.org/id/>
-PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 
 SELECT ?subject ?predicate ?object
 WHERE {
-    {?subject ?predicate ?object .}
+    {
+        ?subject ?predicate ?object .
+    }
     MINUS {
         ?a crm:T1_assessed_the_reliability_of ?b ;
             a crm:R1_Reliability_Assessment .

@@ -1,4 +1,3 @@
-PREFIX nm: <http://nomisma.org/id/>
 PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX crminf: <https://ontome.net/ns/crminf/>
 
@@ -13,8 +12,7 @@ WHERE {
             crminf:I4_Proposition_Set ?proposetion ;
             a crminf:I2_Belief .
     }
-    UNION
-    {
+    UNION {
         ?subject nmo:hasMint ?o.
         FILTER NOT EXISTS {
             ?o crminf:J2_concluded_that ?b ;
