@@ -1,19 +1,25 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib as mpl
+import numpy as np
 
-# Setup, and create the data to plot
-y = np.random.rand(10)
-y[5:] *= 2
-y[np.geomspace(1, 5, 4).astype(int)] = -1
-mpl.rcParams['path.simplify'] = True
+plt.style.use('_mpl-gallery')
 
-print(y)
+# make data:
+np.random.seed(10)
+D = [[0,0,0],[1,2,3],[4,5,6]]
 
-mpl.rcParams['path.simplify_threshold'] = 0.0
-plt.plot(y)
-plt.show()
+print(D)
 
-mpl.rcParams['path.simplify_threshold'] = 1.0
-plt.plot(y)
+# plot
+fig, ax = plt.subplots()
+VP = ax.boxplot(D, widths=1.5, patch_artist=True,
+                showmeans=False, showfliers=False,
+                medianprops={"color": "white", "linewidth": 0.5},
+                boxprops={"facecolor": "C0", "edgecolor": "white",
+                          "linewidth": 0.5},
+                whiskerprops={"color": "C0", "linewidth": 1.5},
+                capprops={"color": "C0", "linewidth": 1.5})
+
+ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
+       ylim=(0, 8), yticks=np.arange(1, 8))
+
 plt.show()

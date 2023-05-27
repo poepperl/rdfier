@@ -5,6 +5,6 @@ PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.o
 SELECT ?subject ?predicate ?object
 WHERE {
     ?subject ?predicate ?b .
-    ?b un:hasUncertainty nm:uncertain_value .
+    ?b un:hasUncertainty nm:uncertain_value ;
         rdf:value ?object .
 }

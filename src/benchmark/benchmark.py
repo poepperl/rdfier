@@ -1,10 +1,13 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
 from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import time
 
+NUMB_LOOPS = 10
 
 class Benchmark:
     """
@@ -34,7 +37,6 @@ class Benchmark:
         self.rdfdata = rdfdata
         self.prefixes_path = prefixes_path
         self.graph_generator : GraphGenerator
-        self.NUMB_LOOPS = 8
 
     def _generate_graph_with_model(self, model_id : int) -> None:
         self.graph_generator = GraphGenerator(self.rdfdata)
@@ -70,15 +72,27 @@ class Benchmark:
             query_times = dict()
             for query_numb in range(1,6):
                 loop = []
-                for _ in range(self.NUMB_LOOPS):
+                print(f"Run query {query_numb} of model {model_numb}.")
+                for _ in range(NUMB_LOOPS):
                     start_time = time()
                     _ = self.run_query_of_model(query_numb,model_numb)
                     time_difference = time() - start_time
-                    loop.append(time_difference)
+                    loop.append(time_difference*100)
                 query_times[query_numb] = loop
             time_results[model_numb] = query_times
         
         return time_results
+    
+    def plot_box_plot(self, list_of_lists : list):
+        plt.style.use('_mpl-gallery')
+
+        _, ax = plt.subplots()
+        ax.boxplot(list_of_lists)
+
+        ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
+            ylim=(0, 8), yticks=np.arange(1, 8))
+
+        plt.show()
 
 
 if __name__ == "__main__":
@@ -96,7 +110,20 @@ if __name__ == "__main__":
 
     input = open(Path(UNCO_PATH,r"tests\testdata\eingabeformat.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
-    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\namespaces.csv")))
-    model = 8
-    bench._generate_graph_with_model(model)
-    print(bench.run_query_of_model(5,model))
+    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\afe\namespaces.csv")))
+
+    # model = 8
+    # bench._generate_graph_with_model(model)
+    # print(bench.run_query_of_model(5,model))
+
+    dictionary = bench.start_benchmark()
+
+    for query_numb in range(1,6):
+        query_results = []
+        for model_numb in range(1,9):
+            model_list = []
+            for loop in range(NUMB_LOOPS):
+                model_list.append(dictionary[model_numb][query_numb][loop])
+            query_results.append(model_list)
+        print(query_results)
+        bench.plot_box_plot(query_results)

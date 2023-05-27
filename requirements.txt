@@ -18,7 +18,6 @@ requests==2.30.0 # communication between python and fuseki server
 pathlib==1.0.1
 psutil==5.9.5 # close fuseki console
 matplotlib==3.7.1
-isodate==0.6.1
 
 # UI
 streamlit == 1.22.0
