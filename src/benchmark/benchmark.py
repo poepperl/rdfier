@@ -77,7 +77,7 @@ class Benchmark:
                     start_time = time()
                     _ = self.run_query_of_model(query_numb,model_numb)
                     time_difference = time() - start_time
-                    loop.append(time_difference*100)
+                    loop.append(time_difference*10)
                 query_times[query_numb] = loop
             time_results[model_numb] = query_times
         
@@ -108,9 +108,9 @@ if __name__ == "__main__":
     
     # print(generator.run_query(test_query))
 
-    input = open(Path(UNCO_PATH,r"tests\testdata\eingabeformat.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"data/input/afemapping_1_public_changed.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
-    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,r"tests\testdata\afe\namespaces.csv")))
+    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/namespaces.csv")))
 
     # model = 8
     # bench._generate_graph_with_model(model)
