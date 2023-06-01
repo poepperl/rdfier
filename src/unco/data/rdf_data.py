@@ -102,8 +102,9 @@ class RDFData:
                 if (l := len(plan["certainties"]))==1:
                     unc_column = next(iter(plan["certainties"]))
                     for row_index in range(len(self.data)):
-                        uncertainties = self._get_uncertainty_dict(str(self.data.iat[row_index,sub_column]), str(self.data.iat[row_index,unc_column]))
-                        if uncertainties : self.uncertainties[(row_index,sub_column)] = uncertainties
+                        if pd.notna(self.data.iat[row_index,unc_column]):
+                            uncertainties = self._get_uncertainty_dict(str(self.data.iat[row_index,sub_column]), str(self.data.iat[row_index,unc_column]))
+                            if uncertainties : self.uncertainties[(row_index,sub_column)] = uncertainties
                 elif l > 1:
                     raise SyntaxError(f"Subject-column {self.data.columns[sub_column]} has more than one certainty-column.")
             

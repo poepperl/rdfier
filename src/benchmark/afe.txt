@@ -97,7 +97,7 @@ LEFT JOIN findspot ON cf.FindSpot = findspot.id
 ORDER BY cf.id;
 
 Manuelle Korrekturen:
- * In LibreOffice laden und direkt speichern
+ * Tausche ; mit | aus.
 
 SQL-Skript verändert:
  * Zeilenumbrüche \n und \r entfernen.
