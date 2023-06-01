@@ -33,9 +33,9 @@ class UncertaintyGenerator():
         for plan in self.rdfdata.triple_plan.values():
             object_set = object_set.union(plan["objects"])
         
-        for plan in self.rdfdata.triple_plan.values():
-            if plan["objects"]:
-                object_set = object_set.difference(plan["subject"])
+        # for plan in self.rdfdata.triple_plan.values():
+        #     if plan["objects"]:
+        #         object_set = object_set.difference(plan["subject"])
 
         nrows = self.rdfdata.data.shape[0]
         list_of_columns = list(set(list_of_columns)) # Remove all duplicates from list
@@ -73,7 +73,6 @@ class UncertaintyGenerator():
                 else:
                     self.rdfdata.uncertainties[(row,column)] = {"mode":"a"}
 
-        print(self.rdfdata.uncertainties)
         return self.rdfdata
     
 

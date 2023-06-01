@@ -1,8 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from statistics import median
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
+from unco.data.uncertainty_generator import UncertaintyGenerator
 from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import time
@@ -95,29 +97,63 @@ class Benchmark:
         plt.show()
 
 
+    def start_benchmark_increasing_uncertainties(self):
+        rdfdata = self.rdfdata
+        query_results = []
+        for query_numb in range(1,2):
+            X = range(1, len(self.rdfdata.data), int(len(self.rdfdata.data)/30))
+            results = []
+            for model_numb in range(1,9):
+                model_results = []
+                for i in X:
+                    ugen = UncertaintyGenerator(rdfdata)
+                    self.rdfdata = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i)
+                    self._generate_graph_with_model(model_numb)
+                    loop = []
+                    print(f"Run query {query_numb} of model {model_numb}.")
+                    for _ in range(NUMB_LOOPS):
+                        start_time = time()
+                        _ = self.run_query_of_model(query_numb,model_numb)
+                        time_difference = time() - start_time
+                        loop.append(time_difference)
+                    model_results.append(median(loop))
+                results.append(model_results)
+            query_results.append(results)
+
+        self.rdfdata = rdfdata
+
+        for i, res in enumerate(query_results):
+            plt.plot(X, res[0], color='r', label='1')
+            plt.plot(X, res[1], color='b', label='2')
+            plt.plot(X, res[2], color='g', label='3')
+            plt.plot(X, res[3], color='y', label='4')
+            plt.plot(X, res[4], color='r', label='5')
+            plt.plot(X, res[5], color='b', label='6')
+            plt.plot(X, res[6], color='g', label='7')
+            plt.plot(X, res[7], color='y', label='8')
+
+            plt.xlabel("#Uncertainties")
+            plt.ylabel("Time")
+            plt.title(f"Query {i+1} with increasing numb uncertainties")
+
+            plt.legend()
+
+            plt.show()
+        
+        return query_results
+
 if __name__ == "__main__":
-    # file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/eingabeformat.csv")), encoding='utf-8')
-    # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/namespaces.csv"))
-
-    # rdfdata = RDFData(pd.read_csv(file))
-    # generator = GraphGenerator(rdfdata)
-    # generator.load_prefixes(prefixes)
-    # generator.generate_solution(xml_format=False)
-
-    # test_query = Path(UNCO_PATH,"src/benchmark/queries/model1/query5.rq").read_text()
-    
-    # print(generator.run_query(test_query))
-
-    # input = open(Path(UNCO_PATH,"data/input/afemapping_1_public_changed.csv"), encoding='utf-8')
-    input = open(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv"), encoding='utf-8')
+    # Load data-------------------------------------------------------------------------------------------------------------------------
+    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_public_noUn_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
-    # bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/namespaces.csv")))
-    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv")))
+    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
-    model = 3
-    bench._generate_graph_with_model(model)
-    print(bench.run_query_of_model(6,model))
+    # Test query of model---------------------------------------------------------------------------------------------------------------
+    # model = 3
+    # bench._generate_graph_with_model(model)
+    # print(bench.run_query_of_model(6,model))
 
+    # Run benchmark models/queries------------------------------------------------------------------------------------------------------
     # dictionary = bench.start_benchmark()
 
     # for query_numb in range(1,6):
@@ -129,3 +165,6 @@ if __name__ == "__main__":
     #         query_results.append(model_list)
     #     print(query_results)
     #     bench.plot_box_plot(query_results)
+    
+    # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
+    print(bench.start_benchmark_increasing_uncertainties())

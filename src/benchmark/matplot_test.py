@@ -1,25 +1,28 @@
+# Importing libraries
 import matplotlib.pyplot as plt
 import numpy as np
+import math
+  
+# Using Numpy to create an array X
+X = np.arange(0, math.pi*2, 0.05)
+  
+# Assign variables to the y axis part of the curve
+y = np.sin(X)
+z = np.cos(X)
 
-plt.style.use('_mpl-gallery')
-
-# make data:
-np.random.seed(10)
-D = [[0,0,0],[1,2,3],[4,5,6]]
-
-print(D)
-
-# plot
-fig, ax = plt.subplots()
-VP = ax.boxplot(D, widths=1.5, patch_artist=True,
-                showmeans=False, showfliers=False,
-                medianprops={"color": "white", "linewidth": 0.5},
-                boxprops={"facecolor": "C0", "edgecolor": "white",
-                          "linewidth": 0.5},
-                whiskerprops={"color": "C0", "linewidth": 1.5},
-                capprops={"color": "C0", "linewidth": 1.5})
-
-ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-       ylim=(0, 8), yticks=np.arange(1, 8))
-
+print(y)
+  
+# Plotting both the curves simultaneously
+plt.plot(X, y, color='r', label='sin')
+plt.plot(X, z, color='g', label='cos')
+  
+# Naming the x-axis, y-axis and the whole graph
+plt.xlabel("Angle")
+plt.ylabel("Magnitude")
+plt.title("Sine and Cosine functions")
+  
+# Adding legend, which helps us recognize the curve according to it's color
+plt.legend()
+  
+# To load the display window
 plt.show()
