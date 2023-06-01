@@ -11,7 +11,7 @@
 
 # external requirements
 # pytest==7.3.1 # testing
-# tqdm==4.65.0 # progress bars
+tqdm==4.65.0 # progress bars
 pandas==2.0.1 # data manipulation
 rdflib==6.3.2 # rdf-graphs
 requests==2.30.0 # communication between python and fuseki server
