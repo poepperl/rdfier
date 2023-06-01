@@ -108,22 +108,24 @@ if __name__ == "__main__":
     
     # print(generator.run_query(test_query))
 
-    input = open(Path(UNCO_PATH,"data/input/afemapping_1_public_changed.csv"), encoding='utf-8')
+    # input = open(Path(UNCO_PATH,"data/input/afemapping_1_public_changed.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
-    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/namespaces.csv")))
+    # bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/namespaces.csv")))
+    bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv")))
 
-    # model = 8
-    # bench._generate_graph_with_model(model)
-    # print(bench.run_query_of_model(5,model))
+    model = 3
+    bench._generate_graph_with_model(model)
+    print(bench.run_query_of_model(6,model))
 
-    dictionary = bench.start_benchmark()
+    # dictionary = bench.start_benchmark()
 
-    for query_numb in range(1,6):
-        query_results = []
-        for model_numb in range(1,9):
-            model_list = []
-            for loop in range(NUMB_LOOPS):
-                model_list.append(dictionary[model_numb][query_numb][loop])
-            query_results.append(model_list)
-        print(query_results)
-        bench.plot_box_plot(query_results)
+    # for query_numb in range(1,6):
+    #     query_results = []
+    #     for model_numb in range(1,9):
+    #         model_list = []
+    #         for loop in range(NUMB_LOOPS):
+    #             model_list.append(dictionary[model_numb][query_numb][loop])
+    #         query_results.append(model_list)
+    #     print(query_results)
+    #     bench.plot_box_plot(query_results)
