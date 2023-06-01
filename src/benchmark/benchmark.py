@@ -104,7 +104,7 @@ class Benchmark:
         for query_numb in range(1,2):
             X = range(0, len(self.rdfdata.data), 100)[:]
             results = []
-            for model_numb in [1,2,4,5,6,7,8]:
+            for model_numb in [1,2,3,4,5,6,7,8]:
                 model_results = []
                 for i in X:
                     ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
@@ -124,12 +124,12 @@ class Benchmark:
         for i, res in enumerate(query_results):
             plt.plot(X, res[0], color='r', label='1')
             plt.plot(X, res[1], color='b', label='2')
-            plt.plot(X, res[2], color='g', label='4')
-            plt.plot(X, res[3], color='y', label='5')
-            plt.plot(X, res[4], color='m', label='6')
-            plt.plot(X, res[5], color='c', label='7')
-            plt.plot(X, res[6], color='k', label='8')
-            #plt.plot(X, res[7], color='y', label='8')
+            plt.plot(X, res[2], color='g', label='3')
+            plt.plot(X, res[3], color='y', label='4')
+            plt.plot(X, res[4], color='m', label='5')
+            plt.plot(X, res[5], color='c', label='6')
+            plt.plot(X, res[6], color='k', label='7')
+            plt.plot(X, res[7], color='y', label='8')
 
             plt.xlabel("#Uncertainties")
             plt.ylabel("Time")
