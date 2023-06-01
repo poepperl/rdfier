@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from copy import deepcopy
+from tqdm import tqdm
 from statistics import median
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
@@ -9,7 +11,7 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import time
 
-NUMB_LOOPS = 10
+NUMB_LOOPS = 5
 
 class Benchmark:
     """
@@ -40,8 +42,8 @@ class Benchmark:
         self.prefixes_path = prefixes_path
         self.graph_generator : GraphGenerator
 
-    def _generate_graph_with_model(self, model_id : int) -> None:
-        self.graph_generator = GraphGenerator(self.rdfdata)
+    def _generate_graph_with_model(self, rdfdata : RDFData, model_id : int) -> None:
+        self.graph_generator = GraphGenerator(rdfdata)
         self.graph_generator.load_prefixes(self.prefixes_path)
         self.graph_generator.generate_solution(model_id)
 
@@ -98,20 +100,19 @@ class Benchmark:
 
 
     def start_benchmark_increasing_uncertainties(self):
-        rdfdata = self.rdfdata
         query_results = []
         for query_numb in range(1,2):
-            X = range(1, len(self.rdfdata.data), int(len(self.rdfdata.data)/30))
+            X = range(0, len(self.rdfdata.data), 100)[:]
             results = []
-            for model_numb in range(1,9):
+            for model_numb in [1,2,4,5,6,7,8]:
                 model_results = []
                 for i in X:
-                    ugen = UncertaintyGenerator(rdfdata)
-                    self.rdfdata = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i)
-                    self._generate_graph_with_model(model_numb)
+                    ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
+                    rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i) if i != 0 else rdfdata
+                    self._generate_graph_with_model(rdf_data, model_numb)
                     loop = []
-                    print(f"Run query {query_numb} of model {model_numb}.")
-                    for _ in range(NUMB_LOOPS):
+                    print(f"Run query {query_numb} of model {model_numb} with {len(rdf_data.uncertainties)} uncertainties. Graph size: {len(self.graph_generator.graph)}")
+                    for _ in tqdm(range(NUMB_LOOPS)):
                         start_time = time()
                         _ = self.run_query_of_model(query_numb,model_numb)
                         time_difference = time() - start_time
@@ -120,17 +121,15 @@ class Benchmark:
                 results.append(model_results)
             query_results.append(results)
 
-        self.rdfdata = rdfdata
-
         for i, res in enumerate(query_results):
             plt.plot(X, res[0], color='r', label='1')
             plt.plot(X, res[1], color='b', label='2')
-            plt.plot(X, res[2], color='g', label='3')
-            plt.plot(X, res[3], color='y', label='4')
-            plt.plot(X, res[4], color='r', label='5')
-            plt.plot(X, res[5], color='b', label='6')
-            plt.plot(X, res[6], color='g', label='7')
-            plt.plot(X, res[7], color='y', label='8')
+            plt.plot(X, res[2], color='g', label='4')
+            plt.plot(X, res[3], color='y', label='5')
+            plt.plot(X, res[4], color='m', label='6')
+            plt.plot(X, res[5], color='c', label='7')
+            plt.plot(X, res[6], color='k', label='8')
+            #plt.plot(X, res[7], color='y', label='8')
 
             plt.xlabel("#Uncertainties")
             plt.ylabel("Time")
@@ -144,7 +143,7 @@ class Benchmark:
 
 if __name__ == "__main__":
     # Load data-------------------------------------------------------------------------------------------------------------------------
-    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_public_noUn_ready.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_1000rows.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
