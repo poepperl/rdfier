@@ -80,22 +80,22 @@ def remove_wrong_context_from_obverse(dataframe : pd.DataFrame) -> pd.DataFrame:
         dataframe : pd.DataFrame
             Dataframe which should be updated
     """
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Vs.: ")[-1] if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Obv.: ")[-1] if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Av.: ")[-1] if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Obv: ")[-1] if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Ob: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Vs.: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Obv.: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Av.: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Obv: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Ob: ")[-1] if pd.notna(x) else pd.NA)
 
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Rev.: ")[0] if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Rs.: ")[0] if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Rev: ")[0] if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).split("Revers: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Rev.: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Rs.: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Rev: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).split("Revers: ")[0] if pd.notna(x) else pd.NA)
 
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: pd.NA if "Rs." in str(x) or pd.isna(x) else str(x))
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: pd.NA if "Res." in str(x) or pd.isna(x) else str(x))
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: pd.NA if "Rs." in str(x) or pd.isna(x) else str(x))
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: pd.NA if "Res." in str(x) or pd.isna(x) else str(x))
 
-    # dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: "".join(str(x).splitlines()) if pd.notna(x) else pd.NA)
-    dataframe["2__nmo:hasContext"] = dataframe["2__nmo:hasContext"].apply(lambda x: str(x).replace(";", "|") if pd.notna(x) else pd.NA)
+    # dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: "".join(str(x).splitlines()) if pd.notna(x) else pd.NA)
+    dataframe["2__rdfs:comment"] = dataframe["2__rdfs:comment"].apply(lambda x: str(x).replace(";", "|") if pd.notna(x) else pd.NA)
     return dataframe
 
 
@@ -108,22 +108,22 @@ def remove_wrong_context_from_reverse(dataframe : pd.DataFrame) -> pd.DataFrame:
         dataframe : pd.DataFrame
             Dataframe which should be updated
     """
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Rev.: ")[-1] if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Rs.: ")[-1] if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Rev: ")[-1] if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Revers: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Rev.: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Rs.: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Rev: ")[-1] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Revers: ")[-1] if pd.notna(x) else pd.NA)
 
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Vs.: ")[0] if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Obv.: ")[0] if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Av.: ")[0] if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Obv: ")[0] if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).split("Ob: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Vs.: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Obv.: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Av.: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Obv: ")[0] if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).split("Ob: ")[0] if pd.notna(x) else pd.NA)
 
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: pd.NA if "Ob." in str(x) or pd.isna(x) else str(x))
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: pd.NA if "Obv." in str(x) or pd.isna(x) else str(x))
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: pd.NA if "Ob." in str(x) or pd.isna(x) else str(x))
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: pd.NA if "Obv." in str(x) or pd.isna(x) else str(x))
 
-    # dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: "".join(str(x).splitlines()) if pd.notna(x) else pd.NA)
-    dataframe["3__nmo:hasContext"] = dataframe["3__nmo:hasContext"].apply(lambda x: str(x).replace(";", "|") if pd.notna(x) else pd.NA)
+    # dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: "".join(str(x).splitlines()) if pd.notna(x) else pd.NA)
+    dataframe["3__rdfs:comment"] = dataframe["3__rdfs:comment"].apply(lambda x: str(x).replace(";", "|") if pd.notna(x) else pd.NA)
     return dataframe
 
 
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     from unco.data.rdf_data import RDFData
     from unco.features.graph_generator import GraphGenerator
 
-    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_withoutUncertainties.csv"))
+    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests\testdata\afe\afe_public_noUncertainties.csv"))
 
     dataframe = change_afe_coin_id(dataframe)
     dataframe = change_findspot(dataframe)
@@ -159,9 +159,9 @@ if __name__ == "__main__":
     dataframe = change_gYear_format(dataframe)
 
     print(dataframe)
-    dataframe.to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed.csv"),index=False)
+    dataframe.to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_changed.csv"),index=False)
 
-    dataframe.sample(n=8).to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed_8rows.csv"),index=False)
+    # dataframe.sample(n=8).to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_1_public_changed_8rows.csv"),index=False)
 
     rdf_data = RDFData(dataframe)
 

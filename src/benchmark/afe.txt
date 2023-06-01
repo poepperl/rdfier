@@ -98,4 +98,7 @@ ORDER BY cf.id;
 
 Manuelle Korrekturen:
  * In LibreOffice laden und direkt speichern
- * Bei afe:5002 muss in der Legende von Obverse die Anführungszeichen entfernt werden bzw. auf zwei reduziert werden
+
+SQL-Skript verändert:
+ * Zeilenumbrüche \n und \r entfernen.
+ * Tausche Anführungszeichen \" mit ^ und ersetze ^^ mit ^ ^.
