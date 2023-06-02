@@ -1,6 +1,5 @@
-from genericpath import exists
-import isodate
 import pandas as pd
+from random import random
 from pathlib import Path
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
@@ -121,8 +120,8 @@ class GraphGenerator():
                                                 print(f"Coin {subject.n3()} Predicate {pred_name} has uncertainties {self.rdfdata.uncertainties[(row_index,column_index)]['likelihoods']} and object {[ob.n3() for ob in objects]}")
                                             weight = self.rdfdata.uncertainties[(row_index,column_index)]["likelihoods"][index]
                                         else:
-                                            weight = 0.5
-                                            print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough model {solution_id} needs some. Weight 0.5 will be taken instead.")
+                                            weight = float("%.2f" % random())
+                                            print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough model {solution_id} needs some. Weight {weight} will be taken instead.")
                                     match solution_id:
                                         case 1:
                                             self._generate_uncertain_value_solution_1(subject, predicate, object)
@@ -370,10 +369,14 @@ class GraphGenerator():
         self.graph.add((b,CRMINF["J2_concluded_that"],c))
 
 
-        if weight>0.5:
-            level = "more likely"
-        else:
+        if weight < 0.25:
             level = "uncertain"
+        elif weight < 0.5:
+            level = "plausible"
+        elif weight < 0.75:
+            level = "likely"
+        else:
+            level = "very likely"
 
         self.graph.add((c, CRMINF["I4_Proposition_Set"], Literal(f"Proposetion_{object_index}")))
         self.graph.add((c, CRMINF["J5_holds_to_be"], Literal(level)))
