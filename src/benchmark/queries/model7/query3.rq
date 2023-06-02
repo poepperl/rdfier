@@ -11,8 +11,10 @@ WHERE {
         BIND("uncertain" AS ?certainty)
     }
     UNION {
-        ?subject nmo:hasMint ?o.
-        FILTER NOT EXISTS {
+        {
+            ?subject nmo:hasMint ?o.
+        }
+        MINUS {
             ?o rdf:type edtfo:ApproximateStatement .
         }
         BIND("certain" AS ?certainty)

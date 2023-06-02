@@ -3,8 +3,10 @@ PREFIX crminf: <https://ontome.net/ns/crminf/>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
 WHERE {
-    ?subject nmo:hasMint ?o.
-    FILTER NOT EXISTS {
+    {
+        ?subject nmo:hasMint ?o.
+    }
+    MINUS {
         ?o crminf:J2_concluded_that ?b ;
             a crminf:I5_Inference_Making .
         ?b crminf:J4_that ?ob ;

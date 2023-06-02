@@ -13,7 +13,9 @@ WHERE {
             a crminf:I2_Belief .
     }
     UNION {
-        ?subject nmo:hasMint ?o.
+        {
+            ?subject nmo:hasMint ?o.
+        }
         FILTER NOT EXISTS {
             ?o crminf:J2_concluded_that ?b ;
                 a crminf:I5_Inference_Making .

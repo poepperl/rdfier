@@ -158,11 +158,26 @@ def replace_uncertainties_with_random_certainties(dataframe : pd.DataFrame) -> p
             reference = str(column).split("__")[0]
             for reference_column in dataframe.columns:
                 if ("**" + reference) in reference_column:
-                    print(f"Column {column} Reference {reference_column}")
                     dataframe[column] = dataframe[[column,reference_column]].apply(lambda x: ";".join(["%.2f" % random() for _ in str(x[1]).split(";")]) if pd.notna(x[0]) else pd.NA, axis=1)
                     dataframe[column] = dataframe[column].apply(lambda x: "; ".join([str("%.2f" % (float(e) / sum([float(i) + 0.001 for i in str(x).split(";")]))) for e in str(x).split(";")]) if pd.notna(x) and len(str(x).split(";")) > 1 else x)
                     break
     return dataframe
+
+
+def remove_datetimes(dataframe : pd.DataFrame) -> pd.DataFrame:
+    """
+        Remove all columns with "^^xsd:gYear".
+    
+        Parameters:
+        -----------
+        dataframe : pd.DataFrame
+            Dataframe which should be updated
+    """
+    dataframe = dataframe.drop([column for column in dataframe.columns if "^^xsd:gYear" in column], axis=1)
+    dataframe = dataframe.drop([column for column in dataframe.columns if ("DF__" in column) or ("DT__" in column)], axis=1)
+    
+    return dataframe
+
 
 def remove_uncertainties(dataframe : pd.DataFrame) -> pd.DataFrame:
     """
@@ -196,9 +211,11 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe = simplify_all_id_columns(dataframe)
     dataframe = change_gYear_format(dataframe)
     dataframe = replace_uncertainties_with_random_certainties(dataframe)
+    dataframe = remove_datetimes(dataframe)
+
 
     dataframe.to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afe_ready.csv"),index=False)
-    dataframe.sample(n=10).to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_changed_10rows.csv"),index=False)
+    remove_uncertainties(dataframe).sample(n=1000).to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afemapping_changed_1000rows.csv"),index=False)
 
     remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,r"tests\testdata\afe\afe_noUn_ready.csv"),index=False)
 
@@ -223,5 +240,3 @@ if __name__ == "__main__":
     gg.load_prefixes(str(Path(UNCO_PATH,r"tests\testdata\afe\namespaces.csv")))
 
     gg.generate_solution(xml_format=False)
-
-    # python -u -m trace -t afe_mapping_pipeline.py

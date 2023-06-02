@@ -10,8 +10,10 @@ WHERE {
             crm:P189.2_uncertain_place ?o .
     }
     UNION {
-        ?subject nmo:hasMint ?o.
-        FILTER NOT EXISTS {
+        {
+            ?subject nmo:hasMint ?o.
+        }
+        MINUS {
             ?o amt:weight ?c ;
                 crm:P189.2_uncertain_place ?b1 .
         }

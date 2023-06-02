@@ -13,8 +13,10 @@ WHERE {
         BIND("uncertain" AS ?certainty)
     }
     UNION {
-        ?subject nmo:hasMint ?o.
-        FILTER NOT EXISTS {
+        {
+            ?subject nmo:hasMint ?o.
+        }
+        MINUS {
             ?b rdf:subject ?subject ;
                 rdf:object ?object ;
                 rdf:predicate nmo:hasMint ;

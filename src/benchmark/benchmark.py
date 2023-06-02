@@ -102,7 +102,7 @@ class Benchmark:
     def start_benchmark_increasing_uncertainties(self):
         query_results = []
         for query_numb in range(1,2):
-            X = range(0, len(self.rdfdata.data), 100)[:]
+            X = range(0, len(self.rdfdata.data), 100)[:3]
             results = []
             for model_numb in [1,2,3,4,5,6,7,8]:
                 model_results = []
@@ -148,10 +148,14 @@ if __name__ == "__main__":
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
-    # model = 3
-    # bench._generate_graph_with_model(model)
-    # print(bench.run_query_of_model(6,model))
-
+    model = 4
+    ugen = UncertaintyGenerator(deepcopy(rdfdata))
+    rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=200,max_uncertainties_per_column=200)
+    bench._generate_graph_with_model(rdf_data,model)
+    start = time()
+    print(bench.run_query_of_model(1,model))
+    time_diff = time() - start
+    print(f"Zeit: {time_diff}")
     # Run benchmark models/queries------------------------------------------------------------------------------------------------------
     # dictionary = bench.start_benchmark()
 
@@ -166,4 +170,4 @@ if __name__ == "__main__":
     #     bench.plot_box_plot(query_results)
     
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    print(bench.start_benchmark_increasing_uncertainties())
+    # print(bench.start_benchmark_increasing_uncertainties())

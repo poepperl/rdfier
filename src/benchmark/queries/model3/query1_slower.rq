@@ -4,10 +4,8 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
 WHERE {
-    {
-        ?subject nmo:hasMint ?o .
-    }
-    MINUS {
+    ?subject nmo:hasMint ?o .
+    FILTER NOT EXISTS {
         ?b crm:P141_assigned ?o ;
             crm:P140_assigned_attribute_to ?subject ;
             crm:T2_assessed_as_reliability ?c ;
