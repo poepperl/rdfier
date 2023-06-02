@@ -102,11 +102,11 @@ class Benchmark:
     def start_benchmark_increasing_uncertainties(self):
         query_results = []
         for query_numb in range(1,2):
-            X = range(0, len(self.rdfdata.data), 100)[:3]
+            X = range(0, len(self.rdfdata.data), 100)[:]
             results = []
             for model_numb in [1,2,3,4,5,6,7,8]:
                 model_results = []
-                for i in X:
+                for i in tqdm(X):
                     ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
                     rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i) if i != 0 else rdfdata
                     self._generate_graph_with_model(rdf_data, model_numb)
@@ -121,19 +121,26 @@ class Benchmark:
                 results.append(model_results)
             query_results.append(results)
 
-        for i, res in enumerate(query_results):
-            plt.plot(X, res[0], color='r', label='1')
-            plt.plot(X, res[1], color='b', label='2')
-            plt.plot(X, res[2], color='g', label='3')
-            plt.plot(X, res[3], color='y', label='4')
-            plt.plot(X, res[4], color='m', label='5')
-            plt.plot(X, res[5], color='c', label='6')
-            plt.plot(X, res[6], color='k', label='7')
-            plt.plot(X, res[7], color='y', label='8')
+            plt.plot(X, results[0], color='r', label='1')
+            plt.plot(X, results[1], color='b', label='2')
+            plt.plot(X, results[2], color='g', label='3')
+            plt.plot(X, results[3], color='y', label='4')
+            plt.plot(X, results[4], color='m', label='5')
+            plt.plot(X, results[5], color='c', label='6')
+            plt.plot(X, results[6], color='k', label='7')
+            plt.plot(X, results[7], color='y', label='8')
+
+            # plt.plot(X, results[0], color='r', label='1')
+            # plt.plot(X, results[1], color='b', label='2')
+            # plt.plot(X, results[2], color='y', label='5')
+            # plt.plot(X, results[3], color='m', label='6')
+            # plt.plot(X, results[4], color='c', label='7')
+            # plt.plot(X, results[5], color='k', label='8')
+            # plt.plot(X, results[6], color='y', label='8')
 
             plt.xlabel("#Uncertainties")
             plt.ylabel("Time")
-            plt.title(f"Query {i+1} with increasing numb uncertainties")
+            plt.title(f"Query {query_numb} with increasing numb uncertainties")
 
             plt.legend()
 
@@ -148,14 +155,14 @@ if __name__ == "__main__":
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
-    model = 4
-    ugen = UncertaintyGenerator(deepcopy(rdfdata))
-    rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=200,max_uncertainties_per_column=200)
-    bench._generate_graph_with_model(rdf_data,model)
-    start = time()
-    print(bench.run_query_of_model(1,model))
-    time_diff = time() - start
-    print(f"Zeit: {time_diff}")
+    #model = 4
+    #ugen = UncertaintyGenerator(deepcopy(rdfdata))
+    #rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=200,max_uncertainties_per_column=200)
+    #bench._generate_graph_with_model(rdf_data,model)
+    #start = time()
+    #print(bench.run_query_of_model(1,model))
+    #time_diff = time() - start
+    #print(f"Zeit: {time_diff}")
     # Run benchmark models/queries------------------------------------------------------------------------------------------------------
     # dictionary = bench.start_benchmark()
 
@@ -170,4 +177,4 @@ if __name__ == "__main__":
     #     bench.plot_box_plot(query_results)
     
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    # print(bench.start_benchmark_increasing_uncertainties())
+    print(bench.start_benchmark_increasing_uncertainties())
