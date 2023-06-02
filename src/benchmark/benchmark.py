@@ -4,7 +4,7 @@ import numpy as np
 from copy import deepcopy
 from tqdm import tqdm
 from statistics import median
-from unco import UNCO_PATH
+from unco import UNCO_PATH, data
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
 from unco.features.graph_generator import GraphGenerator
@@ -148,14 +148,16 @@ if __name__ == "__main__":
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
-    model = 4
+    model = 5
     ugen = UncertaintyGenerator(deepcopy(rdfdata))
     rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=200,max_uncertainties_per_column=200)
     bench._generate_graph_with_model(rdf_data,model)
     start = time()
-    print(bench.run_query_of_model(1,model))
+    dataframe = bench.run_query_of_model(6,model)
     time_diff = time() - start
+    print(dataframe)
     print(f"Zeit: {time_diff}")
+    dataframe.to_csv(Path(UNCO_PATH,r"data/output/query_results.csv"),index=False)
     # Run benchmark models/queries------------------------------------------------------------------------------------------------------
     # dictionary = bench.start_benchmark()
 
