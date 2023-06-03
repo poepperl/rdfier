@@ -128,12 +128,12 @@ class Benchmark:
 
             plt.plot(X, results[0], color='r', label='1')
             plt.plot(X, results[1], color='b', label='2')
-            plt.plot(X, results[2], color='g', label='5')
-            plt.plot(X, results[3], color='y', label='6')
-            plt.plot(X, results[4], color='m', label='7')
-            plt.plot(X, results[5], color='c', label='8')
-            #plt.plot(X, results[6], color='k', label='7')
-            #plt.plot(X, results[7], color='y', label='8')
+            plt.plot(X, results[2], color='g', label='3')
+            plt.plot(X, results[3], color='y', label='4')
+            plt.plot(X, results[4], color='m', label='5')
+            plt.plot(X, results[5], color='c', label='6')
+            plt.plot(X, results[6], color='k', label='7')
+            plt.plot(X, results[7], color='y', label='8')
 
             # plt.plot(X, results[0], color='r', label='1')
             # plt.plot(X, results[1], color='b', label='2')
@@ -144,7 +144,7 @@ class Benchmark:
             # plt.plot(X, results[6], color='y', label='8')
 
             plt.xlabel("#Uncertainties per column")
-            plt.ylabel("Time")
+            plt.ylabel("Time in seconds")
             plt.title(f"Query {query_numb} with increasing numb uncertainties")
 
             plt.legend()
