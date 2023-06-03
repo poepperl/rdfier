@@ -121,7 +121,7 @@ class GraphGenerator():
                                             weight = self.rdfdata.uncertainties[(row_index,column_index)]["likelihoods"][index]
                                         else:
                                             weight = float("%.2f" % random())
-                                            print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough model {solution_id} needs some. Weight {weight} will be taken instead.")
+                                            # print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough model {solution_id} needs some. Weight {weight} will be taken instead.")
                                     match solution_id:
                                         case 1:
                                             self._generate_uncertain_value_solution_1(subject, predicate, object)

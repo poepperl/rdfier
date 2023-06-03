@@ -101,18 +101,23 @@ class Benchmark:
 
     def start_benchmark_increasing_uncertainties(self):
         query_results = []
-        for query_numb in range(1,2):
-            X = range(0, len(self.rdfdata.data), 100)[:]
+        for query_numb in range(5,6):
+            X = range(0, len(self.rdfdata.data), 100)[:15]
             results = []
-            for model_numb in [1,2,3,4,5,6,7,8]:
+            for model_numb in [1,2,5,6,7,8]:
                 model_results = []
+                time_difference = 0
                 for i in tqdm(X):
-                    ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
-                    rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i) if i != 0 else rdfdata
-                    self._generate_graph_with_model(rdf_data, model_numb)
-                    loop = []
-                    print(f"Run query {query_numb} of model {model_numb} with {len(rdf_data.uncertainties)} uncertainties. Graph size: {len(self.graph_generator.graph)}")
+                    if time_difference < 20:
+                        ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
+                        rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i) if i != 0 else rdfdata
+                        self._generate_graph_with_model(rdf_data, model_numb)
+                        loop = []
+                        print(f"Run query {query_numb} of model {model_numb} with {len(rdf_data.uncertainties)} uncertainties. Graph size: {len(self.graph_generator.graph)}")
                     for _ in tqdm(range(NUMB_LOOPS)):
+                        if time_difference > 20:
+                            loop.append(time_difference)
+                            continue
                         start_time = time()
                         _ = self.run_query_of_model(query_numb,model_numb)
                         time_difference = time() - start_time
@@ -123,12 +128,12 @@ class Benchmark:
 
             plt.plot(X, results[0], color='r', label='1')
             plt.plot(X, results[1], color='b', label='2')
-            plt.plot(X, results[2], color='g', label='3')
-            plt.plot(X, results[3], color='y', label='4')
-            plt.plot(X, results[4], color='m', label='5')
-            plt.plot(X, results[5], color='c', label='6')
-            plt.plot(X, results[6], color='k', label='7')
-            plt.plot(X, results[7], color='y', label='8')
+            plt.plot(X, results[2], color='g', label='5')
+            plt.plot(X, results[3], color='y', label='6')
+            plt.plot(X, results[4], color='m', label='7')
+            plt.plot(X, results[5], color='c', label='8')
+            #plt.plot(X, results[6], color='k', label='7')
+            #plt.plot(X, results[7], color='y', label='8')
 
             # plt.plot(X, results[0], color='r', label='1')
             # plt.plot(X, results[1], color='b', label='2')
@@ -138,7 +143,7 @@ class Benchmark:
             # plt.plot(X, results[5], color='k', label='8')
             # plt.plot(X, results[6], color='y', label='8')
 
-            plt.xlabel("#Uncertainties")
+            plt.xlabel("#Uncertainties per column")
             plt.ylabel("Time")
             plt.title(f"Query {query_numb} with increasing numb uncertainties")
 
@@ -150,19 +155,19 @@ class Benchmark:
 
 if __name__ == "__main__":
     # Load data-------------------------------------------------------------------------------------------------------------------------
-    input = open(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_1000rows.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
-    model = 4
-    ugen = UncertaintyGenerator(deepcopy(rdfdata))
-    rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=200,max_uncertainties_per_column=200)
-    bench._generate_graph_with_model(rdf_data,model)
-    start = time()
-    print(bench.run_query_of_model(1,model))
-    time_diff = time() - start
-    print(f"Zeit: {time_diff}")
+    #model = 4
+    #ugen = UncertaintyGenerator(deepcopy(rdfdata))
+    #rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=200,max_uncertainties_per_column=200)
+    #bench._generate_graph_with_model(rdf_data,model)
+    #start = time()
+    #print(bench.run_query_of_model(1,model))
+    #time_diff = time() - start
+    #print(f"Zeit: {time_diff}")
     # Run benchmark models/queries------------------------------------------------------------------------------------------------------
     # dictionary = bench.start_benchmark()
 

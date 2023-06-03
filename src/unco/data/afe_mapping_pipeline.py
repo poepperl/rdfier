@@ -227,7 +227,7 @@ if __name__ == "__main__":
     from unco.data.rdf_data import RDFData
     from unco.features.graph_generator import GraphGenerator
 
-    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe.csv"))
+    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_public.csv"))
 
     dataframe = run_pipeline_on_dataframe(dataframe)
 

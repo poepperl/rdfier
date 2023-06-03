@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import pandas as pd
 
 from unco.data.rdf_data import RDFData
 
@@ -64,8 +65,8 @@ class UncertaintyGenerator():
             if numb_additional_uncertainties < 1:
                 continue
             
-            uncertain_rows = [i for i in range(1, nrows) if i not in current_uncertainties[column]]
-            uncertain_rows = random.sample(uncertain_rows, numb_additional_uncertainties) # Get random row indices
+            uncertain_rows = [i for i in range(1, nrows) if i not in current_uncertainties[column] and pd.notna(self.rdfdata.data.iat[i,column])]
+            uncertain_rows = random.sample(uncertain_rows, (numb_additional_uncertainties if numb_additional_uncertainties < len(uncertain_rows) else len(uncertain_rows))) # Get random row indices
             
             for row in uncertain_rows:
                 if len(str(self.rdfdata.data.iat[row,column]).split(";")) == 1:
