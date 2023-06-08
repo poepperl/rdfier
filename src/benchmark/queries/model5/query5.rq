@@ -7,6 +7,7 @@ WHERE {
     ?b amt:weight ?certainty ;
         ?p1 ?object .
     VALUES (?p1) {
+        (crm:P3.2_uncertain_value)
         (crm:P189.2_uncertain_place)
         (crm:P107.2_uncertain_member)
         (crm:P102.2_uncertain_name_or_ethnic)
