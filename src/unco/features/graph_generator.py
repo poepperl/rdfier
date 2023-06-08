@@ -98,7 +98,7 @@ class GraphGenerator():
             for row_index in range(len(self.rdfdata.data)):
 
                 if pd.notnull(self.rdfdata.data.iat[row_index,subject_colindex]):
-                    subject = self._get_node(str(self.rdfdata.data.iat[row_index,subject_colindex]), self.rdfdata.types_and_languages[(row_index,subject_colindex)][0])
+                    subject = self._get_node(str(self.rdfdata.data.iat[row_index,subject_colindex]), self.rdfdata.types_and_languages[(row_index,subject_colindex)][0], f"r{row_index}c{subject_colindex}")
 
                     for column_index in object_colindices:
 
@@ -108,12 +108,12 @@ class GraphGenerator():
                             predicate = self._get_node(pred_name, "^^uri")
 
                             obj_names = str(entry).split(";")
-                            objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i]) for i, value in enumerate(obj_names)]
+                            objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i], f"r{row_index}c{column_index}") for i, value in enumerate(obj_names)]
 
                             for index, object in enumerate(objects):
                                 if (row_index,column_index) in self.rdfdata.uncertainties:
                                     # uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
-                                    uncertainty_id = subject.n3() + pred_name
+                                    uncertainty_id = (subject.n3() + pred_name).replace(":","")
                                     if solution_id in [3,4,5]:
                                         if "likelihoods" in self.rdfdata.uncertainties[(row_index,column_index)]:
                                             if len(self.rdfdata.uncertainties[(row_index,column_index)]["likelihoods"]) <= index:
@@ -160,7 +160,7 @@ class GraphGenerator():
                     file.write(self.graph.serialize(format="turtle"))
 
 
-    def _get_node(self, value: str, type: str):
+    def _get_node(self, value: str, type: str, identification : str = ""):
         """
         Method which returns the node of the given value and type.
 
@@ -176,7 +176,7 @@ class GraphGenerator():
             return Literal(value)
         elif type[0:2] == "^^":
             if type == "^^id":
-                return BNode("id" + value)
+                return BNode(f"v{value}{identification}")
             if type == "^^uri":
                 return self._get_uri_node(value)
             else:
@@ -466,7 +466,7 @@ class GraphGenerator():
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
         """
-        node = BNode(subject.n3())
+        node = BNode(subject.n3().replace(":",""))
         
         self.graph.add((subject, UN["hasUncertainty"], node))
 

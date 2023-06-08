@@ -7,10 +7,11 @@ from statistics import median
 from unco import UNCO_PATH, data
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
+from unco.features import fuseki
 from unco.features.fuseki import FusekiServer
 from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
-from time import time
+from time import sleep, time
 
 NUMB_LOOPS = 5
 
@@ -104,10 +105,10 @@ class Benchmark:
     def start_benchmark_increasing_uncertainties(self, fuseki : bool = False):
         query_results = []
         if fuseki: self.fserver.start_server()
-        for query_numb in range(2,3):
+        for query_numb in range(5,6):
             X = range(0, len(self.rdfdata.data), 300)[:6]
             results = []
-            for model_numb in [1,2,5,6,7,8]:
+            for model_numb in [1,2,3,4,5,6,7,8]:
                 model_results = []
                 time_difference = 0
                 for i in tqdm(X):
@@ -125,21 +126,22 @@ class Benchmark:
                             loop.append(time_difference)
                             continue
                         start_time = time()
-                        _ = self.run_query_of_model(query_numb, model_numb, fuseki)
+                        output = self.run_query_of_model(query_numb, model_numb, fuseki)
                         time_difference = time() - start_time
                         loop.append(time_difference)
+                        print(f"Ergebnis Länge: {len(output)}")
                     model_results.append(median(loop))
                 results.append(model_results)
             query_results.append(results)
 
             plt.plot(X, results[0], color='r', label='1')
             plt.plot(X, results[1], color='b', label='2')
-            plt.plot(X, results[2], color='g', label='5')
-            plt.plot(X, results[3], color='y', label='6')
-            plt.plot(X, results[4], color='m', label='7')
-            plt.plot(X, results[5], color='c', label='8')
-            # plt.plot(X, results[6], color='k', label='7')
-            # plt.plot(X, results[7], color='y', label='8')
+            plt.plot(X, results[2], color='g', label='3')
+            plt.plot(X, results[3], color='y', label='4')
+            plt.plot(X, results[4], color='m', label='5')
+            plt.plot(X, results[5], color='c', label='6')
+            plt.plot(X, results[6], color='k', label='7')
+            plt.plot(X, results[7], color='y', label='8')
 
             # plt.plot(X, results[0], color='r', label='1')
             # plt.plot(X, results[1], color='b', label='2')
@@ -164,16 +166,27 @@ if __name__ == "__main__":
     input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
+    fuski = False
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
-    # model = 4
-    # ugen = UncertaintyGenerator(deepcopy(rdfdata))
-    # rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=200,max_uncertainties_per_column=200)
-    # bench._generate_graph_with_model(rdf_data,model)
-    # start = time()
-    # print(bench.run_query_of_model(1,model))
-    # time_diff = time() - start
-    # print(f"Zeit: {time_diff}")
+    model = 2
+    query = 5
+    ugen = UncertaintyGenerator(deepcopy(rdfdata))
+    # rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
+    rdf_data = ugen.add_pseudorand_uncertainty_flags([21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
+    bench._generate_graph_with_model(rdf_data,model)
+    if fuski:
+        bench.fserver.start_server()
+        bench.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
+    start = time()
+    print(result := bench.run_query_of_model(query,model,fuski))
+    print(len(rdf_data.uncertainties))
+    for (row,column) in rdf_data.uncertainties:
+        print(f"Column: {rdf_data.data.columns[column]} Eintrag: {rdf_data.data.iat[row,column]}")
+    time_diff = time() - start
+    if fuski: bench.fserver.stop_server()
+    print(f"Zeit: {time_diff}")
+
 
 
     # Run benchmark models/queries------------------------------------------------------------------------------------------------------
@@ -191,6 +204,5 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    fuseki = False
-    print(bench.start_benchmark_increasing_uncertainties(fuseki))
-    if fuseki: bench.fserver.stop_server()
+    # print(bench.start_benchmark_increasing_uncertainties(fuski))
+    # if fuski: bench.fserver.stop_server()

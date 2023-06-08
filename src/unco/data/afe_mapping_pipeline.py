@@ -212,6 +212,7 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe = change_gYear_format(dataframe)
     dataframe = replace_uncertainties_with_random_certainties(dataframe)
     dataframe = remove_datetimes(dataframe)
+    dataframe = remove_corrosio_legend_without_obreverse(dataframe)
 
 
     dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_ready.csv"),index=False)
