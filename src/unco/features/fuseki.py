@@ -1,16 +1,20 @@
-import os
 import subprocess
 import psutil
 import time
 import requests
+import pandas as pd
+from io import StringIO
+from pathlib import Path
 from unco import UNCO_PATH
+
+OUTPUT_FOLDER  = Path(UNCO_PATH, "data/output")
 
 class FusekiServer:
     """
         Interface to the fuseki server.
     """
 
-    def __init__(self, fuseki_path: str = os.path.join(UNCO_PATH, r"src\fuseki"), gb_ram: int = 4) -> None:
+    def __init__(self, fuseki_path: str = str(Path(UNCO_PATH, r"src\fuseki")), gb_ram: int = 4) -> None:
         """
         Parameters
         ----------
@@ -22,7 +26,7 @@ class FusekiServer:
         self.FUSEKI_PATH = fuseki_path
         self.GB_RAM = gb_ram
         self.server = None
-        self.starter_path = os.path.join(UNCO_PATH, r"src\unco\features\server_starter.bat")
+        self.starter_path = str(Path(UNCO_PATH, r"src\unco\features\server_starter.bat"))
         self._initialize()
 
     def _initialize(self) -> None:
@@ -64,13 +68,31 @@ class FusekiServer:
         requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
 
 
-    def sparql_query(self, query : str):
+    def delete_graph(self) -> None:
+        """
+            Method, which deletes the current graph ds.
+        """  
+        sparql_query = """
+        DELETE WHERE {
+            ?s ?p ?o
+        }
+        """
+        requests.post(f"http://localhost:3030/ds/update", headers={"Content-Type": "application/sparql-update"}, data=sparql_query)
+
+
+    def run_query(self, query : str) -> pd.DataFrame:
         """
             Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
         """
-        headers = {"Accept" : "text/plain"}
-        response = requests.post('http://localhost:3030/ds/sparql', data={'query': query}, headers=headers)
-        return response.text
+        headers = {"Accept" : "text/csv"}
+        params = {"query" : query}
+        response = requests.get('http://localhost:3030/ds/query', params=params, headers=headers)
+
+        csvdata = pd.read_csv(StringIO(response.text), encoding='utf-8')
+
+        csvdata.to_csv(str(Path(OUTPUT_FOLDER, "query_results_fuseki.csv")))
+
+        return pd.DataFrame(csvdata)
 
 
     def stop_server(self) -> None:
@@ -94,9 +116,9 @@ if __name__ == "__main__":
     PREFIX nmo: <http://nomisma.org/ontology#>
     PREFIX nm: <http://nomisma.org/id/>
 
-    SELECT ?s
+    SELECT ?s ?p ?o
     WHERE {
-        ?s nmo:hasMint nm:rome .
+        ?s ?p ?o .
     }
     """
     # SELECT ?s { ?s nmo:hasMint nm:comama }
@@ -105,7 +127,10 @@ if __name__ == "__main__":
 
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
-    print(f.sparql_query(query))
+    print(f.run_query(query))
+    f.delete_graph()
+    print(f.run_query(query))
+    time.sleep(5)
     f.stop_server()
 
 
