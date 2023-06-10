@@ -1,6 +1,9 @@
+from sys import prefix
 import pandas as pd
 from pathlib import Path
 from random import random
+
+from unco import data
 
 def change_afe_coin_id(dataframe : pd.DataFrame) -> pd.DataFrame:
     """
@@ -192,6 +195,27 @@ def remove_uncertainties(dataframe : pd.DataFrame) -> pd.DataFrame:
     
     return dataframe
 
+def remove_corrosion_legend_without_obreverse(dataframe : pd.DataFrame) -> pd.DataFrame:
+    """
+        Remove all corrosions and legends, without a ob- or reverse.
+    
+        Parameters:
+        -----------
+        dataframe : pd.DataFrame
+            Dataframe which should be updated
+    """
+    old_dataframe = dataframe
+    plans = {str(subject).split("**")[1] : subject for subject in dataframe.columns if len(str(subject).split("**")) > 1}
+    print(plans)
+    for key, subject in plans.items():
+        for column in (col for col in dataframe.columns if f"{key}__" in col):
+            dataframe[column] = dataframe[[subject,column]].apply(lambda x: x[1] if pd.notna(x[0]) else pd.NA, axis=1)
+    
+    if not old_dataframe.equals(dataframe):
+        return remove_corrosion_legend_without_obreverse(dataframe)
+
+    return dataframe
+
 
 def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     """
@@ -210,13 +234,13 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe = remove_wrong_context_from_reverse(dataframe)
     dataframe = simplify_all_id_columns(dataframe)
     dataframe = change_gYear_format(dataframe)
+    dataframe = remove_corrosion_legend_without_obreverse(dataframe)
     dataframe = replace_uncertainties_with_random_certainties(dataframe)
     dataframe = remove_datetimes(dataframe)
-    dataframe = remove_corrosio_legend_without_obreverse(dataframe)
 
 
     dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_ready.csv"),index=False)
-    remove_uncertainties(dataframe).sample(n=1000).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afemapping_changed_1000rows.csv"),index=False)
+    remove_uncertainties(dataframe).sample(n=100).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
 
     remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
 
