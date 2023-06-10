@@ -14,7 +14,7 @@ class FusekiServer:
         Interface to the fuseki server.
     """
 
-    def __init__(self, fuseki_path: str = str(Path(UNCO_PATH, r"src\fuseki")), gb_ram: int = 4) -> None:
+    def __init__(self, fuseki_path: str = str(Path(UNCO_PATH, "src/fuseki")), gb_ram: int = 4) -> None:
         """
         Parameters
         ----------
@@ -26,7 +26,7 @@ class FusekiServer:
         self.FUSEKI_PATH = fuseki_path
         self.GB_RAM = gb_ram
         self.server = None
-        self.starter_path = str(Path(UNCO_PATH, r"src\unco\features\server_starter.bat"))
+        self.starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.bat"))
         self._initialize()
 
     def _initialize(self) -> None:
@@ -44,7 +44,7 @@ class FusekiServer:
         if self.server:
             raise RuntimeError("Server is already running.")
         else:
-            self.server = subprocess.Popen(self.starter_path, creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
+            self.server = subprocess.Popen(self.starter_path, shell=True, start_new_session=True)
             time.sleep(3)
     
     def upload_data(self, path: str) -> None:
@@ -110,7 +110,7 @@ class FusekiServer:
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
-    f.upload_data(r"D:\Dokumente\Repositories\unco\data\output\graph.ttl")
+    f.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
     # time.sleep(4)
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
