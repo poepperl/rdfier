@@ -3,7 +3,7 @@ from unco import UNCO_PATH
 import shutil
 import requests
 
-class Grapher():
+class Illustrator():
     """
         Class which gets a graphical version of a generated rdf file.
 
@@ -50,4 +50,4 @@ class Grapher():
 
 
 if __name__ == "__main__":
-    g = Grapher(Path(r"D:\Dokumente\Repositories\unco\data\output\graph.rdf"))
+    g = Illustrator(Path(r"D:\Dokumente\Repositories\unco\data\output\graph.rdf"))

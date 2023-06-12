@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
-from unco.features.grapher import Grapher
+from unco.features.illustrator import Illustrator
 from unco.features.graph_generator import GraphGenerator
 
 st.set_page_config(
@@ -68,7 +68,7 @@ else:
 
             codcol.code(path.read_text())
 
-            grapher = Grapher(path)
+            grapher = Illustrator(path)
             
             image = Image.open(str(Path(UNCO_PATH, "data/output/downloaded_graph.png")))
 

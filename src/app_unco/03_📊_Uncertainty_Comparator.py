@@ -5,7 +5,7 @@ from PIL import Image
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
-from unco.features.grapher import Grapher
+from unco.features.illustrator import Illustrator
 from unco.features.graph_generator import GraphGenerator
 
 st.set_page_config(
@@ -119,7 +119,7 @@ if st.session_state.rdfdata is not None:
 
             codcol.code(st.session_state.path.read_text())
 
-            grapher = Grapher(st.session_state.path)
+            grapher = Illustrator(st.session_state.path)
             
             image = Image.open(str(Path(UNCO_PATH, "data/output/downloaded_graph.png")))
 
