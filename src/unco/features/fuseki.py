@@ -55,7 +55,7 @@ class FusekiServer:
             if self.server:
                 raise RuntimeError("Server is already running.")
             else:
-                self.server = subprocess.Popen(self.starter_path, shell=True, start_new_session=True)
+                self.server = subprocess.Popen(self.starter_path, creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
                 time.sleep(3)
         elif os.name == "posix":
             if self.server:
@@ -150,14 +150,8 @@ if __name__ == "__main__":
 
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
-
-    print(f.run_query(query))
-    time.sleep(20)
+    print(f.sparql_query(query))
     f.stop_server()
-    #f.delete_graph()
-    #print(f.run_query(query))
-    #time.sleep(5)
-    #f.stop_server()
 
 
     # response = requests.post('http://localhost:3030/ds/sparql', data={'query': 'SELECT * WHERE {?sub ?pred ?obj .} LIMIT 10'})
