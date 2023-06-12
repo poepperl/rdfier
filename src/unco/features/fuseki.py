@@ -3,6 +3,8 @@ import psutil
 import time
 import requests
 import pandas as pd
+import os
+import signal
 from io import StringIO
 from pathlib import Path
 from unco import UNCO_PATH
@@ -26,26 +28,43 @@ class FusekiServer:
         self.FUSEKI_PATH = fuseki_path
         self.GB_RAM = gb_ram
         self.server = None
-        self.starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.bat"))
+        self.starter_path : str
         self._initialize()
 
     def _initialize(self) -> None:
         """
             Method, which creates the server_starter.bat which starts the fuseki server.
         """
-        with open(self.starter_path, 'w') as starter:
-            starter.write("echo 'Running fuseki server'\ncd \"" + self.FUSEKI_PATH + "\"\n")
-            starter.write("java -Xmx" + str(self.GB_RAM) + "G -jar \"fuseki-server.jar\" --update --mem /ds %*")
+        if os.name == "nt":
+            self.starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.bat"))
+            with open(self.starter_path, 'w') as starter:
+                starter.write("echo 'Running fuseki server'\ncd \"" + self.FUSEKI_PATH + "\"\n")
+                starter.write("java -Xmx" + str(self.GB_RAM) + "G -jar \"fuseki-server.jar\" --update --mem /ds %*")
+        elif os.name == "posix":
+            self.starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.sh"))
+            with open(self.starter_path, 'w') as starter:
+                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server &')
+        else:
+            print(f"Unknown system{os.name}. Please contact the admin.")
 
     def start_server(self) -> None:
         """
             Method, which starts the fuseki server.
         """
-        if self.server:
-            raise RuntimeError("Server is already running.")
+        if os.name == "nt":
+            if self.server:
+                raise RuntimeError("Server is already running.")
+            else:
+                self.server = subprocess.Popen(self.starter_path, shell=True, start_new_session=True)
+                time.sleep(3)
+        elif os.name == "posix":
+            if self.server:
+                raise RuntimeError("Server is already running.")
+            else:
+                self.server = subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'cd /home/luca/Dokumente/repositories/unco/src/unco/features; ./server_starter.sh; bash'], stdout=subprocess.PIPE, preexec_fn=os.setsid)
+                time.sleep(3)
         else:
-            self.server = subprocess.Popen(self.starter_path, shell=True, start_new_session=True)
-            time.sleep(3)
+            print(f"Unknown system{os.name}. Please contact the admin.")
     
     def upload_data(self, path: str) -> None:
         """
@@ -99,19 +118,23 @@ class FusekiServer:
         """
             Method, which stops the fuseki server.
         """
-        if self.server:
-            for child in psutil.Process(self.server.pid).children():
-                child.kill()
-            self.server = None
+        if os.name == "nt":
+            if self.server:
+                for child in psutil.Process(self.server.pid).children():
+                    child.kill()
+                self.server = None
+            else:
+                raise RuntimeError("Server is already stopped.")
+        elif os.name == "posix":
+            subprocess.call(['pkill', 'gnome-terminal'])
         else:
-            raise RuntimeError("Server is already stopped.")
+            print(f"Unknown system{os.name}. Please contact the admin.")
 
 
 if __name__ == "__main__":
     f = FusekiServer()
     f.start_server()
     f.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
-    # time.sleep(4)
     query = """
     PREFIX nmo: <http://nomisma.org/ontology#>
     PREFIX nm: <http://nomisma.org/id/>
@@ -127,11 +150,14 @@ if __name__ == "__main__":
 
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
+
     print(f.run_query(query))
-    f.delete_graph()
-    print(f.run_query(query))
-    time.sleep(5)
+    time.sleep(20)
     f.stop_server()
+    #f.delete_graph()
+    #print(f.run_query(query))
+    #time.sleep(5)
+    #f.stop_server()
 
 
     # response = requests.post('http://localhost:3030/ds/sparql', data={'query': 'SELECT * WHERE {?sub ?pred ?obj .} LIMIT 10'})
