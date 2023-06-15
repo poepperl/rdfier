@@ -528,14 +528,14 @@ class GraphGenerator():
         return crm_dict
     
 
-    def run_query(self, query : str) -> pd.DataFrame:
+    def run_query(self, query : str, save_result : bool = True) -> pd.DataFrame:
         result = self.graph.query(query)
 
-        result.serialize(format="csv", destination=str(Path(self.OUTPUT_FOLDER, "query_results.csv")))
+        df = pd.DataFrame(result.bindings)
 
-        csvdata = pd.read_csv(open(Path(self.OUTPUT_FOLDER, "query_results.csv"), 'r', encoding='utf-8'))
+        if save_result: df.to_csv(str(Path(UNCO_PATH, "data/output/query_results_fuseki.csv")))
 
-        return pd.DataFrame(csvdata)
+        return df
     
 
 if __name__ == "__main__":
@@ -548,8 +548,8 @@ if __name__ == "__main__":
     # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/namespaces.csv"))
 
     # Eingabeformat-Test:
-    file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/eingabeformat.csv")), encoding='utf-8')
-    prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/namespaces.csv"))
+    file = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
+    prefixes = str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv"))
 
     rdfdata = RDFData(pd.read_csv(file))
     generator = GraphGenerator(rdfdata)
