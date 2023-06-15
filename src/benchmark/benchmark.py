@@ -65,7 +65,7 @@ class Benchmark:
         """
         if (query_path := Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}.rq")).is_file():
             query = query_path.read_text()
-            return self.graph_generator.run_query(query) if not run_on_fuseki else self.fserver.run_query(query)
+            return self.graph_generator.run_query(query,save_result=False) if not run_on_fuseki else self.fserver.run_query(query,save_result=False)
             # return self.graph_generator.graph.query(query).serialize(destination=str(Path(UNCO_PATH,r"data\output\query_results.csv")),format="xml")
         else:
             print(f"Warning: Doesn't found query{query_id} for model {model_id}.")
@@ -105,8 +105,8 @@ class Benchmark:
     def start_benchmark_increasing_uncertainties(self, fuseki : bool = False):
         query_results = []
         if fuseki: self.fserver.start_server()
-        for query_numb in range(4,5):
-            X = range(0, len(self.rdfdata.data), 1000)[:]
+        for query_numb in range(1,2):
+            X = range(0, len(self.rdfdata.data), 100)[:15]
             results = []
             for model_numb in [1,2,3,4,5,6,7,8]:
                 model_results = []
@@ -163,10 +163,10 @@ class Benchmark:
 
 if __name__ == "__main__":
     # Load data-------------------------------------------------------------------------------------------------------------------------
-    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_public_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
-    fuski = True
+    fuski = False
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
     # model = 2
