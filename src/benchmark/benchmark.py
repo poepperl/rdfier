@@ -105,8 +105,8 @@ class Benchmark:
     def start_benchmark_increasing_uncertainties(self, fuseki : bool = False):
         query_results = []
         if fuseki: self.fserver.start_server()
-        for query_numb in range(5,6):
-            X = range(0, len(self.rdfdata.data), 300)[:6]
+        for query_numb in range(4,5):
+            X = range(0, len(self.rdfdata.data), 1000)[:]
             results = []
             for model_numb in [1,2,3,4,5,6,7,8]:
                 model_results = []
@@ -163,10 +163,10 @@ class Benchmark:
 
 if __name__ == "__main__":
     # Load data-------------------------------------------------------------------------------------------------------------------------
-    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
-    fuski = False
+    fuski = True
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
     # model = 2
