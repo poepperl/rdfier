@@ -150,7 +150,7 @@ if __name__ == "__main__":
 
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
-    print(f.sparql_query(query))
+    print(f.run_query(query))
     f.stop_server()
 
 
