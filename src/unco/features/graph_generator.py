@@ -139,6 +139,8 @@ class GraphGenerator():
                                             self._generate_uncertain_value_solution_7(subject, predicate, object)
                                         case 8:
                                             self._generate_uncertain_value_solution_8(subject, predicate, object)
+                                        case 9:
+                                            self._generate_uncertain_value_solution_9(subject, predicate, object)
                                         case _:
                                             self.graph.add((subject, predicate, object))
 
@@ -267,6 +269,13 @@ class GraphGenerator():
                 self.prefixes["rdf"] = RDF
             case 8:
                 self.graph.bind("un", UN)
+                self.prefixes["un"] = UN
+            case 9:
+                self.graph.bind("rdf", RDF)
+                self.graph.bind("nm", NM)
+                self.graph.bind("un", UN)
+                self.prefixes["rdf"] = RDF
+                self.prefixes["nm"] = NM
                 self.prefixes["un"] = UN
             case _:
                 pass
@@ -472,6 +481,27 @@ class GraphGenerator():
 
         self.graph.add((node, predicate, object))
 
+    def _generate_uncertain_value_solution_9(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
+        """ Method to create an uncertain value of solution 8.
+        Attributes
+        ----------
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
+        """
+        node = BNode()
+
+        self.graph.add((node, RDF["type"], RDF["Statement"]))
+        self.graph.add((node, RDF["subject"], subject))
+        self.graph.add((node, RDF["predicate"], predicate))
+        self.graph.add((node, RDF["object"], object))
+        self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
+
 
     def _get_crm_properties(self):
         """
@@ -543,18 +573,18 @@ if __name__ == "__main__":
     # file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/input_data.csv")), encoding='utf-8')
     # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/namespaces.csv"))
 
-    # Uncertain Mint:
-    # file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/input_data.csv")), encoding='utf-8')
-    # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/namespaces.csv"))
+    # AFE:
+    file = open(str(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_100rows.csv")), encoding='utf-8')
+    prefixes = str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv"))
 
     # Eingabeformat-Test:
-    file = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
-    prefixes = str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv"))
+    # file = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
+    # prefixes = str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv"))
 
     rdfdata = RDFData(pd.read_csv(file))
     generator = GraphGenerator(rdfdata)
     generator.load_prefixes(prefixes)
-    generator.generate_solution(xml_format=False)
+    generator.generate_solution(xml_format=True, solution_id=9)
 
     test_query =    """
                     PREFIX nmo: <http://nomisma.org/ontology#>
