@@ -13,7 +13,7 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import sleep, time
 
-NUMB_LOOPS = 5
+NUMB_LOOPS = 11
 
 class Benchmark:
     """
@@ -43,7 +43,7 @@ class Benchmark:
         self.rdfdata = rdfdata
         self.prefixes_path = prefixes_path
         self.graph_generator : GraphGenerator
-        self.fserver = FusekiServer()
+        self.fserver = FusekiServer(Path(UNCO_PATH,"src/apache-jena-fuseki-4.8.0"))
 
     def _generate_graph_with_model(self, rdfdata : RDFData, model_id : int) -> None:
         self.graph_generator = GraphGenerator(rdfdata)

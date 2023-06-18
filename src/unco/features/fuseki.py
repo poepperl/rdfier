@@ -43,7 +43,7 @@ class FusekiServer:
         elif os.name == "posix":
             self.starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.sh"))
             with open(self.starter_path, 'w') as starter:
-                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server &')
+                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
         else:
             print(f"Unknown system{os.name}. Please contact the admin.")
 
@@ -64,7 +64,7 @@ class FusekiServer:
                 self.server = subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'cd /home/luca/Dokumente/repositories/unco/src/unco/features; ./server_starter.sh; bash'], stdout=subprocess.PIPE, preexec_fn=os.setsid)
                 time.sleep(3)
         else:
-            print(f"Unknown system{os.name}. Please contact the admin.")
+            print(f"Unknown system{os.name}. Please contact the admin. Notice: the benchmark is currently not aviable for Mac users.")
     
     def upload_data(self, path: str) -> None:
         """
@@ -132,7 +132,7 @@ class FusekiServer:
 
 
 if __name__ == "__main__":
-    f = FusekiServer()
+    f = FusekiServer(Path(UNCO_PATH,"src/apache-jena-fuseki-4.8.0"))
     f.start_server()
     f.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
     query = """
@@ -151,6 +151,7 @@ if __name__ == "__main__":
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
     print(f.run_query(query))
+    time.sleep(7)
     f.stop_server()
 
 
