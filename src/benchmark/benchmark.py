@@ -106,9 +106,9 @@ class Benchmark:
         query_results = []
         if fuseki: self.fserver.start_server()
         for query_numb in range(1,2):
-            X = range(0, len(self.rdfdata.data), 100)[:15]
+            X = range(0, len(self.rdfdata.data), int(len(self.rdfdata.data)/15))[:]
             results = []
-            for model_numb in [1,2,3,4,5,6,7,8]:
+            for model_numb in [1,2,3,4,5,6,7,8,9]:
                 model_results = []
                 time_difference = 0
                 for i in tqdm(X):
@@ -135,21 +135,14 @@ class Benchmark:
             query_results.append(results)
 
             plt.plot(X, results[0], color='r', label='1')
-            plt.plot(X, results[1], color='b', label='2')
-            plt.plot(X, results[2], color='g', label='3')
+            plt.plot(X, results[1], color='g', label='2')
+            plt.plot(X, results[2], color='b', label='3')
             plt.plot(X, results[3], color='y', label='4')
             plt.plot(X, results[4], color='m', label='5')
             plt.plot(X, results[5], color='c', label='6')
             plt.plot(X, results[6], color='k', label='7')
-            plt.plot(X, results[7], color='y', label='8')
-
-            # plt.plot(X, results[0], color='r', label='1')
-            # plt.plot(X, results[1], color='b', label='2')
-            # plt.plot(X, results[2], color='y', label='5')
-            # plt.plot(X, results[3], color='m', label='6')
-            # plt.plot(X, results[4], color='c', label='7')
-            # plt.plot(X, results[5], color='k', label='8')
-            # plt.plot(X, results[6], color='y', label='8')
+            plt.plot(X, results[7], linestyle=":", color='r', label='8')
+            plt.plot(X, results[8], linestyle=":", color='g', label='9')
 
             plt.xlabel("#Uncertainties per column")
             plt.ylabel("Time in seconds")
@@ -163,27 +156,27 @@ class Benchmark:
 
 if __name__ == "__main__":
     # Load data-------------------------------------------------------------------------------------------------------------------------
-    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_public_ready.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
     fuski = True
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
-    model = 8
-    query = 5
-    ugen = UncertaintyGenerator(deepcopy(rdfdata))
-    rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
-    # rdf_data = ugen.add_pseudorand_uncertainty_flags([19],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
-    bench._generate_graph_with_model(rdf_data,model)
-    if fuski:
-        bench.fserver.start_server()
-        bench.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
-    start = time()
-    print(bench.run_query_of_model(query,model,fuski))
+    # model = 8
+    # query = 5
+    # ugen = UncertaintyGenerator(deepcopy(rdfdata))
+    # rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
+    # # rdf_data = ugen.add_pseudorand_uncertainty_flags([19],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
+    # bench._generate_graph_with_model(rdf_data,model)
+    # if fuski:
+    #     bench.fserver.start_server()
+    #     bench.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
+    # start = time()
+    # print(bench.run_query_of_model(query,model,fuski))
 
-    time_diff = time() - start
-    if fuski: bench.fserver.stop_server()
-    print(f"Zeit: {time_diff}")
+    # time_diff = time() - start
+    # if fuski: bench.fserver.stop_server()
+    # print(f"Zeit: {time_diff}")
 
 
 
@@ -202,5 +195,5 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    # print(bench.start_benchmark_increasing_uncertainties(fuski))
-    # if fuski: bench.fserver.stop_server()
+    print(bench.start_benchmark_increasing_uncertainties(fuski))
+    if fuski: bench.fserver.stop_server()
