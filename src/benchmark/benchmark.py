@@ -166,26 +166,24 @@ if __name__ == "__main__":
     input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_public_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
-    fuski = False
+    fuski = True
 
     # Test query of model---------------------------------------------------------------------------------------------------------------
-    # model = 2
-    # query = 5
-    # ugen = UncertaintyGenerator(deepcopy(rdfdata))
-    # rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
-    # # rdf_data = ugen.add_pseudorand_uncertainty_flags([19],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
-    # bench._generate_graph_with_model(rdf_data,model)
-    # if fuski:
-    #     bench.fserver.start_server()
-    #     bench.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
-    # start = time()
-    # print(result := bench.run_query_of_model(query,model,fuski))
-    # print(len(rdf_data.uncertainties))
-    # for (row,column) in rdf_data.uncertainties:
-    #     print(f"Column: {rdf_data.data.columns[column]} Eintrag: {rdf_data.data.iat[row,column]}")
-    # time_diff = time() - start
-    # if fuski: bench.fserver.stop_server()
-    # print(f"Zeit: {time_diff}")
+    model = 8
+    query = 5
+    ugen = UncertaintyGenerator(deepcopy(rdfdata))
+    rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
+    # rdf_data = ugen.add_pseudorand_uncertainty_flags([19],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
+    bench._generate_graph_with_model(rdf_data,model)
+    if fuski:
+        bench.fserver.start_server()
+        bench.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
+    start = time()
+    print(bench.run_query_of_model(query,model,fuski))
+
+    time_diff = time() - start
+    if fuski: bench.fserver.stop_server()
+    print(f"Zeit: {time_diff}")
 
 
 
@@ -204,5 +202,5 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    print(bench.start_benchmark_increasing_uncertainties(fuski))
-    if fuski: bench.fserver.stop_server()
+    # print(bench.start_benchmark_increasing_uncertainties(fuski))
+    # if fuski: bench.fserver.stop_server()

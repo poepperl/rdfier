@@ -572,18 +572,18 @@ class GraphGenerator():
 
         for line in input(str(Path(self.OUTPUT_FOLDER, "graph.ttl")), inplace=True):
             if "rdf:star" in line:
-                splitlist = line.split(" ")
-                splitlist = splitlist[2].split("$$")
+                splitlist = line.split("rdf:star")
+                splitlist = splitlist[1][:-2].strip().split("$$")
 
                 # Delete ":
                 splitlist[0] = splitlist[0][1:]
                 splitlist[2] = splitlist[2][:-1]
 
-                for i in range(3):
-                    if splitlist[i][0] != "<":
-                        splitlist[i] = "\"" + splitlist[i] + "\""
+                # for i in range(3):
+                #     if splitlist[i][0] != "<":
+                #         splitlist[i] = "\"" + splitlist[i] + "\""
                 
-                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type {EDTFO['UncertainStatement'].n3()} ."
+                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type {EDTFO['UncertainStatement'].n3()} .".replace("\\\"","\"")
 
             print(line)
 

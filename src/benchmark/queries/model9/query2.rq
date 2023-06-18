@@ -4,6 +4,6 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
 WHERE {
-    ?subject nmo:hasMint ?o .
+    << ?subject nmo:hasMint ?o >> rdf:type edtfo:UncertainStatement .
 }
 GROUP BY ?subject
