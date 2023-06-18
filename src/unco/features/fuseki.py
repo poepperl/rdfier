@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
     SELECT ?s ?p ?o
     WHERE {
-        ?s ?p ?o .
+        <<?s ?p ?o>> ?b1 ?b2 .
     }
     """
     # SELECT ?s { ?s nmo:hasMint nm:comama }

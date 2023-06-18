@@ -1,4 +1,6 @@
 import pandas as pd
+from sys import stdout
+from fileinput import input
 from random import random
 from pathlib import Path
 from unco import UNCO_PATH
@@ -14,7 +16,7 @@ UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertain
 CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
 BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
-EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
+EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl#") # Checken!
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 CRMINF = Namespace("https://ontome.net/ns/crminf/")
 AMT = Namespace("http://academic-meta-tool.xyz/vocab#")
@@ -147,19 +149,20 @@ class GraphGenerator():
                                 else:
                                         self.graph.add((subject, predicate, object))
 
-        filename = "graph"
-
         # Save sparql-prefix txt:
-        with open(Path(self.OUTPUT_FOLDER, filename + "_prefixes.txt"), 'w') as file:
+        with open(Path(self.OUTPUT_FOLDER, "graph_prefixes.txt"), 'w') as file:
             file.write("".join("PREFIX " + prefix + ": <" + self.prefixes[prefix] + ">" + "\n" for prefix in self.prefixes))
 
         # Save RDF Graph:
         if xml_format:
-            with open(Path(self.OUTPUT_FOLDER, filename + ".rdf"), 'w') as file:
+            with open(Path(self.OUTPUT_FOLDER, "graph.rdf"), 'w') as file:
                     file.write(self.graph.serialize(format='pretty-xml'))
         else:
-            with open(Path(self.OUTPUT_FOLDER, filename + ".ttl"), 'w') as file:
+            with open(Path(self.OUTPUT_FOLDER, "graph.ttl"), 'w') as file:
                     file.write(self.graph.serialize(format="turtle"))
+            
+            if solution_id == 9:
+                self.change_to_rdf_star()
 
 
     def _get_node(self, value: str, type: str, identification : str = ""):
@@ -272,11 +275,7 @@ class GraphGenerator():
                 self.prefixes["un"] = UN
             case 9:
                 self.graph.bind("rdf", RDF)
-                self.graph.bind("nm", NM)
-                self.graph.bind("un", UN)
                 self.prefixes["rdf"] = RDF
-                self.prefixes["nm"] = NM
-                self.prefixes["un"] = UN
             case _:
                 pass
 
@@ -496,11 +495,13 @@ class GraphGenerator():
         """
         node = BNode()
 
-        self.graph.add((node, RDF["type"], RDF["Statement"]))
-        self.graph.add((node, RDF["subject"], subject))
-        self.graph.add((node, RDF["predicate"], predicate))
-        self.graph.add((node, RDF["object"], object))
-        self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
+        self.graph.add((node, RDF["star"], Literal(f"{subject.n3()}$${predicate.n3()}$${object.n3()}")))
+
+        # self.graph.add((node, RDF["type"], RDF["Statement"]))
+        # self.graph.add((node, RDF["subject"], subject))
+        # self.graph.add((node, RDF["predicate"], predicate))
+        # self.graph.add((node, RDF["object"], object))
+        # self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
 
 
     def _get_crm_properties(self):
@@ -567,6 +568,24 @@ class GraphGenerator():
 
         return df
     
+    def change_to_rdf_star(self):
+
+        for line in input(str(Path(self.OUTPUT_FOLDER, "graph.ttl")), inplace=True):
+            if "rdf:star" in line:
+                splitlist = line.split(" ")
+                splitlist = splitlist[2].split("$$")
+
+                # Delete ":
+                splitlist[0] = splitlist[0][1:]
+                splitlist[2] = splitlist[2][:-1]
+
+                for i in range(3):
+                    if splitlist[i][0] != "<":
+                        splitlist[i] = "\"" + splitlist[i] + "\""
+                
+                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type {EDTFO['UncertainStatement'].n3()} ."
+
+            print(line)
 
 if __name__ == "__main__":
     # Corpus Nummorum Beispiel:
@@ -584,7 +603,7 @@ if __name__ == "__main__":
     rdfdata = RDFData(pd.read_csv(file))
     generator = GraphGenerator(rdfdata)
     generator.load_prefixes(prefixes)
-    generator.generate_solution(xml_format=True, solution_id=9)
+    generator.generate_solution(xml_format=False, solution_id=9)
 
     test_query =    """
                     PREFIX nmo: <http://nomisma.org/ontology#>
