@@ -275,6 +275,8 @@ class GraphGenerator():
                 self.prefixes["un"] = UN
             case 9:
                 self.graph.bind("rdf", RDF)
+                self.graph.bind("edtfo", EDTFO)
+                self.prefixes["edtfo"] = EDTFO
                 self.prefixes["rdf"] = RDF
             case _:
                 pass
@@ -495,7 +497,7 @@ class GraphGenerator():
         """
         node = BNode()
 
-        self.graph.add((node, RDF["star"], Literal(f"{subject.n3()}$${predicate.n3()}$${object.n3()}")))
+        self.graph.add((EDTFO[node.n3()[2:]], RDF["star"], Literal(f"{subject.n3(namespace_manager=self.graph.namespace_manager)}$${predicate.n3(namespace_manager=self.graph.namespace_manager)}$${object.n3(namespace_manager=self.graph.namespace_manager)}")))
 
         # self.graph.add((node, RDF["type"], RDF["Statement"]))
         # self.graph.add((node, RDF["subject"], subject))
@@ -569,7 +571,6 @@ class GraphGenerator():
         return df
     
     def change_to_rdf_star(self):
-
         for line in input(str(Path(self.OUTPUT_FOLDER, "graph.ttl")), inplace=True):
             if "rdf:star" in line:
                 splitlist = line.split("rdf:star")
@@ -583,7 +584,7 @@ class GraphGenerator():
                 #     if splitlist[i][0] != "<":
                 #         splitlist[i] = "\"" + splitlist[i] + "\""
                 
-                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type {EDTFO['UncertainStatement'].n3()} .".replace("\\\"","\"")
+                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type edtfo:UncertainStatement .".replace("\\\"","\"")
 
             print(line)
 

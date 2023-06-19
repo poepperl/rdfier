@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 
 from unco.data.rdf_data import RDFData
+from unco.features.graph_generator import GraphGenerator
+from unco.features.illustrator import Illustrator
 
 
 class UncertaintyGenerator():
@@ -77,7 +79,7 @@ class UncertaintyGenerator():
         return self.rdfdata
     
 
-    def add_pseudorand_alternatives(self, min_number_of_alternatives : int = 1, max_number_of_alternatives : int = 3, list_of_columns: list[int] =[]) -> RDFData:
+    def add_pseudorand_alternatives(self, list_of_columns: list[int] =[], min_number_of_alternatives : int = 1, max_number_of_alternatives : int = 3) -> RDFData:
         """ Method to add alternatives to the existing uncertainty flags.
 
         Parameters
@@ -124,7 +126,7 @@ class UncertaintyGenerator():
                 if numb_additional_alternatives < 1:
                     continue
 
-                values_of_column = [str(entry).strip() for entry in list_of_column_entries[column] if entry not in current_values]
+                values_of_column = [str(entry).strip() for entry in list_of_column_entries[list_of_columns.index(column)] if entry not in current_values]
 
                 if numb_additional_alternatives > len(values_of_column):
                     print(f"Warning: Couldn't find {numb_additional_alternatives+len(current_values)} different entries in column {column}. Set the higher bound to {len(values_of_column)+len(current_values)}.")
@@ -157,8 +159,9 @@ if __name__ == "__main__":
 
     rdfdata = RDFData(pd.read_csv(file))
     g = UncertaintyGenerator(rdfdata=rdfdata)
-    print(g.add_pseudorand_uncertainty_flags(list_of_columns=[1]).data)
-
-"""
-Bei Generierung von uncertainty flags dürfen nur Spalten in Fragen kommen, die ausschließlich Objekte beinhalten.
-"""
+    rdfdata = g.add_pseudorand_uncertainty_flags(list_of_columns=[1])
+    # rdfdata = g.add_pseudorand_alternatives(list_of_columns=[1],min_number_of_alternatives=2,max_number_of_alternatives=2)
+    dd = GraphGenerator(rdfdata)
+    dd.load_prefixes(str(Path(UNCO_PATH,"data/input/namespaces.csv")))
+    dd.generate_solution(9,xml_format=False)
+    g = Illustrator(Path(UNCO_PATH,"data/output/graph.ttl"))
