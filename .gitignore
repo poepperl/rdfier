@@ -22,6 +22,9 @@ tests/testdata/*
 
 # Fuseki
 src/unco/features/server_starter.bat
+src/unco/features/server_starter.sh
+src/fuseki
+src/apache-jena-fuseki-4.8.0
 
 # Gitkeep
 !.gitkeep

@@ -1,0 +1,13 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX edtfo: <https://periodo.github.io/edtf-ontology/edtfo.ttl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?subject ?predicate ?object
+WHERE {
+    {
+        ?subject ?predicate ?object .
+    }
+    MINUS {
+        << ?b1 ?b2 ?b3 >> ?predicate ?object .
+    }
+}

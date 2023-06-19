@@ -1,0 +1,14 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX edtfo: <https://periodo.github.io/edtf-ontology/edtfo.ttl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+WHERE {
+    {
+        ?subject nmo:hasMint ?o.
+    }
+    MINUS {
+        ?o rdf:type edtfo:ApproximateStatement .
+    }
+}
+GROUP BY ?subject

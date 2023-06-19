@@ -1,5 +1,7 @@
-from genericpath import exists
 import pandas as pd
+from sys import stdout
+from fileinput import input
+from random import random
 from pathlib import Path
 from unco import UNCO_PATH
 from unco.data.rdf_data import RDFData
@@ -14,7 +16,7 @@ UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertain
 CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
 BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
 NM = Namespace("http://nomisma.org/id/")
-EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl")
+EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl#") # Checken!
 XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
 CRMINF = Namespace("https://ontome.net/ns/crminf/")
 AMT = Namespace("http://academic-meta-tool.xyz/vocab#")
@@ -90,13 +92,15 @@ class GraphGenerator():
             self.graph.bind(prefix, nspaces)
 
         for plan in self.rdfdata.triple_plan.values():
+            if not plan["objects"]:
+                continue
             subject_colindex = plan["subject"].copy().pop()
             object_colindices = plan["objects"].copy()
 
             for row_index in range(len(self.rdfdata.data)):
 
                 if pd.notnull(self.rdfdata.data.iat[row_index,subject_colindex]):
-                    subject = self._get_node(str(self.rdfdata.data.iat[row_index,subject_colindex]), self.rdfdata.types_and_languages[(row_index,subject_colindex)][0])
+                    subject = self._get_node(str(self.rdfdata.data.iat[row_index,subject_colindex]), self.rdfdata.types_and_languages[(row_index,subject_colindex)][0], f"r{row_index}c{subject_colindex}")
 
                     for column_index in object_colindices:
 
@@ -106,18 +110,20 @@ class GraphGenerator():
                             predicate = self._get_node(pred_name, "^^uri")
 
                             obj_names = str(entry).split(";")
-                            objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i]) for i, value in enumerate(obj_names)]
+                            objects = [self._get_node(value, self.rdfdata.types_and_languages[(row_index,column_index)][i], f"r{row_index}c{column_index}") for i, value in enumerate(obj_names)]
 
                             for index, object in enumerate(objects):
                                 if (row_index,column_index) in self.rdfdata.uncertainties:
                                     # uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
-                                    uncertainty_id = subject.n3() + pred_name
+                                    uncertainty_id = (subject.n3() + pred_name).replace(":","")
                                     if solution_id in [3,4,5]:
                                         if "likelihoods" in self.rdfdata.uncertainties[(row_index,column_index)]:
+                                            if len(self.rdfdata.uncertainties[(row_index,column_index)]["likelihoods"]) <= index:
+                                                print(f"Coin {subject.n3()} Predicate {pred_name} has uncertainties {self.rdfdata.uncertainties[(row_index,column_index)]['likelihoods']} and object {[ob.n3() for ob in objects]}")
                                             weight = self.rdfdata.uncertainties[(row_index,column_index)]["likelihoods"][index]
                                         else:
-                                            weight = 0.5
-                                            print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough model {solution_id} needs some. Weight 0.5 will be taken instead.")
+                                            weight = float("%.2f" % random())
+                                            # print(f"Warning: No weighted uncertainties for entry {object} in column {predicate}, altough model {solution_id} needs some. Weight {weight} will be taken instead.")
                                     match solution_id:
                                         case 1:
                                             self._generate_uncertain_value_solution_1(subject, predicate, object)
@@ -126,7 +132,7 @@ class GraphGenerator():
                                         case 3:
                                             self._generate_uncertain_value_solution_3(subject, predicate, object, weight)
                                         case 4:
-                                            self._generate_uncertain_value_solution_4(subject, predicate, object, weight, uncertainty_id, len(obj_names)!=1)
+                                            self._generate_uncertain_value_solution_4(subject, predicate, object, weight, uncertainty_id, index)
                                         case 5:
                                             self._generate_uncertain_value_solution_5(subject, predicate, object, weight)
                                         case 6:
@@ -135,28 +141,31 @@ class GraphGenerator():
                                             self._generate_uncertain_value_solution_7(subject, predicate, object)
                                         case 8:
                                             self._generate_uncertain_value_solution_8(subject, predicate, object)
+                                        case 9:
+                                            self._generate_uncertain_value_solution_9(subject, predicate, object)
                                         case _:
                                             self.graph.add((subject, predicate, object))
 
                                 else:
                                         self.graph.add((subject, predicate, object))
 
-        filename = "graph"
-
         # Save sparql-prefix txt:
-        with open(Path(self.OUTPUT_FOLDER, filename + "_prefixes.txt"), 'w') as file:
+        with open(Path(self.OUTPUT_FOLDER, "graph_prefixes.txt"), 'w') as file:
             file.write("".join("PREFIX " + prefix + ": <" + self.prefixes[prefix] + ">" + "\n" for prefix in self.prefixes))
 
         # Save RDF Graph:
         if xml_format:
-            with open(Path(self.OUTPUT_FOLDER, filename + ".rdf"), 'w') as file:
+            with open(Path(self.OUTPUT_FOLDER, "graph.rdf"), 'w') as file:
                     file.write(self.graph.serialize(format='pretty-xml'))
         else:
-            with open(Path(self.OUTPUT_FOLDER, filename + ".ttl"), 'w') as file:
+            with open(Path(self.OUTPUT_FOLDER, "graph.ttl"), 'w') as file:
                     file.write(self.graph.serialize(format="turtle"))
+            
+            if solution_id == 9:
+                self.change_to_rdf_star()
 
 
-    def _get_node(self, value: str, type: str):
+    def _get_node(self, value: str, type: str, identification : str = ""):
         """
         Method which returns the node of the given value and type.
 
@@ -172,7 +181,7 @@ class GraphGenerator():
             return Literal(value)
         elif type[0:2] == "^^":
             if type == "^^id":
-                return BNode("id" + value)
+                return BNode(f"v{value}{identification}")
             if type == "^^uri":
                 return self._get_uri_node(value)
             else:
@@ -239,11 +248,15 @@ class GraphGenerator():
                 self.prefixes["rdf"] = RDF
                 self.graph.add((BNode("A3"), RDF.type, CRM["R1_Reliability_Assessment"]))
             case 4:
+                self.graph.bind("rdf", RDF)
                 self.graph.bind("crminf", CRMINF)
                 self.prefixes["crminf"] = CRMINF
+                self.prefixes["rdf"] = RDF
             case 5:
                 self.graph.bind("amt", AMT)
                 self.graph.bind("crm", CRM)
+                self.graph.bind("rdfs", RDFS)
+                self.prefixes["rdfs"] = RDFS
                 self.prefixes["amt"] = AMT
                 self.prefixes["crm"] = CRM
                 self.crm_properties = self._get_crm_properties()
@@ -260,6 +273,9 @@ class GraphGenerator():
             case 8:
                 self.graph.bind("un", UN)
                 self.prefixes["un"] = UN
+            case 9:
+                self.graph.bind("rdf", RDF)
+                self.prefixes["rdf"] = RDF
             case _:
                 pass
 
@@ -325,8 +341,8 @@ class GraphGenerator():
 
         self.graph.add((b, RDF.type, CRM["E13"]))
         self.graph.add((b, RDF.Property, predicate))
-        self.graph.add((b, CRM["T2_assessed_the_reliability"], c))
-        self.graph.add((b, CRM["P140_assigned_the_reliability_to"], subject))
+        self.graph.add((b, CRM["T2_assessed_as_reliability"], c))
+        self.graph.add((b, CRM["P140_assigned_attribute_to"], subject))
         self.graph.add((b, CRM["P141_assigned"], object))
 
         # Likelihood:
@@ -336,7 +352,7 @@ class GraphGenerator():
         self.graph.add((subject, predicate, object))
 
 
-    def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal, weight : float, uncertainty_id : str, has_alternatives : bool) -> None:
+    def _generate_uncertain_value_solution_4(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal, weight : float, uncertainty_id : str, object_index : int) -> None:
         """ Method to create an uncertain value of solution 4.
         Attributes
         ----------
@@ -353,28 +369,27 @@ class GraphGenerator():
         has_alternatives : bool
             Boolean value to mark, if the entry has other alternatives or not.
         """
-        if has_alternatives:
-            b = BNode(uncertainty_id)
-            c = BNode()
+        b = BNode(uncertainty_id)
+        c = BNode()
 
-            self.graph.add((subject,predicate,b))
-            self.graph.add((b,RDF.type,CRMINF["I5_Inference_Making"]))
-            self.graph.add((b,CRMINF["J2"],c))
-        else:
-            c = BNode()
-
-            self.graph.add((subject,predicate,c))
+        self.graph.add((subject,predicate,b))
+        self.graph.add((b,RDF.type,CRMINF["I5_Inference_Making"]))
+        self.graph.add((b,CRMINF["J2_concluded_that"],c))
 
 
-        if weight>0.5:
-            level = "more likely"
-        else:
+        if weight < 0.25:
             level = "uncertain"
+        elif weight < 0.5:
+            level = "plausible"
+        elif weight < 0.75:
+            level = "likely"
+        else:
+            level = "very likely"
 
-
+        self.graph.add((c, CRMINF["I4_Proposition_Set"], Literal(f"Proposetion_{object_index}")))
         self.graph.add((c, CRMINF["J5_holds_to_be"], Literal(level)))
-        self.graph.add((c, RDF["type"], CRMINF["I2_Belief"]))
         self.graph.add((c, CRMINF["J4_that"], object))
+        self.graph.add((c, RDF["type"], CRMINF["I2_Belief"]))
 
 
     def _generate_uncertain_value_solution_5(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal, weight : float) -> None:
@@ -459,11 +474,34 @@ class GraphGenerator():
         uncertainty_id : str
             Unique string to identify the predicate and object of this uncertain relation.
         """
-        node = BNode(subject.n3())
+        node = BNode(subject.n3().replace(":",""))
         
         self.graph.add((subject, UN["hasUncertainty"], node))
 
         self.graph.add((node, predicate, object))
+
+    def _generate_uncertain_value_solution_9(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
+        """ Method to create an uncertain value of solution 8.
+        Attributes
+        ----------
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
+        """
+        node = BNode()
+
+        self.graph.add((node, RDF["star"], Literal(f"{subject.n3()}$${predicate.n3()}$${object.n3()}")))
+
+        # self.graph.add((node, RDF["type"], RDF["Statement"]))
+        # self.graph.add((node, RDF["subject"], subject))
+        # self.graph.add((node, RDF["predicate"], predicate))
+        # self.graph.add((node, RDF["object"], object))
+        # self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
 
 
     def _get_crm_properties(self):
@@ -521,33 +559,51 @@ class GraphGenerator():
         return crm_dict
     
 
-    def run_query(self, query : str) -> pd.DataFrame:
+    def run_query(self, query : str, save_result : bool = True) -> pd.DataFrame:
         result = self.graph.query(query)
 
-        result.serialize(format="csv", destination=str(Path(self.OUTPUT_FOLDER, "query_results.csv")))
+        df = pd.DataFrame(result.bindings)
 
-        csvdata = pd.read_csv(open(Path(self.OUTPUT_FOLDER, "query_results.csv"), 'r', encoding='utf-8'))
+        if save_result: df.to_csv(str(Path(UNCO_PATH, "data/output/query_results_fuseki.csv")))
 
-        return pd.DataFrame(csvdata)
+        return df
     
+    def change_to_rdf_star(self):
+
+        for line in input(str(Path(self.OUTPUT_FOLDER, "graph.ttl")), inplace=True):
+            if "rdf:star" in line:
+                splitlist = line.split("rdf:star")
+                splitlist = splitlist[1][:-2].strip().split("$$")
+
+                # Delete ":
+                splitlist[0] = splitlist[0][1:]
+                splitlist[2] = splitlist[2][:-1]
+
+                # for i in range(3):
+                #     if splitlist[i][0] != "<":
+                #         splitlist[i] = "\"" + splitlist[i] + "\""
+                
+                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type {EDTFO['UncertainStatement'].n3()} .".replace("\\\"","\"")
+
+            print(line)
 
 if __name__ == "__main__":
     # Corpus Nummorum Beispiel:
     # file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/input_data.csv")), encoding='utf-8')
     # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/namespaces.csv"))
 
-    # Uncertain Mint:
-    # file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/input_data.csv")), encoding='utf-8')
-    # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/1certain2uncertainMints/namespaces.csv"))
+    # AFE:
+    file = open(str(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_100rows.csv")), encoding='utf-8')
+    prefixes = str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv"))
 
     # Eingabeformat-Test:
-    file = open(str(Path(UNCO_PATH,"tests/test_data/csv_testdata/eingabeformat.csv")), encoding='utf-8')
-    prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/namespaces.csv"))
+    # file = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
+    # prefixes = str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv"))
 
     rdfdata = RDFData(pd.read_csv(file))
     generator = GraphGenerator(rdfdata)
     generator.load_prefixes(prefixes)
-    generator.generate_solution(xml_format=False)
+    generator.generate_solution(xml_format=False, solution_id=9)
 
     test_query =    """
                     PREFIX nmo: <http://nomisma.org/ontology#>

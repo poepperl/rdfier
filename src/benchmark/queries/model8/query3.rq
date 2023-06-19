@@ -1,0 +1,21 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
+
+SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects) ?certainty
+WHERE {
+    {
+        ?subject un:hasUncertainty ?b .
+        ?b nmo:hasMint ?o .
+        BIND("uncertain" AS ?certainty)
+    }
+    UNION {
+        {
+            ?subject nmo:hasMint ?o.
+        }
+        MINUS {
+            ?a un:hasUncertainty ?subject .
+        }
+        BIND("certain" AS ?certainty)
+    }
+}
+GROUP BY ?subject ?certainty

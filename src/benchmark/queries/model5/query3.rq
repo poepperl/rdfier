@@ -1,0 +1,23 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX amt: <http://academic-meta-tool.xyz/vocab#>
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+
+SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects) ?certainty
+WHERE {
+    {
+        ?subject nmo:hasMint ?b .
+        ?b amt:weight ?certainty ;
+            crm:P189.2_uncertain_place ?o .
+    }
+    UNION {
+        {
+            ?subject nmo:hasMint ?o.
+        }
+        MINUS {
+            ?o amt:weight ?c ;
+                crm:P189.2_uncertain_place ?b1 .
+        }
+        BIND("certain" AS ?certainty)
+    }
+}
+GROUP BY ?subject ?certainty

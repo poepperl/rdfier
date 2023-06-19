@@ -1,0 +1,18 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX crminf: <https://ontome.net/ns/crminf/>
+
+SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+WHERE {
+    {
+        ?subject nmo:hasMint ?o.
+    }
+    MINUS {
+        ?o crminf:J2_concluded_that ?b ;
+            a crminf:I5_Inference_Making .
+        ?b crminf:J4_that ?ob ;
+            crminf:J5_holds_to_be ?certainty ;
+            crminf:I4_Proposition_Set ?proposetion ;
+            a crminf:I2_Belief .
+    }
+}
+GROUP BY ?subject

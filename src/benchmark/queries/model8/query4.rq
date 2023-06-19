@@ -1,0 +1,15 @@
+PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
+
+SELECT ?subject ?predicate ?object
+WHERE {
+    {
+        ?subject ?predicate ?object .
+    }
+    MINUS {
+        ?subject un:hasUncertainty ?object .
+    }
+    MINUS {
+        ?b1 un:hasUncertainty ?subject .
+        ?subject ?p2 ?o .
+    }
+}
