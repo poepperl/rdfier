@@ -109,6 +109,12 @@ class UncertaintyGenerator():
             list_of_columns = list(range(len(self.rdfdata.data.columns)))
     	
         list_of_column_entries = []
+
+        # In ARBEIT
+        # for column in list_of_columns:
+        #     values_of_column = [((entry, row) for entry in self.rdfdata.data.iloc[:,column].tolist()) for row in self.rdfdata.data.index[self.rdfdata.data[column]].tolist()]
+        #     print(values_of_column)
+
         for column in list_of_columns:
             values_of_column = set(self.rdfdata.data.iloc[:,column].tolist())
             values_of_column = [str(entry).split(";") for entry in values_of_column]
@@ -160,7 +166,7 @@ if __name__ == "__main__":
     rdfdata = RDFData(pd.read_csv(file))
     g = UncertaintyGenerator(rdfdata=rdfdata)
     rdfdata = g.add_pseudorand_uncertainty_flags(list_of_columns=[1])
-    # rdfdata = g.add_pseudorand_alternatives(list_of_columns=[1],min_number_of_alternatives=2,max_number_of_alternatives=2)
+    rdfdata = g.add_pseudorand_alternatives(list_of_columns=[1],min_number_of_alternatives=2,max_number_of_alternatives=2)
     dd = GraphGenerator(rdfdata)
     dd.load_prefixes(str(Path(UNCO_PATH,"data/input/namespaces.csv")))
     dd.generate_solution(9,xml_format=False)
