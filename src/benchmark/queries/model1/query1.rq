@@ -5,8 +5,10 @@ PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
 WHERE {
-    ?subject nmo:hasMint ?o.
-    FILTER NOT EXISTS {
+    {
+        ?subject nmo:hasMint ?o.
+    }
+    MINUS {
         ?b crm:P140_assigned_attribute_to ?subject ;
             crm:P141_assigned ?object ;
             bmo:PX_Property nmo:hasMint ;

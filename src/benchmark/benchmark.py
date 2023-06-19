@@ -105,7 +105,7 @@ class Benchmark:
     def start_benchmark_increasing_uncertainties(self, fuseki : bool = False):
         query_results = []
         if fuseki: self.fserver.start_server()
-        for query_numb in range(1,2):
+        for query_numb in range(3,4):
             X = range(0, len(self.rdfdata.data), int(len(self.rdfdata.data)/15))[:]
             results = []
             for model_numb in [1,2,3,4,5,6,7,8,9]:
