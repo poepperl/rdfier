@@ -134,19 +134,20 @@ class Benchmark:
                 results.append(model_results)
             query_results.append(results)
 
-            plt.plot(X, results[0], color='r', label='1')
-            plt.plot(X, results[1], color='g', label='2')
-            plt.plot(X, results[2], color='b', label='3')
-            plt.plot(X, results[3], color='y', label='4')
-            plt.plot(X, results[4], color='m', label='5')
-            plt.plot(X, results[5], color='c', label='6')
-            plt.plot(X, results[6], color='k', label='7')
-            plt.plot(X, results[7], linestyle=":", color='r', label='8')
-            plt.plot(X, results[8], linestyle=":", color='g', label='9')
+        for index, res in enumerate(query_results):
+            plt.plot(X, res[0], color='r', label='1')
+            plt.plot(X, res[1], color='g', label='2')
+            plt.plot(X, res[2], color='b', label='3')
+            plt.plot(X, res[3], color='y', label='4')
+            plt.plot(X, res[4], color='m', label='5')
+            plt.plot(X, res[5], color='c', label='6')
+            plt.plot(X, res[6], color='k', label='7')
+            plt.plot(X, res[7], linestyle=":", color='r', label='8')
+            plt.plot(X, res[8], linestyle=":", color='g', label='9')
 
             plt.xlabel("#Uncertainties per column")
             plt.ylabel("Time in seconds")
-            plt.title(f"Query {query_numb} with increasing numb uncertainties")
+            plt.title(f"Query {query_numb-len(query_results)+index+1} with increasing numb uncertainties")
 
             plt.legend()
 
