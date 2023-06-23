@@ -120,8 +120,6 @@ class UncertaintyGenerator():
                         set_of_column_entries.add((e.strip(), self.rdfdata.types_and_languages[(row,column)][i] if (row,column) in self.rdfdata.types_and_languages else ""))
             dict_of_entries[column] = set_of_column_entries
         
-        print(dict_of_entries)
-        
         for (row,column) in self.rdfdata.uncertainties:
             if column in list_of_columns:
                 self.rdfdata.uncertainties[(row,column)]["mode"] = "a"

@@ -74,22 +74,25 @@ class Benchmark:
             return pd.DataFrame()
         
     
-    def start_benchmark(self):
+    def start_boxplot_benchmark(self, fuseki : bool = True):
         time_results = dict()
-        for model_numb in range(1,9):
-            self._generate_graph_with_model(model_numb)
+        if fuseki: self.fserver.start_server()
+        for model_numb in range(1,10):
+            self._generate_graph_with_model(rdfdata=self.rdfdata,model_id=model_numb,query_id=1)
             query_times = dict()
             for query_numb in range(1,6):
                 loop = []
                 print(f"Run query {query_numb} of model {model_numb}.")
                 for _ in range(NUMB_LOOPS):
                     start_time = time()
-                    _ = self.run_query_of_model(query_numb,model_numb)
+                    _ = self.run_query_of_model(query_numb,model_numb,fuseki)
                     time_difference = time() - start_time
                     loop.append(time_difference*10)
                 query_times[query_numb] = loop
             time_results[model_numb] = query_times
         
+        if fuski: bench.fserver.stop_server()
+
         return time_results
     
     def plot_box_plot(self, list_of_lists : list):
@@ -104,7 +107,7 @@ class Benchmark:
         plt.show()
 
 
-    def start_benchmark_increasing_uncertainties(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], stepsize : int = 100, fuseki : bool = False):
+    def start_benchmark_increasing_uncertainties(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], stepsize : int = 100, fuseki : bool = True):
         query_results = []
         if fuseki: self.fserver.start_server()
         for query_numb in querylist:
@@ -178,15 +181,16 @@ class Benchmark:
             plt.legend()
 
             plt.show()
+        if fuski: bench.fserver.stop_server()
         
         return query_results
     
 
-    def start_benchmark_increasing_alternatives(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], stepsize : int = 100, fuseki : bool = False):
+    def start_benchmark_increasing_alternatives(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], stepsize : int = 100, fuseki : bool = True):
         query_results = []
         if fuseki: self.fserver.start_server()
         for query_numb in querylist:
-            X = range(0, len(self.rdfdata.data), stepsize)[:]
+            X = range(0, len(self.rdfdata.data), stepsize)[:20]
             results = []
             for model_numb in modellist:
                 model_results = []
@@ -200,7 +204,7 @@ class Benchmark:
                             self.fserver.delete_graph()
                             self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
                         loop = []
-                        print(f"\nRun query {query_numb} of model {model_numb} with {i} alternatives per uncertainty.")
+                        print(f"\nRun query {query_numb} of model {model_numb} with {i} alternatives per uncertainty and {len(ugen.rdfdata.uncertainties)} uncertainties.")
                     for _ in range(NUMB_LOOPS):
                         if time_difference > 20:
                             loop.append(time_difference)
@@ -256,12 +260,13 @@ class Benchmark:
             plt.legend()
 
             plt.show()
-        
+        if fuski: bench.fserver.stop_server()
+
         return query_results
 
 if __name__ == "__main__":
     # Load data--------------------------------------------------------------------------------------------------------------------------
-    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"), encoding='utf-8')
+    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv"), encoding='utf-8')
     rdfdata = RDFData(pd.read_csv(input))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
     fuski = True
@@ -286,23 +291,21 @@ if __name__ == "__main__":
 
 
     # Run benchmark models/queries-------------------------------------------------------------------------------------------------------
-    # dictionary = bench.start_benchmark()
+    dictionary = bench.start_boxplot_benchmark()
 
-    # for query_numb in range(1,6):
-    #     query_results = []
-    #     for model_numb in range(1,9):
-    #         model_list = []
-    #         for loop in range(NUMB_LOOPS):
-    #             model_list.append(dictionary[model_numb][query_numb][loop])
-    #         query_results.append(model_list)
-    #     print(query_results)
-    #     bench.plot_box_plot(query_results)
+    for query_numb in range(1,6):
+        query_results = []
+        for model_numb in range(1,10):
+            model_list = []
+            for loop in range(NUMB_LOOPS):
+                model_list.append(dictionary[model_numb][query_numb][loop])
+            query_results.append(model_list)
+        print(query_results)
+        bench.plot_box_plot(query_results)
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
     # print(bench.start_benchmark_increasing_uncertainties(fuseki=fuski, querylist=[1,6], modellist=[3,9], stepsize=int(len(bench.rdfdata.data)/2)))
-    # if fuski: bench.fserver.stop_server()
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
-    print(bench.start_benchmark_increasing_alternatives(fuseki=fuski, querylist=[1,6], modellist=[3,9], stepsize=int(len(bench.rdfdata.data)/2)))
-    if fuski: bench.fserver.stop_server()
+    # print(bench.start_benchmark_increasing_alternatives(fuseki=fuski, stepsize=3))
