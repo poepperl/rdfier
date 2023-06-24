@@ -5,9 +5,9 @@
 <!-- Title: %3 Pages: 1 -->
 
 <svg
-   width="798pt"
-   height="234pt"
-   viewBox="0.00 0.00 798.35 234.00"
+   width="790.89313pt"
+   height="112.95046pt"
+   viewBox="0 0 791.24001 112.95046"
    version="1.1"
    id="svg2577"
    sodipodi:docname="7.svg"
@@ -30,8 +30,8 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="1.2969925"
-     inkscape:cx="532"
-     inkscape:cy="156.13043"
+     inkscape:cx="527.37391"
+     inkscape:cy="152.27536"
      inkscape:window-width="1920"
      inkscape:window-height="1001"
      inkscape:window-x="-9"
@@ -41,14 +41,9 @@
   <g
      id="graph0"
      class="graph"
-     transform="scale(1 1) rotate(0) translate(4 230)">
+     transform="translate(0.29999924,226.44868)">
     <title
        id="title2491">%3</title>
-    <polygon
-       fill="white"
-       stroke="transparent"
-       points="-4,4 -4,-230 794.35,-230 794.35,4 -4,4"
-       id="polygon2493" />
     <!-- Rbsp:coin_0 -->
     <g
        id="node1"
@@ -57,7 +52,7 @@
          id="title2507">Rbsp:coin_0</title>
       <ellipse
          fill="none"
-         stroke="blue"
+         stroke="#0000ff"
          cx="309.38"
          cy="-208"
          rx="59.59"
@@ -67,8 +62,8 @@
          text-anchor="middle"
          x="309.38"
          y="-204.3"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2511">bsp:coin_0</text>
     </g>
     <!-- Rnm:rome -->
@@ -79,18 +74,18 @@
          id="title2514">Rnm:rome</title>
       <ellipse
          fill="none"
-         stroke="blue"
-         cx="644.77"
+         stroke="#0000ff"
+         cx="644.77002"
          cy="-197"
-         rx="51.99"
+         rx="51.990002"
          ry="18"
          id="ellipse2516" />
       <text
          text-anchor="middle"
-         x="644.77"
+         x="644.77002"
          y="-193.3"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2518">nm:rome</text>
     </g>
     <!-- Rbsp:coin_0&#45;&gt;Rnm:rome -->
@@ -101,20 +96,20 @@
          id="title2521">Rbsp:coin_0-&gt;Rnm:rome</title>
       <path
          fill="none"
-         stroke="black"
-         d="M368.84,-206.07C428.77,-204.09 521.59,-201.03 582.52,-199.02"
+         stroke="#000000"
+         d="m 368.84,-206.07 c 59.93,1.98 152.75,5.04 213.68,7.05"
          id="path2523" />
       <polygon
-         fill="black"
-         stroke="black"
-         points="582.88,-202.51 592.76,-198.68 582.65,-195.51 582.88,-202.51"
+         fill="#000000"
+         stroke="#000000"
+         points="582.65,-195.51 582.88,-202.51 592.76,-198.68 "
          id="polygon2525" />
       <text
          text-anchor="middle"
-         x="434.18"
+         x="434.17999"
          y="-208.8"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2527">nmo:hasMint</text>
     </g>
     <!-- B_:genid1 -->
@@ -123,14 +118,13 @@
        class="node">
       <title
          id="title2530">B_:genid1</title>
-      <ellipse
+      <circle
          fill="none"
-         stroke="green"
+         stroke="#008000"
          cx="309.38"
          cy="-143"
-         rx="18"
-         ry="18"
-         id="ellipse2532" />
+         id="ellipse2532"
+         r="18" />
     </g>
     <!-- B_:genid1&#45;&gt;Rnm:rome -->
     <g
@@ -140,20 +134,20 @@
          id="title2535">B_:genid1-&gt;Rnm:rome</title>
       <path
          fill="none"
-         stroke="black"
-         d="M327.37,-145.75C374.74,-153.42 509.86,-175.31 587.34,-187.86"
+         stroke="#000000"
+         d="m 327.37,-145.75 c 47.37,-7.67 182.49,-29.56 259.97,-42.11"
          id="path2537" />
       <polygon
-         fill="black"
-         stroke="black"
-         points="586.98,-191.35 597.41,-189.49 588.1,-184.44 586.98,-191.35"
+         fill="#000000"
+         stroke="#000000"
+         points="588.1,-184.44 586.98,-191.35 597.41,-189.49 "
          id="polygon2539" />
       <text
          text-anchor="middle"
-         x="434.18"
+         x="434.17999"
          y="-173.8"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2541">rdf:value</text>
     </g>
     <!-- Redtfo:ApproximateStatement -->
@@ -164,18 +158,18 @@
          id="title2544">Redtfo:ApproximateStatement</title>
       <ellipse
          fill="none"
-         stroke="blue"
-         cx="644.77"
+         stroke="#0000ff"
+         cx="644.77002"
          cy="-132"
          rx="145.67"
          ry="18"
          id="ellipse2546" />
       <text
          text-anchor="middle"
-         x="644.77"
+         x="644.77002"
          y="-128.3"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2548">edtfo:ApproximateStatement</text>
     </g>
     <!-- B_:genid1&#45;&gt;Redtfo:ApproximateStatement -->
@@ -186,20 +180,20 @@
          id="title2551">B_:genid1-&gt;Redtfo:ApproximateStatement</title>
       <path
          fill="none"
-         stroke="black"
-         d="M327.4,-140.16C342.93,-137.72 366.52,-134.38 387.18,-133 420.55,-130.77 456.42,-129.76 490.46,-129.45"
+         stroke="#000000"
+         d="m 327.4,-140.16 c 15.53,2.44 39.12,5.78 59.78,7.16 33.37,2.23 69.24,3.24 103.28,3.55"
          id="path2553" />
       <polygon
-         fill="black"
-         stroke="black"
-         points="490.5,-132.95 500.48,-129.38 490.45,-125.95 490.5,-132.95"
+         fill="#000000"
+         stroke="#000000"
+         points="490.45,-125.95 490.5,-132.95 500.48,-129.38 "
          id="polygon2555" />
       <text
          text-anchor="middle"
-         x="434.18"
+         x="434.17999"
          y="-136.8"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2557">rdf:type</text>
     </g>
     <!-- Rbsp:coin_1 -->
@@ -210,18 +204,18 @@
          id="title2560">Rbsp:coin_1</title>
       <ellipse
          fill="none"
-         stroke="blue"
-         cx="59.79"
+         stroke="#0000ff"
+         cx="59.790001"
          cy="-143"
          rx="59.59"
          ry="18"
          id="ellipse2562" />
       <text
          text-anchor="middle"
-         x="59.79"
+         x="59.790001"
          y="-139.3"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2564">bsp:coin_1</text>
     </g>
     <!-- Rbsp:coin_1&#45;&gt;B_:genid1 -->
@@ -232,20 +226,20 @@
          id="title2567">Rbsp:coin_1-&gt;B_:genid1</title>
       <path
          fill="none"
-         stroke="black"
-         d="M119.78,-143C170.68,-143 241.94,-143 280.67,-143"
+         stroke="#000000"
+         d="m 119.78,-143 c 50.9,0 122.16,0 160.89,0"
          id="path2569" />
       <polygon
-         fill="black"
-         stroke="black"
-         points="281.13,-146.5 291.13,-143 281.13,-139.5 281.13,-146.5"
+         fill="#000000"
+         stroke="#000000"
+         points="281.13,-139.5 281.13,-146.5 291.13,-143 "
          id="polygon2571" />
       <text
          text-anchor="middle"
          x="184.59"
          y="-146.8"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text2573">nmo:hasMint</text>
     </g>
   </g>

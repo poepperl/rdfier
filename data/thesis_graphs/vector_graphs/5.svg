@@ -5,9 +5,9 @@
 <!-- Title: %3 Pages: 1 -->
 
 <svg
-   width="1087pt"
-   height="378pt"
-   viewBox="0.00 0.00 1087.35 377.50"
+   width="651.30389pt"
+   height="202.62218pt"
+   viewBox="0 0 651.51361 202.35416"
    version="1.1"
    id="svg2054"
    sodipodi:docname="5.svg"
@@ -30,8 +30,8 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="1.3465603"
-     inkscape:cx="796.84512"
-     inkscape:cy="293.71132"
+     inkscape:cx="476.0277"
+     inkscape:cy="191.97061"
      inkscape:window-width="1920"
      inkscape:window-height="1001"
      inkscape:window-x="-9"
@@ -41,7 +41,7 @@
   <g
      id="graph0"
      class="graph"
-     transform="scale(1 1) rotate(0) translate(4 373.5)">
+     transform="translate(-236.67541,297.34701)">
     <title
        id="title1921">%3</title>
     <!-- Rbsp:coin_0 -->
@@ -106,7 +106,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="933.1,-233.09 933.23,-240.09 943.16,-236.41 "
+         points="943.16,-236.41 933.1,-233.09 933.23,-240.09 "
          id="polygon1959"
          transform="translate(-60.172633,47.915245)" />
       <text
@@ -123,14 +123,13 @@
        class="node">
       <title
          id="title1964">B_:genid1</title>
-      <ellipse
+      <circle
          fill="none"
-         stroke="green"
-         cx="543.36"
+         stroke="#008000"
+         cx="543.35999"
          cy="-178.5"
-         rx="18"
-         ry="18"
-         id="ellipse1966" />
+         id="ellipse1966"
+         r="18" />
     </g>
     <!-- B_:genid1&#45;&gt;Rnm:rome -->
     <g
@@ -147,7 +146,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="939.66,-222.21 938.48,-229.11 948.93,-227.33 "
+         points="948.93,-227.33 939.66,-222.21 938.48,-229.11 "
          id="polygon1973"
          transform="translate(-179.4036,17.271774)" />
       <text
@@ -168,7 +167,7 @@
       <polygon
          fill="none"
          stroke="#000000"
-         points="911.35,-190.5 1079.35,-190.5 1079.35,-144.5 911.35,-144.5 "
+         points="1079.35,-144.5 911.35,-144.5 911.35,-190.5 1079.35,-190.5 "
          id="polygon1980" />
       <text
          text-anchor="middle"
@@ -205,7 +204,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="901.08,-162.75 901.02,-169.75 911.05,-166.33 "
+         points="911.05,-166.33 901.08,-162.75 901.02,-169.75 "
          id="polygon1993"
          transform="rotate(20.219516,679.12918,-681.60796)" />
       <text
@@ -252,9 +251,9 @@
          id="path2007"
          sodipodi:nodetypes="cc" />
       <polygon
-         fill="black"
-         stroke="black"
-         points="514.98,-182 524.98,-178.5 514.98,-175 514.98,-182"
+         fill="#000000"
+         stroke="#000000"
+         points="514.98,-175 514.98,-182 524.98,-178.5 "
          id="polygon2009" />
       <text
          text-anchor="middle"

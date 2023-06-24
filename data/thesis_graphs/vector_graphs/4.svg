@@ -5,9 +5,9 @@
 <!-- Title: %3 Pages: 1 -->
 
 <svg
-   width="1531pt"
-   height="321pt"
-   viewBox="0.00 0.00 1531.35 320.50"
+   width="1017.8181pt"
+   height="258.20621pt"
+   viewBox="0 0 1018.0507 257.80402"
    version="1.1"
    id="svg856"
    sodipodi:docname="4.svg"
@@ -30,8 +30,8 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="0.95604901"
-     inkscape:cx="873.38619"
-     inkscape:cy="201.34951"
+     inkscape:cx="868.15633"
+     inkscape:cy="186.70591"
      inkscape:window-width="1920"
      inkscape:window-height="1001"
      inkscape:window-x="-9"
@@ -41,7 +41,7 @@
   <g
      id="graph0"
      class="graph"
-     transform="scale(1 1) rotate(0) translate(4 316.5)">
+     transform="translate(0.29999924,305.65139)">
     <title
        id="title710">%3</title>
     <!-- Rbsp:coin_0 -->
@@ -106,7 +106,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1376.76,-292.59 1386.73,-289 1376.69,-285.59 "
+         points="1376.69,-285.59 1376.76,-292.59 1386.73,-289 "
          id="polygon742"
          transform="translate(-244.17574,-1.3486308)" />
       <text
@@ -148,7 +148,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1384.04,-274.62 1382.8,-281.51 1393.26,-279.84 "
+         points="1393.26,-279.84 1384.04,-274.62 1382.8,-281.51 "
          id="polygon756"
          transform="rotate(-8.4705834,1296.8058,1284.3358)" />
       <text
@@ -198,7 +198,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1349.52,-223.88 1359.75,-221.09 1350.02,-216.89 "
+         points="1350.02,-216.89 1349.52,-223.88 1359.75,-221.09 "
          id="polygon772"
          transform="rotate(0.22872378,414.3831,-53728.918)" />
       <text
@@ -219,7 +219,7 @@
       <polygon
          fill="none"
          stroke="#000000"
-         points="1497.86,-190.5 1497.86,-154.5 1379.86,-154.5 1379.86,-190.5 "
+         points="1379.86,-154.5 1379.86,-190.5 1497.86,-190.5 1497.86,-154.5 "
          id="polygon779" />
       <text
          text-anchor="middle"
@@ -245,7 +245,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1369.78,-168.87 1369.79,-175.87 1379.78,-172.35 "
+         points="1379.78,-172.35 1369.78,-168.87 1369.79,-175.87 "
          id="polygon788"
          transform="translate(-215.27673,14.425761)" />
       <text
@@ -266,7 +266,7 @@
       <polygon
          fill="none"
          stroke="#000000"
-         points="1466.36,-135.5 1466.36,-99.5 1411.36,-99.5 1411.36,-135.5 "
+         points="1411.36,-99.5 1411.36,-135.5 1466.36,-135.5 1466.36,-99.5 "
          id="polygon795" />
       <text
          text-anchor="middle"
@@ -292,7 +292,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1401.61,-109.62 1400.88,-116.58 1411.19,-114.15 "
+         points="1411.19,-114.15 1401.61,-109.62 1400.88,-116.58 "
          id="polygon804"
          transform="translate(-368.41173,35.509565)" />
       <text
@@ -309,14 +309,13 @@
        class="node">
       <title
          id="title809">B_:genid2</title>
-      <ellipse
+      <circle
          fill="none"
-         stroke="green"
+         stroke="#008000"
          cx="267.59"
          cy="-160.5"
-         rx="18"
-         ry="18"
-         id="ellipse811" />
+         id="ellipse811"
+         r="18" />
     </g>
     <!-- B_:genid2&#45;&gt;B_:genid1 -->
     <g
@@ -333,7 +332,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="801.58,-195.02 791.69,-191.21 791.48,-198.21 "
+         points="791.48,-198.21 801.58,-195.02 791.69,-191.21 "
          id="polygon818"
          transform="translate(-293.46207,5.4926055)" />
       <text
@@ -382,7 +381,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="680.45,-130.69 680.23,-137.69 690.34,-134.51 "
+         points="690.34,-134.51 680.45,-130.69 680.23,-137.69 "
          id="polygon834"
          transform="rotate(9.225894,93.677666,-2154.1393)" />
       <text
@@ -401,18 +400,18 @@
          id="title839">Rbsp:coin_1</title>
       <ellipse
          fill="none"
-         stroke="blue"
-         cx="59.79"
+         stroke="#0000ff"
+         cx="59.790001"
          cy="-160.5"
          rx="59.59"
          ry="18"
          id="ellipse841" />
       <text
          text-anchor="middle"
-         x="59.79"
+         x="59.790001"
          y="-156.8"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text843">bsp:coin_1</text>
     </g>
     <!-- Rbsp:coin_1&#45;&gt;B_:genid2 -->
@@ -423,20 +422,20 @@
          id="title846">Rbsp:coin_1-&gt;B_:genid2</title>
       <path
          fill="none"
-         stroke="black"
-         d="M119.77,-160.5C159.12,-160.5 209.02,-160.5 239.34,-160.5"
+         stroke="#000000"
+         d="m 119.77,-160.5 c 39.35,0 89.25,0 119.57,0"
          id="path848" />
       <polygon
-         fill="black"
-         stroke="black"
-         points="239.57,-164 249.57,-160.5 239.57,-157 239.57,-164"
+         fill="#000000"
+         stroke="#000000"
+         points="239.57,-157 239.57,-164 249.57,-160.5 "
          id="polygon850" />
       <text
          text-anchor="middle"
          x="184.59"
          y="-164.3"
-         font-family="Times,serif"
-         font-size="14.00"
+         font-family="Times, serif"
+         font-size="14px"
          id="text852">nmo:hasMint</text>
     </g>
   </g>
