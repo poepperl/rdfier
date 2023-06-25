@@ -1,0 +1,11 @@
+@prefix bsp: <http://beispiel.com/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a bsp:warenkorb ;
+    bsp:beinhaltet bsp:buch1 ;
+    bsp:erstelltVon bsp:Luca .
+
+bsp:buch1 bsp:hatAutor "Rowling" ;
+    bsp:hatErscheinungsjahr "1997"^^xsd:gYear ;
+    bsp:hatTitel "Harry Potter und der Stein der Weisen"@de,
+        "Harry Potter and the Philosopher's Stone"@en .
