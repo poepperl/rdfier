@@ -1,2 +1,2 @@
-ding^^id,bsp:erstelltVon^^uri,rdf:type^^uri,bsp:beinhaltet^^uri**1,1__bsp:hatAutor,1__bsp:hatErscheinungsjahr^^xsd:gYear,1__bsp:hatTitel
+ding^^blank,bsp:erstelltVon^^uri,rdf:type^^uri,bsp:beinhaltet^^uri**1,1__bsp:hatAutor,1__bsp:hatErscheinungsjahr^^xsd:gYear,1__bsp:hatTitel
 WK1,bsp:Luca,bsp:warenkorb,bsp:buch1,Rowling,1997,Harry Potter und der Stein der Weisen@de; Harry Potter and the Philosopher's Stone@en

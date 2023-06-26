@@ -69,9 +69,9 @@ def simplify_all_id_columns(dataframe : pd.DataFrame) -> pd.DataFrame:
         dataframe : pd.DataFrame
             Dataframe which should be updated
     """
-    dataframe["nmo:hasDie^^id**Di"] = dataframe["nmo:hasDie^^id**Di"].apply(lambda x: str(1) if pd.notna(x) else x)
-    dataframe["nmo:hasObverse^^id**Ob"] = dataframe["nmo:hasObverse^^id**Ob"].apply(lambda x: str(1) if pd.notna(x) else x)
-    dataframe["nmo:hasReverse^^id**Re"] = dataframe["nmo:hasReverse^^id**Re"].apply(lambda x: str(1) if pd.notna(x) else x)
+    dataframe["nmo:hasDie^^blank**Di"] = dataframe["nmo:hasDie^^blank**Di"].apply(lambda x: str(1) if pd.notna(x) else x)
+    dataframe["nmo:hasObverse^^blank**Ob"] = dataframe["nmo:hasObverse^^blank**Ob"].apply(lambda x: str(1) if pd.notna(x) else x)
+    dataframe["nmo:hasReverse^^blank**Re"] = dataframe["nmo:hasReverse^^blank**Re"].apply(lambda x: str(1) if pd.notna(x) else x)
 
     return dataframe
 

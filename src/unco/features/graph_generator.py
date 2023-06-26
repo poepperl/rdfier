@@ -9,18 +9,24 @@ from rdflib import Graph, Namespace, BNode, Literal, URIRef
 
 
 # Standard Namespaces------------------------------------------------------------------------
-RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
-UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
-# CRM = Namespace("http://erlangen-crm.org/current/")
-CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
-BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
-NM = Namespace("http://nomisma.org/id/")
-EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl#") # Checken!
-XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
-CRMINF = Namespace("https://ontome.net/ns/crminf/")
-AMT = Namespace("http://academic-meta-tool.xyz/vocab#")
-UNCO = Namespace("localhost:8501/id/")
+CRM         = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
+DCTERMS     = Namespace("http://purl.org/dc/terms/")
+DCMITYPE    = Namespace("http://purl.org/dc/dcmitype/")
+FOAF        = Namespace("http://xmlns.com/foaf/0.1/")
+GEO         = Namespace("http://www.w3.org/2003/01/geo/wgs84_pos#")
+NM          = Namespace("http://nomisma.org/id/")
+NMO         = Namespace("http://nomisma.org/ontology#")
+ORG         = Namespace("http://www.w3.org/ns/org#")
+RDF         = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+RDFS        = Namespace("http://www.w3.org/2000/01/rdf-schema#")
+SKOS        = Namespace("http://www.w3.org/2004/02/skos/core#")
+XSD         = Namespace("http://www.w3.org/2001/XMLSchema#")
+UN          = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
+BMO         = Namespace("http://collection.britishmuseum.org/id/ontology/")
+EDTFO       = Namespace("http://periodo.github.io/edtf-ontology/edtfo.ttl#")
+CRMINF      = Namespace("http://ontome.net/ns/crminf/")
+AMT         = Namespace("http://academic-meta-tool.xyz/vocab#")
+UNCO        = Namespace("localhost:8501/id/")
 
 class GraphGenerator():
     """
@@ -50,7 +56,9 @@ class GraphGenerator():
         self.rdfdata = rdfdata
         self.graph = Graph()
         self.OUTPUT_FOLDER = Path(UNCO_PATH, "data/output")
-        self.prefixes : dict[str,Namespace] = {"xsd" : XSD, "rdf" : RDF, "rdfs" : RDFS, "" : UNCO}
+        self.prefixes : dict[str,Namespace] = {"crm" : CRM, "dcterms" : DCTERMS, "dcmitype" : DCMITYPE, "foaf" : FOAF, "geo" : GEO,
+                                               "nm" : NM, "nmo" : NMO, "org" : ORG, "rdf" : RDF, "rdfs" : RDFS, "skos" : SKOS,
+                                               "xsd" : XSD, "un" : UN, "bmo" : BMO, "edtfo" : EDTFO, "crminf" : CRMINF, "amt" : AMT}
         self.crm_properties = {}
 
 
@@ -180,7 +188,7 @@ class GraphGenerator():
         if type is None:
             return Literal(value)
         elif type[0:2] == "^^":
-            if type == "^^id":
+            if type == "^^blank":
                 return BNode(f"v{value}{identification}")
             if type == "^^uri":
                 return self._get_uri_node(value)

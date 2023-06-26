@@ -1,3 +1,3 @@
-aussage^^id,bsp:stehtIn^^uri,bsp:hatErscheinungsjahr^^xsd:gYear
+aussage^^blank,bsp:stehtIn^^uri,bsp:hatErscheinungsjahr^^xsd:gYear
 B1,<https://de.wikipedia.org/wiki/Harry_Potter_und_der_Stein_der_Weisen>,
 bsp:buch1^^uri,,1997
