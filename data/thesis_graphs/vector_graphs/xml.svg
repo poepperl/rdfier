@@ -1,0 +1,1111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg4651"
+   width="856.66693"
+   height="295.18799"
+   viewBox="0 0 856.66696 295.18799"
+   sodipodi:docname="xml.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:export-filename="xml.pdf"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4655">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4667">
+      <path
+         d="M 0,62.499996 H 358.33331 V 100 H 0 Z"
+         clip-rule="evenodd"
+         id="path4665" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4681">
+      <path
+         d="M 358.33331,62.499996 H 3508.3333 V 100 H 358.33331 Z"
+         clip-rule="evenodd"
+         id="path4679" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4695">
+      <path
+         d="m 0,2379.1665 h 3337.4998 v 37.5 H 0 Z"
+         clip-rule="evenodd"
+         id="path4693" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4709">
+      <path
+         d="m 3337.4998,2379.1665 h 170.8335 v 37.5 h -170.8335 z"
+         clip-rule="evenodd"
+         id="path4707" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4731">
+      <path
+         d="M 120.83333,305.32584 H 3391.6666 V 1277.8204 H 120.83333 Z"
+         clip-rule="evenodd"
+         id="path4729" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4775">
+      <path
+         d="M 120.83333,120.83333 H 3391.6666 V 2359.7593 H 120.83333 Z"
+         clip-rule="evenodd"
+         id="path4773" />
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4789">
+      <path
+         d="M 120.83333,305.32584 H 3391.6666 V 1277.8204 H 120.83333 Z"
+         clip-rule="evenodd"
+         id="path4787" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4653"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.4975033"
+     inkscape:cx="264.77404"
+     inkscape:cy="179.29843"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4791">
+    <inkscape:page
+       x="0"
+       y="0"
+       id="page4657"
+       width="856.66693"
+       height="295.18799" />
+  </sodipodi:namedview>
+  <g
+     id="g4659"
+     inkscape:groupmode="layer"
+     inkscape:label="Page 1"
+     transform="matrix(0.31999998,0,0,0.31999998,-48.551645,-105.70936)">
+    <g
+       id="g4725">
+      <g
+         id="g4727"
+         clip-path="url(#clipPath4731)">
+        <g
+           id="g4733"
+           transform="matrix(3.1269917,0,0,3.1269917,120.83333,120.83333)">
+          <path
+             d="m 28,67 h 1 v 18 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4735" />
+          <path
+             d="m 28,85 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4737" />
+          <path
+             d="m 28,102 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4739" />
+          <path
+             d="m 28,119 h 1 v 18 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4741" />
+          <path
+             d="m 28,137 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4743" />
+          <path
+             d="m 28,154 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4745" />
+          <path
+             d="m 28,171 h 1 v 18 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4747" />
+          <path
+             d="m 28,189 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4749" />
+          <path
+             d="m 28,206 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4751" />
+          <path
+             d="m 28,223 h 1 v 18 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4753" />
+          <path
+             d="m 28,241 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4755" />
+          <path
+             d="m 28,258 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4757" />
+          <path
+             d="m 28,275 h 1 v 18 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4759" />
+          <path
+             d="m 28,293 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4761" />
+          <path
+             d="m 28,310 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4763" />
+          <path
+             d="m 28,327 h 1 v 18 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4765" />
+          <path
+             d="m 28,345 h 1 v 17 h -1 z"
+             style="fill:#c0c0c0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4767" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="g4783">
+      <g
+         id="g4785"
+         clip-path="url(#clipPath4789)">
+        <g
+           id="g4791"
+           transform="matrix(3.1269917,0,0,3.1269917,120.83333,120.83333)">
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,79)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4795"><tspan
+               x="0"
+               y="0"
+               id="tspan4793">1</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(38,79)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000080;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4799"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553 168.56442 175.89331 183.2222 190.55109 197.87997 205.20886 212.53775 219.86664 227.19553 234.52441 241.8533 249.18219 256.51108 263.83997 271.16885"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4797">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,97)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4803"><tspan
+               x="0"
+               y="0"
+               id="tspan4801">2</tspan></text>
+          <path
+             d="m 38,85 h 59 v 15 H 38 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4805" />
+          <text
+             xml:space="preserve"
+             transform="translate(38,97)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4809"><tspan
+               x="0"
+               y="0"
+               id="tspan4807">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(45.34375,97)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4813"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4811">rdf:RDF</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,114)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4817"><tspan
+               x="0"
+               y="0"
+               id="tspan4815">3</tspan></text>
+          <path
+             d="m 38,102 h 242 v 15 H 38 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4819" />
+          <text
+             xml:space="preserve"
+             transform="translate(45.34375,114)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4823"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4821">xmlns:bsp</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(111.3125,114)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4827"><tspan
+               x="0"
+               y="0"
+               id="tspan4825">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(118.65625,114)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4831"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4829">&quot;http://beispiel.com/&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,131)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4835"><tspan
+               x="0"
+               y="0"
+               id="tspan4833">4</tspan></text>
+          <path
+             d="m 38,119 h 410 v 15 H 38 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4837" />
+          <text
+             xml:space="preserve"
+             transform="translate(45.34375,131)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4841"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4839">xmlns:rdf</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(111.3125,131)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4845"><tspan
+               x="0"
+               y="0"
+               id="tspan4843">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(118.65625,131)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4849"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553 168.56442 175.89331 183.2222 190.55109 197.87997 205.20886 212.53775 219.86664 227.19553 234.52441 241.8533 249.18219 256.51108 263.83997 271.16885 278.49774 285.82663 293.15552 300.48441 307.81329 315.14218 322.47107"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4847">&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,149)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4853"><tspan
+               x="0"
+               y="0"
+               id="tspan4851">5</tspan></text>
+          <path
+             d="m 38,137 h 7 v 15 h -7 z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4855" />
+          <text
+             xml:space="preserve"
+             transform="translate(38,149)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4859"><tspan
+               x="0"
+               y="0"
+               id="tspan4857">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,166)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4863"><tspan
+               x="0"
+               y="0"
+               id="tspan4861">6</tspan></text>
+          <path
+             d="m 45,154 h 272 v 15 H 45 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4865" />
+          <text
+             xml:space="preserve"
+             transform="translate(45.34375,166)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4869"><tspan
+               x="0"
+               y="0"
+               id="tspan4867">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(52.6875,166)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4873"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4871">bsp:warenkorb</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(155.3125,166)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4877"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4875">rdf:nodeID</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(228.60938,166)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4881"><tspan
+               x="0"
+               y="0"
+               id="tspan4879">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(235.95313,166)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4885"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4883">&quot;vWK1r0c0&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(309.25,166)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4889"><tspan
+               x="0"
+               y="0"
+               id="tspan4887">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,183)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4893"><tspan
+               x="0"
+               y="0"
+               id="tspan4891">7</tspan></text>
+          <path
+             d="m 53,171 h 425 v 15 H 53 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4895" />
+          <text
+             xml:space="preserve"
+             transform="translate(52.671875,183)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4899"><tspan
+               x="0"
+               y="0"
+               id="tspan4897">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(60.015625,183)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4903"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4901">bsp:erstelltVon</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(177.29688,183)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4907"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4905">rdf:resource</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(265.25,183)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4911"><tspan
+               x="0"
+               y="0"
+               id="tspan4909">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(272.59375,183)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4915"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553 168.56442 175.89331 183.2222"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4913">&quot;http://beispiel.com/Luca&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(463.15625,183)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4919"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4917">/&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,201)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4923"><tspan
+               x="0"
+               y="0"
+               id="tspan4921">8</tspan></text>
+          <path
+             d="m 53,189 h 117 v 15 H 53 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4925" />
+          <text
+             xml:space="preserve"
+             transform="translate(52.671875,201)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4929"><tspan
+               x="0"
+               y="0"
+               id="tspan4927">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(60.015625,201)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4933"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4931">bsp:beinhaltet</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(162.625,201)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4937"><tspan
+               x="0"
+               y="0"
+               id="tspan4935">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(16.328125,218)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4941"><tspan
+               x="0"
+               y="0"
+               id="tspan4939">9</tspan></text>
+          <path
+             d="m 60,206 h 403 v 15 H 60 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4943" />
+          <text
+             xml:space="preserve"
+             transform="translate(60,218)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4947"><tspan
+               x="0"
+               y="0"
+               id="tspan4945">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(67.34375,218)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4951"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4949">rdf:Description</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(184.625,218)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4955"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4953">rdf:about</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(250.59375,218)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4959"><tspan
+               x="0"
+               y="0"
+               id="tspan4957">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(257.9375,218)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4963"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553 168.56442 175.89331 183.2222 190.55109"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4961">&quot;http://beispiel.com/buch1&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(455.82813,218)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4967"><tspan
+               x="0"
+               y="0"
+               id="tspan4965">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,235)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4971"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4969">10</tspan></text>
+          <path
+             d="m 67,223 h 103 v 15 H 67 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4973" />
+          <text
+             xml:space="preserve"
+             transform="translate(67.328125,235)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4977"><tspan
+               x="0"
+               y="0"
+               id="tspan4975">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(74.671875,235)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4981"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4979">bsp:hatAutor</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(162.625,235)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4985"><tspan
+               x="0"
+               y="0"
+               id="tspan4983">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(169.96875,235)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4989"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4987">Rowling</tspan></text>
+          <path
+             d="m 221,223 h 110 v 15 H 221 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path4991" />
+          <text
+             xml:space="preserve"
+             transform="translate(221.28125,235)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4995"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4993">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(235.95313,235)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text4999"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan4997">bsp:hatAutor</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(323.90625,235)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5003"><tspan
+               x="0"
+               y="0"
+               id="tspan5001">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5007"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5005">11</tspan></text>
+          <path
+             d="m 67,241 h 579 v 15 H 67 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5009" />
+          <text
+             xml:space="preserve"
+             transform="translate(67.328125,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5013"><tspan
+               x="0"
+               y="0"
+               id="tspan5011">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(74.671875,253)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5017"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5015">bsp:hatErscheinungsjahr</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(250.59375,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5021"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5019">rdf:datatype</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(338.54688,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5025"><tspan
+               x="0"
+               y="0"
+               id="tspan5023">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(345.89063,253)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5029"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553 168.56442 175.89331 183.2222 190.55109 197.87997 205.20886 212.53775 219.86664 227.19553 234.52441 241.8533 249.18219 256.51108 263.83997 271.16885 278.49774 285.82663"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5027">&quot;http://www.w3.org/2001/XMLSchema#gYear&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(639.04688,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5033"><tspan
+               x="0"
+               y="0"
+               id="tspan5031">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(646.39063,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5037"><tspan
+               x="0 7.3288879 14.657776 21.986664"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5035">1997</tspan></text>
+          <path
+             d="m 676,241 h 190 v 15 H 676 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5039" />
+          <text
+             xml:space="preserve"
+             transform="translate(675.71875,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5043"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5041">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(690.39063,253)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5047"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5045">bsp:hatErscheinungsjahr</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(858.96875,253)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5051"><tspan
+               x="0"
+               y="0"
+               id="tspan5049">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5055"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5053">12</tspan></text>
+          <path
+             d="m 67,258 h 206 v 15 H 67 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5057" />
+          <text
+             xml:space="preserve"
+             transform="translate(67.328125,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5061"><tspan
+               x="0"
+               y="0"
+               id="tspan5059">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(74.671875,270)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5065"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5063">bsp:hatTitel</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(169.96875,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5069"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5067">xml:lang</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(228.60938,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5073"><tspan
+               x="0"
+               y="0"
+               id="tspan5071">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(235.95313,270)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5077"><tspan
+               x="0 7.3288879 14.657776 21.986664"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5075">&quot;de&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(265.28125,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5081"><tspan
+               x="0"
+               y="0"
+               id="tspan5079">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(272.625,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5085"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553 168.56442 175.89331 183.2222 190.55109 197.87997 205.20886 212.53775 219.86664 227.19553 234.52441 241.8533 249.18219 256.51108 263.83997"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5083">Harry Potter und der Stein der Weisen</tspan></text>
+          <path
+             d="m 544,258 h 110 v 15 H 544 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5087" />
+          <text
+             xml:space="preserve"
+             transform="translate(543.79688,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5091"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5089">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(558.46875,270)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5095"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5093">bsp:hatTitel</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(646.42188,270)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5099"><tspan
+               x="0"
+               y="0"
+               id="tspan5097">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5103"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5101">13</tspan></text>
+          <path
+             d="m 67,275 h 206 v 15 H 67 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5105" />
+          <text
+             xml:space="preserve"
+             transform="translate(67.328125,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5109"><tspan
+               x="0"
+               y="0"
+               id="tspan5107">&lt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(74.671875,287)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5113"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5111">bsp:hatTitel</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(169.96875,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5117"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5115">xml:lang</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(228.60938,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5121"><tspan
+               x="0"
+               y="0"
+               id="tspan5119">=</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(235.95313,287)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#008000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5125"><tspan
+               x="0 7.3288879 14.657776 21.986664"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5123">&quot;en&quot;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(265.28125,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5129"><tspan
+               x="0"
+               y="0"
+               id="tspan5127">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(272.625,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5133"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443 109.93332 117.26221 124.59109 131.91998 139.24887 146.57776 153.90665 161.23553 168.56442 175.89331 183.2222 190.55109 197.87997 205.20886 212.53775 219.86664 227.19553 234.52441 241.8533 249.18219 256.51108 263.83997 271.16885 278.49774 285.82663"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5131">Harry Potter and the Philosopher's Stone</tspan></text>
+          <path
+             d="m 566,275 h 110 v 15 H 566 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5135" />
+          <text
+             xml:space="preserve"
+             transform="translate(565.78125,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5139"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5137">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(580.45313,287)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5143"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5141">bsp:hatTitel</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(668.40625,287)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5147"><tspan
+               x="0"
+               y="0"
+               id="tspan5145">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,305)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5151"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5149">14</tspan></text>
+          <path
+             d="m 60,293 h 132 v 15 H 60 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5153" />
+          <text
+             xml:space="preserve"
+             transform="translate(60,305)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5157"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5155">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(74.671875,305)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5161"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543 102.60443"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5159">rdf:Description</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(184.60938,305)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5165"><tspan
+               x="0"
+               y="0"
+               id="tspan5163">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,322)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5169"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5167">15</tspan></text>
+          <path
+             d="m 53,310 h 124 v 15 H 53 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5171" />
+          <text
+             xml:space="preserve"
+             transform="translate(52.671875,322)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5175"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5173">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(67.34375,322)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5179"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655 95.275543"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5177">bsp:beinhaltet</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(169.95313,322)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5183"><tspan
+               x="0"
+               y="0"
+               id="tspan5181">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,339)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5187"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5185">16</tspan></text>
+          <path
+             d="m 45,327 h 118 v 15 H 45 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5189" />
+          <text
+             xml:space="preserve"
+             transform="translate(45.34375,339)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5193"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5191">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(60.015625,339)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5197"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328 51.302216 58.631104 65.959991 73.288879 80.617767 87.946655"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5195">bsp:warenkorb</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(155.29687,339)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5201"><tspan
+               x="0"
+               y="0"
+               id="tspan5199">&gt;</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(9,357)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5205"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5203">17</tspan></text>
+          <path
+             d="m 38,345 h 73 v 15 H 38 Z"
+             style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="path5207" />
+          <text
+             xml:space="preserve"
+             transform="translate(38,357)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5211"><tspan
+               x="0 7.3288879"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5209">&lt;/</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(52.671875,357)"
+             style="font-variant:normal;font-weight:bold;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas-Bold;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5215"><tspan
+               x="0 7.3288879 14.657776 21.986664 29.315552 36.64444 43.973328"
+               y="0"
+               sodipodi:role="line"
+               id="tspan5213">rdf:RDF</tspan></text>
+          <text
+             xml:space="preserve"
+             transform="translate(103.98438,357)"
+             style="font-variant:normal;font-weight:normal;font-size:13.33px;font-family:Consolas;-inkscape-font-specification:Consolas;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text5219"><tspan
+               x="0"
+               y="0"
+               id="tspan5217">&gt;</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -105,7 +105,7 @@ class GraphGenerator():
                     for column_index in object_colindices:
 
                         entry = self.rdfdata.data.iat[row_index,column_index]
-                        if pd.notnull(entry): # Check if value isn't NaN
+                        if pd.notnull(entry) and str(entry) != "": # Check if value isn't NaN
                             pred_name = str(self.rdfdata.data.columns[column_index])
                             predicate = self._get_node(pred_name, "^^uri")
 

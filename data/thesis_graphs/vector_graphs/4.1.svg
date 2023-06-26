@@ -6,13 +6,13 @@
 
 <svg
    width="986.23218pt"
-   height="254.85741pt"
-   viewBox="0 0 986.45754 254.46044"
+   height="421.72076pt"
+   viewBox="0 0 986.45754 421.06389"
    version="1.1"
    id="svg856"
-   sodipodi:docname="4.svg"
+   sodipodi:docname="4.1.svg"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   inkscape:export-filename="4.pdf"
+   inkscape:export-filename="4.1.pdf"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -32,19 +32,19 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="pt"
      showgrid="false"
-     inkscape:zoom="0.67602874"
-     inkscape:cx="687.10097"
-     inkscape:cy="272.91739"
+     inkscape:zoom="0.95604901"
+     inkscape:cx="667.85279"
+     inkscape:cy="421.00352"
      inkscape:window-width="1920"
      inkscape:window-height="1001"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="graph0" />
+     inkscape:current-layer="node2-5" />
   <g
      id="graph0"
      class="graph"
-     transform="translate(0.29999924,305.70749)">
+     transform="translate(0.29999924,305.71047)">
     <title
        id="title710">%3</title>
     <!-- Rbsp:coin_0 -->
@@ -93,6 +93,28 @@
          font-size="14px"
          id="text735">nm:rome</text>
     </g>
+    <g
+       id="node2-5"
+       class="node"
+       transform="translate(-579.17493,385.87906)">
+      <title
+         id="title731-1">Rnm:rome</title>
+      <ellipse
+         fill="none"
+         stroke="#0000ff"
+         cx="1438.86"
+         cy="-288.5"
+         rx="51.990002"
+         ry="18"
+         id="ellipse733-1" />
+      <text
+         text-anchor="middle"
+         x="1438.86"
+         y="-284.79999"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text735-3">nm:athens</text>
+    </g>
     <!-- Rbsp:coin_0&#45;&gt;Rnm:rome -->
     <g
        id="edge1"
@@ -109,7 +131,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1386.73,-289 1376.69,-285.59 1376.76,-292.59 "
+         points="1376.76,-292.59 1386.73,-289 1376.69,-285.59 "
          id="polygon742"
          transform="translate(-244.17574,-1.3486308)" />
       <text
@@ -151,7 +173,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1382.8,-281.51 1393.26,-279.84 1384.04,-274.62 "
+         points="1384.04,-274.62 1382.8,-281.51 1393.26,-279.84 "
          id="polygon756"
          transform="rotate(-8.4705834,1296.8058,1284.3358)" />
       <text
@@ -201,7 +223,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1359.75,-221.09 1350.02,-216.89 1349.52,-223.88 "
+         points="1349.52,-223.88 1359.75,-221.09 1350.02,-216.89 "
          id="polygon772"
          transform="rotate(0.22872378,414.3831,-53728.918)" />
       <text
@@ -222,7 +244,7 @@
       <polygon
          fill="none"
          stroke="#000000"
-         points="1497.86,-190.5 1497.86,-154.5 1379.86,-154.5 1379.86,-190.5 "
+         points="1379.86,-154.5 1379.86,-190.5 1497.86,-190.5 1497.86,-154.5 "
          id="polygon779" />
       <text
          text-anchor="middle"
@@ -248,7 +270,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1369.79,-175.87 1379.78,-172.35 1369.78,-168.87 "
+         points="1369.78,-168.87 1369.79,-175.87 1379.78,-172.35 "
          id="polygon788"
          transform="translate(-215.27673,14.425761)" />
       <text
@@ -269,7 +291,7 @@
       <polygon
          fill="none"
          stroke="#000000"
-         points="1411.36,-99.5 1411.36,-135.5 1466.36,-135.5 1466.36,-99.5 "
+         points="1466.36,-135.5 1466.36,-99.5 1411.36,-99.5 1411.36,-135.5 "
          id="polygon795" />
       <text
          text-anchor="middle"
@@ -295,7 +317,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="1400.88,-116.58 1411.19,-114.15 1401.61,-109.62 "
+         points="1401.61,-109.62 1400.88,-116.58 1411.19,-114.15 "
          id="polygon804"
          transform="rotate(49.886563,1230.7971,-432.52496)" />
       <text
@@ -335,7 +357,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="791.69,-191.21 791.48,-198.21 801.58,-195.02 "
+         points="801.58,-195.02 791.69,-191.21 791.48,-198.21 "
          id="polygon818"
          transform="translate(-293.46207,5.4926055)" />
       <text
@@ -384,7 +406,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="690.34,-134.51 680.45,-130.69 680.23,-137.69 "
+         points="680.23,-137.69 690.34,-134.51 680.45,-130.69 "
          id="polygon834"
          transform="rotate(-73.382689,442.02583,55.579378)" />
       <text
@@ -394,6 +416,189 @@
          font-family="Times, serif"
          font-size="14px"
          id="text836">rdf:type</text>
+    </g>
+    <g
+       id="node3-7"
+       class="node"
+       transform="translate(-310.02476,203.68843)">
+      <title
+         id="title747-5">B_:genid1</title>
+      <circle
+         fill="none"
+         stroke="#008000"
+         cx="819.97998"
+         cy="-195.5"
+         id="ellipse749-9"
+         r="18" />
+    </g>
+    <g
+       id="edge4-0"
+       class="edge"
+       transform="translate(-310.02476,203.68843)">
+      <title
+         id="title752-0">B_:genid1-&gt;Rnm:rome</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 837.35,-200.38 c 91.16399,-46.33306 181.5165,-29.28747 260.1493,-58.26992"
+         id="path754-4"
+         sodipodi:nodetypes="cc" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="1393.26,-279.84 1384.04,-274.62 1382.8,-281.51 "
+         id="polygon756-0"
+         transform="rotate(-8.4705834,1369.4373,1661.2643)" />
+      <text
+         text-anchor="middle"
+         x="1018.2979"
+         y="-135.34344"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text758-7">crminf:J4_that</text>
+    </g>
+    <g
+       id="edge2-2"
+       class="edge"
+       transform="translate(-310.02476,203.68843)">
+      <title
+         id="title768-1">B_:genid1-&gt;Rcrminf:I2_Belief</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 838.34,-196.11 c 97.42904,-20.15788 97.49932,-19.65151 305.2255,-21.47582"
+         id="path770-2"
+         sodipodi:nodetypes="cc" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="1359.75,-221.09 1350.02,-216.89 1349.52,-223.88 "
+         id="polygon772-0"
+         transform="rotate(0.22872378,414.3831,-53728.918)" />
+      <text
+         text-anchor="middle"
+         x="1002.9278"
+         y="-252.62949"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text774-9">rdf:type</text>
+    </g>
+    <g
+       id="node5-7"
+       class="node"
+       transform="translate(-526.41117,217.00451)">
+      <title
+         id="title777-5">LProposetion_0</title>
+      <polygon
+         fill="none"
+         stroke="#000000"
+         points="1497.86,-154.5 1379.86,-154.5 1379.86,-190.5 1497.86,-190.5 "
+         id="polygon779-6" />
+      <text
+         text-anchor="middle"
+         x="1438.86"
+         y="-168.8"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text781-4">Proposetion_1</text>
+    </g>
+    <g
+       id="edge3-2"
+       class="edge"
+       transform="translate(-310.02476,203.68843)">
+      <title
+         id="title784-3">B_:genid1-&gt;LProposetion_0</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 837.95,-193.6 c 47.35221,2.55338 62.85075,34.09845 324.271,35.66576"
+         id="path786-2"
+         sodipodi:nodetypes="cc" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="1369.79,-175.87 1379.78,-172.35 1369.78,-168.87 "
+         id="polygon788-0"
+         transform="translate(-215.27673,14.425761)" />
+      <text
+         text-anchor="middle"
+         x="1056.9344"
+         y="-169.76457"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text790-7">crminf:I4_Proposition_Set</text>
+    </g>
+    <g
+       id="node6-0"
+       class="node"
+       transform="translate(-572.4681,102.22455)">
+      <title
+         id="title793-8">Llikely</title>
+      <polygon
+         fill="none"
+         stroke="#000000"
+         points="1466.36,-99.5 1411.36,-99.5 1411.36,-135.5 1466.36,-135.5 "
+         id="polygon795-3"
+         transform="matrix(1.3165685,0,0,0.99596621,-446.71534,-0.47397044)" />
+      <text
+         text-anchor="middle"
+         x="1448.4019"
+         y="-113.70192"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text797-6">plausible</text>
+    </g>
+    <g
+       id="edge5-3"
+       class="edge"
+       transform="translate(-310.02476,203.68843)">
+      <title
+         id="title800-3">B_:genid1-&gt;Llikely</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 837.14918,-190.30013 c 70.00609,62.53777 248.94282,85.35272 273.29022,84.63626"
+         id="path802-8"
+         sodipodi:nodetypes="cc" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="1401.61,-109.62 1400.88,-116.58 1411.19,-114.15 "
+         id="polygon804-4"
+         transform="rotate(5.4027038,1174.5768,-3228.0294)" />
+      <text
+         text-anchor="middle"
+         x="1052.7502"
+         y="-222.05836"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text806-8">crminf:J5_holds_to_be</text>
+    </g>
+    <g
+       id="edge7-0"
+       class="edge"
+       transform="translate(-14.208724,196.6265)">
+      <title
+         id="title814-0">B_:genid2-&gt;B_:genid1</title>
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 300.06576,-355.43533 c 69.06698,31.08252 59.71399,122.87611 200.2583,153.22304"
+         id="path816-4"
+         sodipodi:nodetypes="cc" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="791.69,-191.21 791.48,-198.21 801.58,-195.02 "
+         id="polygon818-5"
+         transform="rotate(13.058811,678.34475,-1470.6337)" />
+      <text
+         text-anchor="middle"
+         x="460.4234"
+         y="-279.63156"
+         font-family="Times, serif"
+         font-size="14px"
+         id="text820-5">crminf:J2_concluded_that</text>
     </g>
     <!-- Rbsp:coin_1 -->
     <g
@@ -431,7 +636,7 @@
       <polygon
          fill="#000000"
          stroke="#000000"
-         points="249.57,-160.5 239.57,-157 239.57,-164 "
+         points="239.57,-164 249.57,-160.5 239.57,-157 "
          id="polygon850" />
       <text
          text-anchor="middle"
