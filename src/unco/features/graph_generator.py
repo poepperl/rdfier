@@ -95,7 +95,6 @@ class GraphGenerator():
             Output will be in XML format, otherwise Turtle.
         """
         self.graph = Graph()
-        self._load_prefixes_of_solution(solution_id)
         for prefix, nspaces in self.prefixes.items():
             self.graph.bind(prefix, nspaces)
 
@@ -138,10 +137,12 @@ class GraphGenerator():
                                         case 2:
                                             self._generate_uncertain_value_solution_2(subject, predicate, object)
                                         case 3:
+                                            self.graph.add((BNode("A3"), RDF.type, CRM["R1_Reliability_Assessment"]))
                                             self._generate_uncertain_value_solution_3(subject, predicate, object, weight)
                                         case 4:
                                             self._generate_uncertain_value_solution_4(subject, predicate, object, weight, uncertainty_id, index)
                                         case 5:
+                                            self.crm_properties = self._get_crm_properties()
                                             self._generate_uncertain_value_solution_5(subject, predicate, object, weight)
                                         case 6:
                                             self._generate_uncertain_value_solution_6(subject, predicate, object)
@@ -221,73 +222,6 @@ class GraphGenerator():
                     raise ValueError(f"Unknown prefix {splitlist[0]} in uri \"{string}\". To add prefixes for namespaces use the method \"load_prefixes\".")
             else:
                 raise ValueError(f"Could not find prefix in uri \"{string}\"")
-
-
-    def _load_prefixes_of_solution(self, solution_id : int = 0) -> None:
-        """
-            Method to load and bind the necessary prefixes for a solution.
-
-        Parameters
-        ----------
-        solution_id : int
-            Number of the solution.
-        """
-        match solution_id:
-            case 1:
-                self.graph.bind("crm", CRM)
-                self.graph.bind("bmo", BMO)
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("nm", NM)
-                self.prefixes["crm"] = CRM
-                self.prefixes["bmo"] = BMO
-                self.prefixes["rdf"] = RDF
-                self.prefixes["nm"] = NM
-            case 2:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("nm", NM)
-                self.graph.bind("un", UN)
-                self.prefixes["rdf"] = RDF
-                self.prefixes["nm"] = NM
-                self.prefixes["un"] = UN
-            case 3:
-                self.graph.bind("crm", CRM)
-                self.graph.bind("rdf", RDF)
-                self.prefixes["crm"] = CRM
-                self.prefixes["rdf"] = RDF
-                self.graph.add((BNode("A3"), RDF.type, CRM["R1_Reliability_Assessment"]))
-            case 4:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("crminf", CRMINF)
-                self.prefixes["crminf"] = CRMINF
-                self.prefixes["rdf"] = RDF
-            case 5:
-                self.graph.bind("amt", AMT)
-                self.graph.bind("crm", CRM)
-                self.graph.bind("rdfs", RDFS)
-                self.prefixes["rdfs"] = RDFS
-                self.prefixes["amt"] = AMT
-                self.prefixes["crm"] = CRM
-                self.crm_properties = self._get_crm_properties()
-            case 6:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("edtfo", EDTFO)
-                self.prefixes["edtfo"] = EDTFO
-                self.prefixes["rdf"] = RDF
-            case 7:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("edtfo", EDTFO)
-                self.prefixes["edtfo"] = EDTFO
-                self.prefixes["rdf"] = RDF
-            case 8:
-                self.graph.bind("un", UN)
-                self.prefixes["un"] = UN
-            case 9:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("edtfo", EDTFO)
-                self.prefixes["edtfo"] = EDTFO
-                self.prefixes["rdf"] = RDF
-            case _:
-                pass
 
 
     def _generate_uncertain_value_solution_1(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
