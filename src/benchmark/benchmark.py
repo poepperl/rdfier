@@ -253,9 +253,9 @@ class Benchmark:
 
                 plt.plot(X, query_results[index][modelindex], color=color, linestyle=linestyle, label=str(model))
 
-            plt.xlabel("#Uncertainties per column")
+            plt.xlabel("#Alternatives per uncertain statement")
             plt.ylabel("Time in seconds")
-            plt.title(f"Query {query} with increasing numb uncertainties")
+            plt.title(f"Query {query} with increasing numb alternatives")
 
             plt.legend()
 
@@ -263,6 +263,7 @@ class Benchmark:
         if fuski: bench.fserver.stop_server()
 
         return query_results
+    
 
 if __name__ == "__main__":
     # Load data--------------------------------------------------------------------------------------------------------------------------
