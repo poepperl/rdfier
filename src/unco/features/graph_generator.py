@@ -9,18 +9,24 @@ from rdflib import Graph, Namespace, BNode, Literal, URIRef
 
 
 # Standard Namespaces------------------------------------------------------------------------
-RDF = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-RDFS = Namespace("http://www.w3.org/2000/01/rdf-schema#")
-UN = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
-# CRM = Namespace("http://erlangen-crm.org/current/")
-CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
-BMO = Namespace("http://collection.britishmuseum.org/id/ontology/")
-NM = Namespace("http://nomisma.org/id/")
-EDTFO = Namespace("https://periodo.github.io/edtf-ontology/edtfo.ttl#") # Checken!
-XSD = Namespace("http://www.w3.org/2001/XMLSchema#")
-CRMINF = Namespace("https://ontome.net/ns/crminf/")
-AMT = Namespace("http://academic-meta-tool.xyz/vocab#")
-UNCO = Namespace("localhost:8501/id/")
+CRM         = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
+DCTERMS     = Namespace("http://purl.org/dc/terms/")
+DCMITYPE    = Namespace("http://purl.org/dc/dcmitype/")
+FOAF        = Namespace("http://xmlns.com/foaf/0.1/")
+GEO         = Namespace("http://www.w3.org/2003/01/geo/wgs84_pos#")
+NM          = Namespace("http://nomisma.org/id/")
+NMO         = Namespace("http://nomisma.org/ontology#")
+ORG         = Namespace("http://www.w3.org/ns/org#")
+RDF         = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+RDFS        = Namespace("http://www.w3.org/2000/01/rdf-schema#")
+SKOS        = Namespace("http://www.w3.org/2004/02/skos/core#")
+XSD         = Namespace("http://www.w3.org/2001/XMLSchema#")
+UN          = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
+BMO         = Namespace("http://collection.britishmuseum.org/id/ontology/")
+EDTFO       = Namespace("http://periodo.github.io/edtf-ontology/edtfo.ttl#")
+CRMINF      = Namespace("http://ontome.net/ns/crminf/")
+AMT         = Namespace("http://academic-meta-tool.xyz/vocab#")
+UNCO        = Namespace("localhost:8501/id/")
 
 class GraphGenerator():
     """
@@ -50,7 +56,9 @@ class GraphGenerator():
         self.rdfdata = rdfdata
         self.graph = Graph()
         self.OUTPUT_FOLDER = Path(UNCO_PATH, "data/output")
-        self.prefixes : dict[str,Namespace] = {"xsd" : XSD, "rdf" : RDF, "rdfs" : RDFS, "" : UNCO}
+        self.prefixes : dict[str,Namespace] = {"crm" : CRM, "dcterms" : DCTERMS, "dcmitype" : DCMITYPE, "foaf" : FOAF, "geo" : GEO,
+                                               "nm" : NM, "nmo" : NMO, "org" : ORG, "rdf" : RDF, "rdfs" : RDFS, "skos" : SKOS,
+                                               "xsd" : XSD, "un" : UN, "bmo" : BMO, "edtfo" : EDTFO, "crminf" : CRMINF, "amt" : AMT}
         self.crm_properties = {}
 
 
@@ -87,7 +95,6 @@ class GraphGenerator():
             Output will be in XML format, otherwise Turtle.
         """
         self.graph = Graph()
-        self._load_prefixes_of_solution(solution_id)
         for prefix, nspaces in self.prefixes.items():
             self.graph.bind(prefix, nspaces)
 
@@ -105,7 +112,7 @@ class GraphGenerator():
                     for column_index in object_colindices:
 
                         entry = self.rdfdata.data.iat[row_index,column_index]
-                        if pd.notnull(entry): # Check if value isn't NaN
+                        if pd.notnull(entry) and str(entry) != "": # Check if value isn't NaN
                             pred_name = str(self.rdfdata.data.columns[column_index])
                             predicate = self._get_node(pred_name, "^^uri")
 
@@ -130,10 +137,12 @@ class GraphGenerator():
                                         case 2:
                                             self._generate_uncertain_value_solution_2(subject, predicate, object)
                                         case 3:
+                                            self.graph.add((BNode("A3"), RDF.type, CRM["R1_Reliability_Assessment"]))
                                             self._generate_uncertain_value_solution_3(subject, predicate, object, weight)
                                         case 4:
                                             self._generate_uncertain_value_solution_4(subject, predicate, object, weight, uncertainty_id, index)
                                         case 5:
+                                            self.crm_properties = self._get_crm_properties()
                                             self._generate_uncertain_value_solution_5(subject, predicate, object, weight)
                                         case 6:
                                             self._generate_uncertain_value_solution_6(subject, predicate, object)
@@ -180,7 +189,7 @@ class GraphGenerator():
         if type is None:
             return Literal(value)
         elif type[0:2] == "^^":
-            if type == "^^id":
+            if type == "^^blank":
                 return BNode(f"v{value}{identification}")
             if type == "^^uri":
                 return self._get_uri_node(value)
@@ -213,71 +222,6 @@ class GraphGenerator():
                     raise ValueError(f"Unknown prefix {splitlist[0]} in uri \"{string}\". To add prefixes for namespaces use the method \"load_prefixes\".")
             else:
                 raise ValueError(f"Could not find prefix in uri \"{string}\"")
-
-
-    def _load_prefixes_of_solution(self, solution_id : int = 0) -> None:
-        """
-            Method to load and bind the necessary prefixes for a solution.
-
-        Parameters
-        ----------
-        solution_id : int
-            Number of the solution.
-        """
-        match solution_id:
-            case 1:
-                self.graph.bind("crm", CRM)
-                self.graph.bind("bmo", BMO)
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("nm", NM)
-                self.prefixes["crm"] = CRM
-                self.prefixes["bmo"] = BMO
-                self.prefixes["rdf"] = RDF
-                self.prefixes["nm"] = NM
-            case 2:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("nm", NM)
-                self.graph.bind("un", UN)
-                self.prefixes["rdf"] = RDF
-                self.prefixes["nm"] = NM
-                self.prefixes["un"] = UN
-            case 3:
-                self.graph.bind("crm", CRM)
-                self.graph.bind("rdf", RDF)
-                self.prefixes["crm"] = CRM
-                self.prefixes["rdf"] = RDF
-                self.graph.add((BNode("A3"), RDF.type, CRM["R1_Reliability_Assessment"]))
-            case 4:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("crminf", CRMINF)
-                self.prefixes["crminf"] = CRMINF
-                self.prefixes["rdf"] = RDF
-            case 5:
-                self.graph.bind("amt", AMT)
-                self.graph.bind("crm", CRM)
-                self.graph.bind("rdfs", RDFS)
-                self.prefixes["rdfs"] = RDFS
-                self.prefixes["amt"] = AMT
-                self.prefixes["crm"] = CRM
-                self.crm_properties = self._get_crm_properties()
-            case 6:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("edtfo", EDTFO)
-                self.prefixes["edtfo"] = EDTFO
-                self.prefixes["rdf"] = RDF
-            case 7:
-                self.graph.bind("rdf", RDF)
-                self.graph.bind("edtfo", EDTFO)
-                self.prefixes["edtfo"] = EDTFO
-                self.prefixes["rdf"] = RDF
-            case 8:
-                self.graph.bind("un", UN)
-                self.prefixes["un"] = UN
-            case 9:
-                self.graph.bind("rdf", RDF)
-                self.prefixes["rdf"] = RDF
-            case _:
-                pass
 
 
     def _generate_uncertain_value_solution_1(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
@@ -495,7 +439,7 @@ class GraphGenerator():
         """
         node = BNode()
 
-        self.graph.add((node, RDF["star"], Literal(f"{subject.n3()}$${predicate.n3()}$${object.n3()}")))
+        self.graph.add((EDTFO[node.n3()[2:]], RDF["star"], Literal(f"{subject.n3(namespace_manager=self.graph.namespace_manager)}$${predicate.n3(namespace_manager=self.graph.namespace_manager)}$${object.n3(namespace_manager=self.graph.namespace_manager)}")))
 
         # self.graph.add((node, RDF["type"], RDF["Statement"]))
         # self.graph.add((node, RDF["subject"], subject))
@@ -569,7 +513,6 @@ class GraphGenerator():
         return df
     
     def change_to_rdf_star(self):
-
         for line in input(str(Path(self.OUTPUT_FOLDER, "graph.ttl")), inplace=True):
             if "rdf:star" in line:
                 splitlist = line.split("rdf:star")
@@ -583,7 +526,7 @@ class GraphGenerator():
                 #     if splitlist[i][0] != "<":
                 #         splitlist[i] = "\"" + splitlist[i] + "\""
                 
-                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type {EDTFO['UncertainStatement'].n3()} .".replace("\\\"","\"")
+                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type edtfo:UncertainStatement .".replace("\\\"","\"")
 
             print(line)
 

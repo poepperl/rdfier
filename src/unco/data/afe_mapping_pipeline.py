@@ -69,9 +69,9 @@ def simplify_all_id_columns(dataframe : pd.DataFrame) -> pd.DataFrame:
         dataframe : pd.DataFrame
             Dataframe which should be updated
     """
-    dataframe["nmo:hasDie^^id**Di"] = dataframe["nmo:hasDie^^id**Di"].apply(lambda x: str(1) if pd.notna(x) else x)
-    dataframe["nmo:hasObverse^^id**Ob"] = dataframe["nmo:hasObverse^^id**Ob"].apply(lambda x: str(1) if pd.notna(x) else x)
-    dataframe["nmo:hasReverse^^id**Re"] = dataframe["nmo:hasReverse^^id**Re"].apply(lambda x: str(1) if pd.notna(x) else x)
+    dataframe["nmo:hasDie^^blank**Di"] = dataframe["nmo:hasDie^^blank**Di"].apply(lambda x: str(1) if pd.notna(x) else x)
+    dataframe["nmo:hasObverse^^blank**Ob"] = dataframe["nmo:hasObverse^^blank**Ob"].apply(lambda x: str(1) if pd.notna(x) else x)
+    dataframe["nmo:hasReverse^^blank**Re"] = dataframe["nmo:hasReverse^^blank**Re"].apply(lambda x: str(1) if pd.notna(x) else x)
 
     return dataframe
 
@@ -239,8 +239,8 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe = remove_datetimes(dataframe)
 
 
-    dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_ready.csv"),index=False)
-    dataframe.sample(n=100).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
+    dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_public_ready.csv"),index=False)
+    remove_uncertainties(dataframe).sample(n=100).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
 
     remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
 

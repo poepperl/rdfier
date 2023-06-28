@@ -22,7 +22,11 @@ def activate_rerun():
 st.title('RDFier')
 st.subheader("A RDF Mapper")
 
-uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
+button1, button2 = st.columns(2)
+
+uploaded_file = button1.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
+
+uploaded_prefixes = button2.file_uploader("Prefixes", type=["csv"], accept_multiple_files=False)
 
 if not uploaded_file:
     st.session_state.dataframe = None
@@ -43,8 +47,6 @@ else:
 
         solution = col2.selectbox("Select model:", (1,2,3,4,5,6,7,8), on_change=activate_rerun)
 
-    uploaded_prefixes = st.file_uploader("Prefixes", type=["csv"], accept_multiple_files=False)
-
     # Graph generieren-------------------------------------------------------------------------------
 
     generate = st.button("Generate RDF graph")
@@ -57,7 +59,7 @@ else:
         if st.session_state.rerun:
             st.session_state.rerun = False
             generator = GraphGenerator(st.session_state.rdfdata)
-            generator.load_prefixes(pd.read_csv(uploaded_prefixes))
+            if uploaded_prefixes: generator.load_prefixes(pd.read_csv(uploaded_prefixes))
             generator.generate_solution(solution_id=solution,xml_format=(xml_format=="XML"))
 
         

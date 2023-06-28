@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+ xmlns:bsp="http://beispiel.com/"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+>
+ <bsp:warenkorb rdf:nodeID="vWK1r0c0">
+  <bsp:erstelltVon rdf:resource="http://beispiel.com/Luca"/>
+  <bsp:beinhaltet>
+   <rdf:Description rdf:about="http://beispiel.com/buch1">
+    <bsp:hatAutor>Rowling</bsp:hatAutor>
+    <bsp:hatErscheinungsjahr rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">1997</bsp:hatErscheinungsjahr>
+    <bsp:hatTitel xml:lang="de">Harry Potter und der Stein der Weisen</bsp:hatTitel>
+    <bsp:hatTitel xml:lang="en">Harry Potter and the Philosopher's Stone</bsp:hatTitel>
+   </rdf:Description>
+  </bsp:beinhaltet>
+ </bsp:warenkorb>
+</rdf:RDF>

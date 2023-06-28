@@ -1,2 +1,2 @@
-aussage^^id,bsp:dauer,rdf:object^^uri,rdf:predicate^^uri,rdf:subject^^uri,rdf:type^^uri
-B1,1.4,bsp:london,bsp:fliegtNach,bsp:luca,rdf:Statement
+aussage^^blank,bsp:stehtIn^^uri,rdf:object,rdf:predicate^^uri,rdf:subject^^uri,rdf:type^^uri
+B1,<http://de.wikipedia.org/wiki/Harry_Potter_und_der_Stein_der_Weisen>,1997^^xsd:gYear,bsp:hatErscheinungsjahr,bsp:buch1,rdf:Statement

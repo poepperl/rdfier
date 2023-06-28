@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 
 from unco.data.rdf_data import RDFData
+from unco.features.graph_generator import GraphGenerator
+from unco.features.illustrator import Illustrator
 
 
 class UncertaintyGenerator():
@@ -77,7 +79,7 @@ class UncertaintyGenerator():
         return self.rdfdata
     
 
-    def add_pseudorand_alternatives(self, min_number_of_alternatives : int = 1, max_number_of_alternatives : int = 3, list_of_columns: list[int] =[]) -> RDFData:
+    def add_pseudorand_alternatives(self, list_of_columns: list[int] =[], min_number_of_alternatives : int = 1, max_number_of_alternatives : int = 3) -> RDFData:
         """ Method to add alternatives to the existing uncertainty flags.
 
         Parameters
@@ -106,33 +108,45 @@ class UncertaintyGenerator():
         if len(list_of_columns) == 0:
             list_of_columns = list(range(len(self.rdfdata.data.columns)))
     	
-        list_of_column_entries = []
+        dict_of_entries = dict()
+        set_of_column_entries = set() # elements: (entry, datatype)
+
         for column in list_of_columns:
-            values_of_column = set(self.rdfdata.data.iloc[:,column].tolist())
-            values_of_column = [str(entry).split(";") for entry in values_of_column]
-            values_of_column = {element for sublist in values_of_column for element in sublist}
-            values_of_column = [val for val in values_of_column if val != "nan"]
-            list_of_column_entries.append(values_of_column)
+            for row in range(len(self.rdfdata.data)):
+                entry = self.rdfdata.data.iat[row,column]
+                if pd.notna(entry):
+                    splitlist = str(entry).split(";")
+                    for i, e in enumerate(splitlist):
+                        set_of_column_entries.add((e.strip(), self.rdfdata.types_and_languages[(row,column)][i] if (row,column) in self.rdfdata.types_and_languages else ""))
+            dict_of_entries[column] = set_of_column_entries
         
         for (row,column) in self.rdfdata.uncertainties:
             if column in list_of_columns:
                 self.rdfdata.uncertainties[(row,column)]["mode"] = "a"
                 current_values = str(self.rdfdata.data.iat[row,column]).split(";")
+                current_values = [value.strip() for value in current_values]
                 
                 numb_additional_alternatives = random.randint(min_number_of_alternatives,max_number_of_alternatives) - len(current_values)
 
                 if numb_additional_alternatives < 1:
                     continue
 
-                values_of_column = [str(entry).strip() for entry in list_of_column_entries[column] if entry not in current_values]
+                possible_values = [(entry,type) for (entry,type) in dict_of_entries[column] if entry not in current_values]
 
-                if numb_additional_alternatives > len(values_of_column):
-                    print(f"Warning: Couldn't find {numb_additional_alternatives+len(current_values)} different entries in column {column}. Set the higher bound to {len(values_of_column)+len(current_values)}.")
-                    numb_additional_alternatives = len(values_of_column)
+                if numb_additional_alternatives > len(possible_values):
+                    print(f"Warning: Couldn't find {numb_additional_alternatives+len(current_values)} different entries in column {column}. Set the higher bound to {len(possible_values)+len(current_values)}.")
+                    numb_additional_alternatives = len(possible_values)
 
-                current_values += random.sample(values_of_column, numb_additional_alternatives)
+                possible_values = random.sample(possible_values, numb_additional_alternatives)
+
+                current_values += [entry for entry,_ in possible_values]
 
                 self.rdfdata.data.iat[row,column] = "; ".join(current_values)
+
+                if (row,column) not in self.rdfdata.types_and_languages:
+                    self.rdfdata.types_and_languages[(row,column)] = ["" for _ in current_values]
+
+                self.rdfdata.types_and_languages[(row,column)] += [type for _,type in possible_values]
 
                 likelihoods = []
                 sum = 0
@@ -153,12 +167,14 @@ if __name__ == "__main__":
     from unco import UNCO_PATH
     from pathlib import Path
     import pandas as pd
-    file = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
+    file = open(str(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
 
     rdfdata = RDFData(pd.read_csv(file))
     g = UncertaintyGenerator(rdfdata=rdfdata)
-    print(g.add_pseudorand_uncertainty_flags(list_of_columns=[1]).data)
+    # rdfdata = g.add_pseudorand_uncertainty_flags(list_of_columns=[1])
+    rdfdata = g.add_pseudorand_alternatives(list_of_columns=[5],min_number_of_alternatives=4,max_number_of_alternatives=4)
 
-"""
-Bei Generierung von uncertainty flags dürfen nur Spalten in Fragen kommen, die ausschließlich Objekte beinhalten.
-"""
+    dd = GraphGenerator(rdfdata)
+    dd.load_prefixes(str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
+    dd.generate_solution(8,xml_format=False)
+    g = Illustrator(Path(UNCO_PATH,"data/output/graph.ttl"))
