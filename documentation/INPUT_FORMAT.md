@@ -34,13 +34,13 @@ Weitere Namensräume lassen sich mit einer csv-Tabelle mit der gleichen Struktur
 
 URI's, literals and blank nodes
 -------------------------------
-RDF-Graphen besitzt Ressourcen in Form von URI's, Literalen und leeren Knoten. Damit ein Zelleneintrag richtig interpretiert wird, muss zusätzlich zu dem Wert auch der Typ der Ressource angegeben werden. Folgende Einträge sind möglich:
- * ´<*URI*>^^uri´ zum Angeben einer vollständigen URI, wie z.B.: "<http://nomisma.org/id/rome>^^uri"
- * ´*prefix*:*label*^^uri´ zum Angeben einer abgekürzten URI, wie z.B.: "nm:rome^^uri"
- * ´*value*´ zum Angeben eines Literals, wie z.B. "2023"
- * ´*name*^^blank´ zum Angeben eines leeren Knotens. Der Wert von *name* hat dabei keine Bedeutung und wird intern verworfen.
+RDF-Graphen besitzt Ressourcen in Form von URI's, Literalen und leeren Knoten. Damit ein Zelleneintrag richtig interpretiert wird, muss zusätzlich zu dem Wert auch der Typ der Ressource angegeben werden. Die folgenden Einträge sind möglich, wobei die in geschwungenen Klammern `{}` Werte Platzhalter sind.
+ * `<{URI}>^^uri` zum Angeben einer vollständigen URI, wie z.B.: "<http://nomisma.org/id/rome>^^uri"
+ * `{prefix}:{label}^^uri` zum Angeben einer abgekürzten URI, wie z.B.: "nm:rome^^uri"
+ * `{value}` zum Angeben eines Literals, wie z.B. "2023"
+ * `{name}^^blank` zum Angeben eines leeren Knotens. Der Wert von *name* hat dabei keine Bedeutung und wird intern verworfen.
 
-[!hint] Subjekte dürfen müssen vom Typ URI oder leerer Knoten sein und Prädikate müssen vom Typ URI sein.
+> [!hint] Subjekte dürfen müssen vom Typ URI oder leerer Knoten sein und Prädikate müssen vom Typ URI sein.
 
 Datentypen und Sprachen
 -----------------------
