@@ -12,7 +12,7 @@ WHERE {
             crm:P140_assigned_attribute_to ?subject ;
             crm:T2_assessed_as_reliability ?c ;
             rdf:Property nmo:hasMint ;
-            a crm:E13 .
+            a crm:E13_Attribute_Assignment .
         ?c a crm:R2_Reliability .
         ?a crm:T1_assessed_the_reliability_of ?b ;
             a crm:R1_Reliability_Assessment .

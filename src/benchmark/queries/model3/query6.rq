@@ -14,7 +14,7 @@ WHERE {
                 crm:P140_assigned_attribute_to ?subject ;
                 crm:T2_assessed_as_reliability ?c ;
                 rdf:Property ?predicate ;
-                a crm:E13 .
+                a crm:E13_Attribute_Assignment .
             ?c a crm:R2_Reliability .
         }
         MINUS {
@@ -22,13 +22,13 @@ WHERE {
                 crm:P140_assigned_attribute_to ?o2 ;
                 crm:T2_assessed_as_reliability ?o3 ;
                 rdf:Property ?o4 ;
-                a crm:E13 .
+                a crm:E13_Attribute_Assignment .
         }
         MINUS {
             ?subject a crm:R2_Reliability ;
                 crm:P90_has_value ?certainty .
             ?b crm:T2_assessed_as_reliability ?subject ;
-                a crm:E13 .
+                a crm:E13_Attribute_Assignment .
         }
         MINUS {
             ?subject crm:T1_assessed_the_reliability_of ?o1 ;
@@ -43,7 +43,7 @@ WHERE {
             crm:P140_assigned_attribute_to ?subject ;
             crm:T2_assessed_as_reliability ?c ;
             rdf:Property ?predicate ;
-            a crm:E13 .
+            a crm:E13_Attribute_Assignment .
         ?c a crm:R2_Reliability ;
             crm:P90_has_value ?certainty .
         FILTER(?certainty > 0.5).

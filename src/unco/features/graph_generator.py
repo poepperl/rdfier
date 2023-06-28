@@ -21,12 +21,12 @@ RDF         = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 RDFS        = Namespace("http://www.w3.org/2000/01/rdf-schema#")
 SKOS        = Namespace("http://www.w3.org/2004/02/skos/core#")
 XSD         = Namespace("http://www.w3.org/2001/XMLSchema#")
-UN          = Namespace("http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl")
+UN          = Namespace("http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#")
 BMO         = Namespace("http://collection.britishmuseum.org/id/ontology/")
 EDTFO       = Namespace("http://periodo.github.io/edtf-ontology/edtfo.ttl#")
-CRMINF      = Namespace("http://ontome.net/ns/crminf/")
+CRMINF      = Namespace("http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#")
 AMT         = Namespace("http://academic-meta-tool.xyz/vocab#")
-UNCO        = Namespace("localhost:8501/id/")
+# UNCO        = Namespace("localhost:8501/id/")
 
 class GraphGenerator():
     """
@@ -283,7 +283,7 @@ class GraphGenerator():
 
         self.graph.add((BNode("A3"), CRM["T1_assessed_the_reliability_of"], b))
 
-        self.graph.add((b, RDF.type, CRM["E13"]))
+        self.graph.add((b, RDF.type, CRM["E13_Attribute_Assignment"]))
         self.graph.add((b, RDF.Property, predicate))
         self.graph.add((b, CRM["T2_assessed_as_reliability"], c))
         self.graph.add((b, CRM["P140_assigned_attribute_to"], subject))
