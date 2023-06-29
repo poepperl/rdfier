@@ -5,7 +5,7 @@ Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei,
 Grundstruktur
 -------------
 Die Grundstruktur der Eingabe ist folgende:
-BILD EINFÜGEN
+<img src="basic_structure.jpg" alt="basic_structure" width="1000"/>
 
 Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltenkopf. Aus dem Schaubild enstehen somit die Kanten (ex:subject1, ex:predicate1, ex:object1), (ex:subject1, ex:predicate2, ex:object2) und (ex:subject1, ex:predicate3, ex:object3).
 
@@ -91,3 +91,7 @@ Auf eine Subjekt-Spalte mit ID kann dann mit dem Marker `{id}__` (doppelter Unte
 |afe:13    |kryptonite^^blank      |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
 |afe:29    |nm:ar                  |1.16                      |                           |
 
+Durch diese Veränderung wird die zweite Spalte nun zusätzlich als Subjekt-Spalte interpretiert und die vierte Spalte enthält die dazu gehörenden Objekte und das Prädikat. Dadurch entstehen zwei neue Kanten vom leeren Knoten ausgehende mit dem Prädikat `rdf:value` und den beiden Objekten `kryptonite` und `Kryptonit`.
+Durch die Zuweisung von ID 1 bleiben die ursprünglichen RDF-Aussagen bestehen.
+
+Auch lässt sich eine Spalte, die auf eine andere Subjekt-Spalte referenziert wiederrum eine ID zuweisen, usw.
