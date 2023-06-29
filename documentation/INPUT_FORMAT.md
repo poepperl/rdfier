@@ -5,7 +5,7 @@ Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei,
 Grundstruktur
 -------------
 Die Grundstruktur der Eingabe ist folgende:
-<img src="basic_structure.jpg" alt="basic_structure" width="1000"/>
+<img src="basic_structure.JPG" alt="basic_structure" width="1000"/>
 
 Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltenkopf. Aus dem Schaubild enstehen somit die Kanten (ex:subject1, ex:predicate1, ex:object1), (ex:subject1, ex:predicate2, ex:object2) und (ex:subject1, ex:predicate3, ex:object3).
 
