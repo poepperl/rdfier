@@ -1,15 +1,15 @@
 INPUT FORMAT
 ============
-Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei, einen RDF-Graph zu bauen. Da komplexere Konzepte in RDF-Graphen nicht ohne weiteres aus einer csv-Tabelle gelesen werden können, wird hier beschrieben wie diese in der Eingabe codiert werden können.
+The main task of the RDFier is to build an RDF graph from a data set in the form of a csv file. Since more complex concepts in RDF graphs cannot be read easily from a csv table, here we describe how to encode them in the input.
 
-Grundstruktur
--------------
-Die Grundstruktur der Eingabe ist folgende:
+Basic Structure
+---------------
+The basic structure of the input is as follows:
 <img src="basic_structure.JPG" alt="basic_structure" width="1000"/>
 
-Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltenkopf. Aus dem Schaubild enstehen somit die Kanten (ex:subject1, ex:predicate1, ex:object1), (ex:subject1, ex:predicate2, ex:object2) und (ex:subject1, ex:predicate3, ex:object3).
+Thus, usually the first column denotes subjects and the subsequent columns denote objects with the respective predicate in the column header. The edges (subject, predicate1, object1), (subject, predicate2, object2) and (subject, predicate3, object3) are created from the diagram.
 
-Manche Namensräume müssen nicht selbst eingefügt werden, sondern stehen bereits zur Verfügung. Dazu gehören:
+Some namespaces do not need to be inserted themselves, but are already available. These include:
 |prefix  |namespace                                                               |
 |:---    |:---                                                                    |
 |amt     |http://academic-meta-tool.xyz/vocab#                                    |
@@ -30,17 +30,17 @@ Manche Namensräume müssen nicht selbst eingefügt werden, sondern stehen berei
 |un      |http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#|
 |xsd     |http://www.w3.org/2001/XMLSchema#                                       |
 
-Weitere Namensräume lassen sich mit einer csv-Tabelle mit der gleichen Struktur hinzufügen oder die oben definierten überschreiben.
+Additional namespaces can be added using a csv table with the same structure, or overriding those defined above.
 
 URI's, literals and blank nodes
 -------------------------------
-RDF-Graphen besitzt Ressourcen in Form von URI's, Literalen und leeren Knoten. Damit ein Zelleneintrag richtig interpretiert wird, muss zusätzlich zu dem Wert auch der Typ der Ressource angegeben werden. Die folgenden Einträge sind möglich, wobei die in geschwungenen Klammern `{}` Werte Platzhalter sind.
- * `<{URI}>^^uri` zum Angeben einer vollständigen URI, wie z.B.: "<http://nomisma.org/id/rome>^^uri".
- * `{prefix}:{label}^^uri` zum Angeben einer abgekürzten URI, wie z.B.: "nm:rome^^uri".
- * `{value}` bzw. `{value}^^xsd:string` zum Angeben eines Literals, wie z.B. "2023".
- * `{name}^^blank` zum Angeben eines leeren Knotens. Der Wert von *name* hat dabei keine Bedeutung und wird intern verworfen.
+RDF graphs has resources in the form of URI's, literals and empty nodes. In order for a cell entry to be interpreted correctly, the type of the resource must be specified in addition to the value. The following entries are possible, where the values in curly brackets `{}` are placeholders.
+ * `<{URI}>^^uri` to specify a full URI, such as: "<http://nomisma.org/id/rome>^^uri".
+ * `{prefix}:{label}^^uri` to specify a shorten URI, such as: "nm:rome^^uri".
+ * `{value}` bzw. `{value}^^xsd:string` to specify a literal, such as: "2023".
+ * `{name}^^blank` to specify a blank node. The value *name* is only a placeholder and will be ignored by the module.
 
-Somit wird der Marker "^^" dazu verwendet den Type der Ressource anzugeben. Prädikate müssen vom Typ URI sein, weshalb der Marker im header keinen Einfluss auf den Typ des Prädikats hat. Stattdessen kann der Marker an dieser Stelle als Typzuweisung genutzt werden für alle Einträge der Spalte ohne eigenen Typ.
+Thus, the "^^" marker is used to indicate the type of the resource. Predicates must be of type URI, so the marker in the header has no influence on the type of the predicate. Instead, the marker at this point can be used as a type assignment for all entries in the column without their own type.
 
 **Example**:
 |coins^^uri|nmo:hasMaterial^^uri|
@@ -49,21 +49,21 @@ Somit wird der Marker "^^" dazu verwendet den Type der Ressource anzugeben. Prä
 |afe:13    |kryptonite^^blank   |
 |afe:29    |nm:ar               |
 
-Das Stichwort `coin` ist im Spaltenkopf der ersten Spalte mit den Subjekten und definiert somit kein Prädikat, es wird vom Programm verworfen und hat keine Auswirkungen.
-Die beiden Marker `^^uri` weisen allen Einträgen in ihren Spalten den Typ uri zu, wenn diese keinen eigenen Typ haben. Daher werden Einträge wie `nm:ae` als URI gelesen.
-Da es für Kryptonit keine URI im Namensraum *nm* gibt, wird diese durch einen leeren Knoten realisiert und `^^blank` als Marker genutzt. Der Eintrag `kryptonite` hat dabei keinen Einfluss und wird vom Programm verworfen.
+The marker `coin` is in the column header of the first column with the subjects and thus does not define a predicate, it is discarded by the program and has no effect.
+The two markers `^uri` assign the type uri to all entries in their columns if they have no type of their own. Therefore entries like `nm:ae` are read as URI.
+Since there is no URI for kryptonite in the *nm* namespace, this is realized by an empty node and `^blank` is used as a marker. The entry `kryptonite` has no influence and is discarded by the program.
 
 
-Datentypen und Sprachen
+Datatypes and Languages
 -----------------------
-Zu Literalen lassen sich in RDF-Graphen Datentypen und Sprachen zugeordnen. Daher braucht es eine Möglichkeit diese in der Eingabe zu kennzeichnen.
-Hier kann die gleiche Syntax genutzt werden wie im Turtle-Format:
- * `literal^^{URI_of_datatype}` zum Angeben eines Datentyps.
- * `literal@{country ISO code}` zum Angeben einer Sprache.
+Datatypes and languages can be assigned to literals in RDF graphs. Therefore, there needs to be a way to mark them in the input.
+Here the same syntax can be used as in the Turtle format:
+ * `literal^^{URI_of_datatype}` to specify a datatype.
+ * `literal@{country ISO code}` to specify a language.
 
-Da nur Literale Datentypen und Sprachen besitzen können, wird keine zusätzliche Typ Markierung benötigt. Somit werden Einträge der Form *value^^URI* immer als Literal mit Datentyp interpretiert. Die URI kann dabei wie oben bereits beschrieben durch eine vollständige URI `<{URI}>` oder eine abgekürzte URI `{prefix}:{label}` angegeben werden.
-Eine Sprache lässt sich durch eine zweistellige ISO Kennzeichnung angeben. Eine Liste mit allen Länder Codes lässt sich [here](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) finden.
-Ähnlich zu den Ressourcen Typen, lassen sich auch diese Marker in den Spaltenkopf verschieben, um allen Einträgen ohne Ressourcentyp, Datentyp und Sprachen einen Wert zuzuordnen.
+Since only literals can have data types and languages, no additional type marking is needed. Thus entries of the form *value^^URI* are always interpreted as literal with datatype. The URI can be specified by a full URI `<{URI}>` or an abbreviated URI `{prefix}:{label}` as described above.
+A language can be specified by a two-character ISO identifier. A list of all country codes can be found [here](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes).
+Similar to resource types, these markers can be moved to the column header to assign a value to all entries without resource type, data type, or languages.
 
 **Example**:
 |coins^^uri|nmo:hasMaterial^^uri|nmo:hasWeight^^xsd:decimal|
@@ -73,17 +73,17 @@ Eine Sprache lässt sich durch eine zweistellige ISO Kennzeichnung angeben. Eine
 |afe:29    |nm:ar               |1.16                      |
 
 
-Mehrfacheinträge
+Multiple Entries
 ----------------
-Häufig besitzen RDF-Aussagen das gleiche Subjekt-Prädikat-Paar. Für die csv Eingabe bedeutet das, dass sich beide Aussagen auf die selbe Zelle beziehen können.
-Aus diesem Grund lassen sich in die Zellen mit Objekten auch Mehrfacheinträge getrennt durch ein Semikolon `;` erstellen. So lässt sich leicht für das obige Beispiel der Text in einer zweiten Sprache angeben mit `too heavy to weigh@en; zu schwer zum wiegen@de`.
+Often RDF statements have the same subject-predicate pair. For the csv input, this means that both statements can refer to the same cell.
+For this reason, multiple entries can be created in the cells with objects separated by a semicolon `;`. Thus, for the above example, the text in a second language can easily be specified with `too heavy to weigh@en; zu schwer zum wiegen@de`.
 
-Verkettete Aussagen
--------------------
-Um auch Aussagen darstellen zu können wie "A ist mit B befreundet und B hat den Namen Luca", lässt sich die oben gezeigte Grundstruktur verändern.
-Durch den Marker `**{id}` am Ende des Spaltennamens lässt sich einer Spalte eine ID zuordnen und somit als Subjekt-Spalte markieren.
-Die ID darf dabei eine beliebige Zeichekette sein.
-Auf eine Subjekt-Spalte mit ID kann dann mit dem Marker `{id}__` (doppelter Unterstrich) am Anfang eines Spaltennamens referenziert werden, sodass die Spalte Objekte und das Prädikat zur referenzierten Subjekt-Spalte enthält. Für unser Beispiel sieht das wie Folgt aus:
+Nested Statements
+-----------------
+In order to be able to represent also statements like "A is friends with B and B has the name Luca", the basic structure shown above can be changed.
+With the marker `**{id}` at the end of the column name an ID can be assigned to a column and thus marked as a subject column.
+The ID may be any string.
+A subject column with ID can then be referenced with the marker `{id}__` (double underscore) at the beginning of a column name, so that the column contains objects and the predicate to the referenced subject column. For our example, this looks like the following:
 
 |coins^^uri|nmo:hasMaterial^^uri**1|nmo:hasWeight^^xsd:decimal|1__rdf:value               |
 |:---      |:---                   |:---                      |:---                       |
@@ -91,7 +91,7 @@ Auf eine Subjekt-Spalte mit ID kann dann mit dem Marker `{id}__` (doppelter Unte
 |afe:13    |kryptonite^^blank      |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
 |afe:29    |nm:ar                  |1.16                      |                           |
 
-Durch diese Veränderung wird die zweite Spalte nun zusätzlich als Subjekt-Spalte interpretiert und die vierte Spalte enthält die dazu gehörenden Objekte und das Prädikat. Dadurch entstehen zwei neue Kanten vom leeren Knoten ausgehende mit dem Prädikat `rdf:value` und den beiden Objekten `kryptonite` und `Kryptonit`.
-Durch die Zuweisung von ID 1 bleiben die ursprünglichen RDF-Aussagen bestehen.
+As a result of this change, the second column is now additionally interpreted as a subject column and the fourth column contains the objects and predicate belonging to it. This creates two new edges starting from the empty node with the predicate `rdf:value` and the two objects `kryptonite` and `kryptonite`.
+By assigning ID 1, the original RDF statements remain.
 
-Auch lässt sich eine Spalte, die auf eine andere Subjekt-Spalte referenziert wiederrum eine ID zuweisen, usw.
+Also, a column that references another subject column can be assigned an ID, and so on.
