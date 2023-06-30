@@ -6,6 +6,6 @@ st.set_page_config(
     page_title="Input Format",
     layout="wide")
 
-st.title('Input Format')
+# st.title('Input Format')
 
 st.markdown(Path(UNCO_PATH,"docu/INPUT_FORMAT.md").read_text(), unsafe_allow_html=True)
