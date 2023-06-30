@@ -13,7 +13,7 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import sleep, time
 
-NUMB_LOOPS = 1
+NUMB_LOOPS = 11
 
 class Benchmark:
     """
@@ -86,10 +86,10 @@ class Benchmark:
                 looplist = []
                 for _ in range(NUMB_LOOPS):
                     start_time = time()
-                    res = self.run_query_of_model(query_numb,model_numb,fuseki)
+                    _ = self.run_query_of_model(query_numb,model_numb,fuseki)
                     time_difference = time() - start_time
-                    looplist.append(len(res))
-                results[index].append(looplist[0])
+                    looplist.append(time_difference)
+                results[index].append(median(looplist))
         
         if fuski: bench.fserver.stop_server()
 
@@ -258,6 +258,19 @@ class Benchmark:
 
         return query_results
     
+    def pretty_print_results(self, resultlist : list[list[float]], querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9]):
+        print(f"         |", end="")
+        for model in modellist:
+            print(f"model {model}|", end="")
+        
+        print("\n",end="")
+
+        for index, query in enumerate(querylist):
+            print(f"query {query}: |", end="")
+            for res in resultlist[index]:
+                print("%.3f" % res + "  |", end="")
+            print("\n",end="")
+    
 
 if __name__ == "__main__":
     # Load data--------------------------------------------------------------------------------------------------------------------------
@@ -288,12 +301,7 @@ if __name__ == "__main__":
     # Run afe benchmark -------------------------------------------------------------------------------------------------------
     results : list[list[pd.DataFrame]] = bench.start_boxplot_benchmark(fuseki=fuski)
     print(results)
-    # print(len(results[0][0]),len(results[0][1]))
-    # difference = pd.concat([results[0][0], results[0][1]]).drop_duplicates(keep=False)
-    # difference = difference.applymap(lambda x: "" if str(x)[:3] == "_:b" else x).drop_duplicates(keep=False)
-    # difference.to_csv(Path(UNCO_PATH,"data/output/query_results_fuseki.csv"))
-    # print(difference)
-    # bench.plot_box_plot(results)
+    bench.pretty_print_results(results)
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------

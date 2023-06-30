@@ -239,7 +239,7 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe = remove_datetimes(dataframe)
 
 
-    dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_public_ready.csv"),index=False)
+    dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_ready.csv"),index=False)
     remove_uncertainties(dataframe).sample(n=100).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
 
     remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
