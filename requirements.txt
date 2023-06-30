@@ -12,13 +12,13 @@
 #rstcheck
 
 # external requirements
-tqdm==4.65.0 # progress bars
-pandas==2.0.2 # data manipulation
-rdflib==6.3.2 # rdf-graphs
-requests==2.31.0 # communication between python and fuseki server
-pathlib==1.0.1
-psutil==5.9.5 # close fuseki console
-matplotlib==3.7.1
+tqdm==4.65.0        # progress bars
+pandas==2.0.2       # data manipulation
+rdflib==6.3.2       # rdf-graphs
+requests==2.31.0    # communication between python and fuseki server
+pathlib==1.0.1      # path management
+psutil==5.9.5       # close fuseki console
+matplotlib==3.7.1   # benchmark plots
 
 # UI
-streamlit == 1.24.0
+streamlit == 1.24.0 # Application

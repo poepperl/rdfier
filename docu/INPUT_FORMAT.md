@@ -5,7 +5,7 @@ The main task of the RDFier is to build an RDF graph from a data set in the form
 Basic Structure
 ---------------
 The basic structure of the input is as follows:
-<img src="basic_structure.JPG" alt="basic_structure" width="1000"/>
+<img src="images/basic_structure.JPG" alt="basic_structure" width="1000"/>
 
 Thus, usually the first column denotes subjects and the subsequent columns denote objects with the respective predicate in the column header. The edges (subject, predicate1, object1), (subject, predicate2, object2) and (subject, predicate3, object3) are created from the diagram.
 
