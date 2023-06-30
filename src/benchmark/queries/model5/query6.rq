@@ -1,4 +1,3 @@
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX amt: <http://academic-meta-tool.xyz/vocab#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 
@@ -10,8 +9,10 @@ WHERE {
         }
         MINUS {
             ?subject ?predicate ?object .
+
             ?object amt:weight ?c1 ;
                 ?p1 ?o1 .
+
             VALUES (?p1) {
                 (crm:P3.2_uncertain_value)
                 (crm:P189.2_uncertain_place)
@@ -32,27 +33,8 @@ WHERE {
         MINUS {
             ?subject amt:weight ?c2 ;
                 ?p2 ?o2 .
+
             VALUES (?p2) {
-                (crm:P3.2_uncertain_value)
-                (crm:P189.2_uncertain_place)
-                (crm:P107.2_uncertain_member)
-                (crm:P102.2_uncertain_name_or_ethnic)
-                (crm:P16.2_uncertain_technique_or_object_used_for_creation)
-                (crm:P103.2_uncertain_symbole_or_features)
-                (crm:P67.2_uncertain_type)
-                (crm:P138.2_uncertain_authenticity)
-                (crm:P14.2_uncertain_authority_or_issuer)
-                (crm:P137.2_uncertain_material)
-                (crm:P136.2_uncertain_context_or_taxonomy)
-                (crm:P139.2_uncertain_form)
-                (crm:P19.2_uncertain_mode)
-                (crm:P62.2_uncertain_depiction)
-            }
-        }
-        MINUS {
-            ?subject rdfs:domain ?o3 ;
-                rdfs:range crm:E55_Type .
-            VALUES (?subject) {
                 (crm:P3.2_uncertain_value)
                 (crm:P189.2_uncertain_place)
                 (crm:P107.2_uncertain_member)
@@ -73,8 +55,10 @@ WHERE {
     }
     UNION {
         ?subject ?predicate ?b4 .
+
         ?b4 amt:weight ?certainty ;
             ?p4 ?object .
+            
         VALUES (?p4) {
             (crm:P3.2_uncertain_value)
             (crm:P189.2_uncertain_place)

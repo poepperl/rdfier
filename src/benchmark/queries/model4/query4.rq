@@ -1,4 +1,4 @@
-PREFIX crminf: <https://ontome.net/ns/crminf/>
+PREFIX crminf: <http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#>
 
 SELECT ?subject ?predicate ?object
 WHERE {
@@ -8,19 +8,25 @@ WHERE {
     MINUS {
         ?object crminf:J2_concluded_that ?b ;
             a crminf:I5_Inference_Making .
+
         ?b crminf:J4_that ?o ;
             crminf:J5_holds_to_be ?certainty ;
             crminf:I4_Proposition_Set ?proposetion ;
             a crminf:I2_Belief .
     }
     MINUS {
-        ?subject crminf:J2_concluded_that ?o1 ;
+        ?subject crminf:J2_concluded_that ?b1 ;
             a crminf:I5_Inference_Making .
+            
+        ?b1 crminf:J4_that ?o1 ;
+            crminf:J5_holds_to_be ?certainty1 ;
+            crminf:I4_Proposition_Set ?proposetion1 ;
+            a crminf:I2_Belief .
     }
     MINUS {
         ?subject crminf:J4_that ?o2 ;
-            crminf:J5_holds_to_be ?o3 ;
-            crminf:I4_Proposition_Set ?o4 ;
+            crminf:J5_holds_to_be ?certainty2 ;
+            crminf:I4_Proposition_Set ?proposetion2 ;
             a crminf:I2_Belief .
     }
 }

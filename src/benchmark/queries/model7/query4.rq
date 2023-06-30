@@ -1,4 +1,4 @@
-PREFIX edtfo: <https://periodo.github.io/edtf-ontology/edtfo.ttl#>
+PREFIX edtfo: <http://periodo.github.io/edtf-ontology/edtfo.ttl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject ?predicate ?object
@@ -7,12 +7,11 @@ WHERE {
         ?subject ?predicate ?object .
     }
     MINUS {
-        ?subject ?predicate ?objekt .
         ?objekt rdf:type edtfo:ApproximateStatement ;
             rdf:value ?b .
     }
     MINUS {
-        ?subject rdf:type ?o1 ;
+        ?subject rdf:type edtfo:ApproximateStatement ;
             rdf:value ?o2 .
     }
 }

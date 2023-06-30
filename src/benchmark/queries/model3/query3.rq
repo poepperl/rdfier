@@ -1,17 +1,21 @@
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects) ?certainty
 WHERE {
     {
-        ?a crm:T1_assessed_the_reliability_of ?b ;
-            a crm:R1_Reliability_Assessment .
+        ?subject nmo:hasMint ?o .
+
         ?b crm:P141_assigned ?o ;
             crm:P140_assigned_attribute_to ?subject ;
             crm:T2_assessed_as_reliability ?c ;
             rdf:Property nmo:hasMint ;
-            a crm:E13 .
+            a crm:E13_Attribute_Assignment .
+
+        ?a crm:T1_assessed_the_reliability_of ?b ;
+            a crm:R1_Reliability_Assessment .
+
         ?c a crm:R2_Reliability ;
             crm:P90_has_value ?certainty .
     }
@@ -24,10 +28,13 @@ WHERE {
             crm:P140_assigned_attribute_to ?subject ;
             crm:T2_assessed_as_reliability ?c ;
             rdf:Property nmo:hasMint ;
-            a crm:E13 .
-        ?c a crm:R2_Reliability .
+            a crm:E13_Attribute_Assignment .
+
         ?a crm:T1_assessed_the_reliability_of ?b ;
             a crm:R1_Reliability_Assessment .
+
+        ?c a crm:R2_Reliability ;
+            crm:P90_has_value ?certainty .
         }
         BIND("1" AS ?certainty)
     }

@@ -1,13 +1,15 @@
+PREFIX edtfo: <http://periodo.github.io/edtf-ontology/edtfo.ttl#>
 PREFIX nmo: <http://nomisma.org/ontology#>
-PREFIX edtfo: <https://periodo.github.io/edtf-ontology/edtfo.ttl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects) ?certainty
 WHERE {
     {
         ?subject nmo:hasMint ?b .
+
         ?b rdf:type edtfo:ApproximateStatement ;
             rdf:value ?o .
+            
         BIND("uncertain" AS ?certainty)
     }
     UNION {
@@ -15,7 +17,8 @@ WHERE {
             ?subject nmo:hasMint ?o.
         }
         MINUS {
-            ?o rdf:type edtfo:ApproximateStatement .
+            ?o rdf:type edtfo:ApproximateStatement ;
+                rdf:value ?b1 .
         }
         BIND("certain" AS ?certainty)
     }

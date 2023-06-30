@@ -1,6 +1,7 @@
-PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGRurw3-20080331/Uncertainty.owl>
+PREFIX edtfo: <http://periodo.github.io/edtf-ontology/edtfo.ttl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject ?predicate ?object
 WHERE {
-    << ?subject ?predicate ?object >> ?b1 ?b2 .
+    << ?subject ?predicate ?object >> rdf:type edtfo:UncertainStatement .
 }

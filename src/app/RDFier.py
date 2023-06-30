@@ -34,7 +34,7 @@ if not uploaded_file:
     st.session_state.rdfdata = None
     st.session_state.rerun = True
 else:
-    st.session_state.dataframe = st.experimental_data_editor(pd.read_csv(uploaded_file), on_change=activate_rerun)
+    st.session_state.dataframe = st.data_editor(pd.read_csv(uploaded_file), on_change=activate_rerun)
     if st.session_state.rerun:
         update()
 
@@ -68,7 +68,7 @@ else:
         if graphical_version:
             codcol, graphcol = st.columns(2)
 
-            codcol.code(path.read_text())
+            codcol.code(path.read_text(),language="turtle" if xml_format=="Turtle" else "xml")
 
             grapher = Illustrator(path)
             
@@ -76,4 +76,4 @@ else:
 
             graphcol.image(image, output_format="PNG", use_column_width="auto")
         else:
-            st.code(path.read_text())
+            st.code(path.read_text(),language="turtle" if xml_format=="Turtle" else "xml")

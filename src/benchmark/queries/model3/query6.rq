@@ -1,51 +1,43 @@
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject ?predicate ?object ?certainty
 WHERE {
     {
         {
             ?subject ?predicate ?object .
-        }
-        MINUS {
-            ?a crm:T1_assessed_the_reliability_of ?b ;
-                a crm:R1_Reliability_Assessment .
+
             ?b crm:P141_assigned ?object ;
                 crm:P140_assigned_attribute_to ?subject ;
                 crm:T2_assessed_as_reliability ?c ;
                 rdf:Property ?predicate ;
-                a crm:E13 .
-            ?c a crm:R2_Reliability .
-        }
-        MINUS {
-            ?subject crm:P141_assigned ?o1 ;
-                crm:P140_assigned_attribute_to ?o2 ;
-                crm:T2_assessed_as_reliability ?o3 ;
-                rdf:Property ?o4 ;
-                a crm:E13 .
-        }
-        MINUS {
-            ?subject a crm:R2_Reliability ;
-                crm:P90_has_value ?certainty .
-            ?b crm:T2_assessed_as_reliability ?subject ;
-                a crm:E13 .
-        }
-        MINUS {
-            ?subject crm:T1_assessed_the_reliability_of ?o1 ;
+                a crm:E13_Attribute_Assignment .
+
+            ?a crm:T1_assessed_the_reliability_of ?b ;
                 a crm:R1_Reliability_Assessment .
+
+            ?c a crm:R2_Reliability ;
+                crm:P90_has_value ?certainty .
         }
-        BIND("1" AS ?certainty)
+        FILTER(?certainty > 0.5) .
     }
     UNION {
-        ?a crm:T1_assessed_the_reliability_of ?b ;
-            a crm:R1_Reliability_Assessment .
+        {
+            ?subject ?predicate ?object.
+        }
+        MINUS {
         ?b crm:P141_assigned ?object ;
             crm:P140_assigned_attribute_to ?subject ;
             crm:T2_assessed_as_reliability ?c ;
             rdf:Property ?predicate ;
-            a crm:E13 .
+            a crm:E13_Attribute_Assignment .
+
+        ?a crm:T1_assessed_the_reliability_of ?b ;
+            a crm:R1_Reliability_Assessment .
+
         ?c a crm:R2_Reliability ;
             crm:P90_has_value ?certainty .
-        FILTER(?certainty > 0.5).
+        }
+        BIND("1" AS ?certainty)
     }
 }
