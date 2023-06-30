@@ -1,7 +1,7 @@
 PREFIX crminf: <http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#>
 PREFIX nmo: <http://nomisma.org/ontology#>
 
-SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects) ?certainty
+SELECT ?subject ?object
 WHERE {
     {
         ?subject nmo:hasMint ?a .
@@ -9,17 +9,17 @@ WHERE {
         ?a crminf:J2_concluded_that ?b ;
             a crminf:I5_Inference_Making .
 
-        ?b crminf:J4_that ?o ;
+        ?b crminf:J4_that ?object ;
             crminf:J5_holds_to_be ?certainty ;
             crminf:I4_Proposition_Set ?proposetion ;
             a crminf:I2_Belief .
     }
     UNION {
         {
-            ?subject nmo:hasMint ?o.
+            ?subject nmo:hasMint ?object.
         }
         MINUS {
-            ?o crminf:J2_concluded_that ?b ;
+            ?object crminf:J2_concluded_that ?b ;
                 a crminf:I5_Inference_Making .
                 
             ?b crminf:J4_that ?ob ;
@@ -30,4 +30,3 @@ WHERE {
         BIND("certain" AS ?certainty)
     }
 }
-GROUP BY ?subject ?certainty

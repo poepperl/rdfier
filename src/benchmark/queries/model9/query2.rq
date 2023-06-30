@@ -2,8 +2,7 @@ PREFIX edtfo: <http://periodo.github.io/edtf-ontology/edtfo.ttl#>
 PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+SELECT ?subject ?object
 WHERE {
-    << ?subject nmo:hasMint ?o >> rdf:type edtfo:UncertainStatement .
+    << ?subject nmo:hasMint ?object >> rdf:type edtfo:UncertainStatement .
 }
-GROUP BY ?subject

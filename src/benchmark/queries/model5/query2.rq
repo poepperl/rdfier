@@ -2,11 +2,10 @@ PREFIX amt: <http://academic-meta-tool.xyz/vocab#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX nmo: <http://nomisma.org/ontology#>
 
-SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+SELECT ?subject ?object
 WHERE {
     ?subject nmo:hasMint ?b .
     
     ?b amt:weight ?certainty ;
         crm:P189.2_uncertain_place ?o .
 }
-GROUP BY ?subject

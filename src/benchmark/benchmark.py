@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from copy import deepcopy
 from tqdm import tqdm
-from statistics import median
+from statistics import median, mean
 from unco import UNCO_PATH, data
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
@@ -13,7 +13,7 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import sleep, time
 
-NUMB_LOOPS = 11
+NUMB_LOOPS = 1
 
 class Benchmark:
     """
@@ -45,13 +45,12 @@ class Benchmark:
         self.graph_generator : GraphGenerator
         self.fserver = FusekiServer(Path(UNCO_PATH,"src/apache-jena-fuseki-4.8.0"))
 
-    def _generate_graph_with_model(self, rdfdata : RDFData, model_id : int, query_id : int) -> None:
-        if not (Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}.rq")).is_file():
-            return
-        self.graph_generator = GraphGenerator(rdfdata)
+    def _generate_graph_with_model(self, model_id : int, fuseki : bool) -> None:
         self.graph_generator.load_prefixes(self.prefixes_path)
         self.graph_generator.generate_solution(model_id, xml_format=False)
-
+        if fuseki:
+            self.fserver.delete_graph()
+            self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
 
     def run_query_of_model(self, query_id : int, model_id : int, run_on_fuseki : bool = False) -> pd.DataFrame:
         """ 
@@ -74,26 +73,27 @@ class Benchmark:
             return pd.DataFrame()
         
     
-    def start_boxplot_benchmark(self, fuseki : bool = True):
-        time_results = dict()
+    def start_boxplot_benchmark(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], fuseki : bool = True):
+        results = [[] for _ in querylist]
         if fuseki: self.fserver.start_server()
-        for model_numb in range(1,10):
-            self._generate_graph_with_model(rdfdata=self.rdfdata,model_id=model_numb,query_id=1)
-            query_times = dict()
-            for query_numb in range(1,6):
-                loop = []
+
+        for model_numb in modellist:
+            self.graph_generator = GraphGenerator(self.rdfdata)
+            self._generate_graph_with_model(model_numb, fuseki)
+            for index, query_numb in enumerate(querylist):
                 print(f"Run query {query_numb} of model {model_numb}.")
+
+                looplist = []
                 for _ in range(NUMB_LOOPS):
                     start_time = time()
-                    _ = self.run_query_of_model(query_numb,model_numb,fuseki)
+                    res = self.run_query_of_model(query_numb,model_numb,fuseki)
                     time_difference = time() - start_time
-                    loop.append(time_difference*10)
-                query_times[query_numb] = loop
-            time_results[model_numb] = query_times
+                    looplist.append(len(res))
+                results[index].append(looplist[0])
         
         if fuski: bench.fserver.stop_server()
 
-        return time_results
+        return results
     
     def plot_box_plot(self, list_of_lists : list):
         plt.style.use('_mpl-gallery')
@@ -120,10 +120,7 @@ class Benchmark:
                     if time_difference < 20:
                         ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
                         rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i) if i != 0 else rdfdata
-                        self._generate_graph_with_model(rdf_data, model_numb, query_numb)
-                        if fuseki:
-                            self.fserver.delete_graph()
-                            self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
+                        self._generate_graph_with_model(model_numb, fuseki)
                         loop = []
                         print(f"\nRun query {query_numb} of model {model_numb} with {len(rdf_data.uncertainties)} uncertainties. Graph size: {len(self.graph_generator.graph)}")
                     for _ in range(NUMB_LOOPS):
@@ -199,10 +196,7 @@ class Benchmark:
                     if time_difference < 20:
                         ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
                         rdf_data = ugen.add_pseudorand_alternatives(list_of_columns=[2,3,4,5,6,9,10,11,12,18,19,20,21], min_number_of_alternatives=i, max_number_of_alternatives=i) if i != 0 else rdfdata
-                        self._generate_graph_with_model(rdf_data, model_numb, query_numb)
-                        if fuseki:
-                            self.fserver.delete_graph()
-                            self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
+                        self._generate_graph_with_model(model_numb, fuseki)
                         loop = []
                         print(f"\nRun query {query_numb} of model {model_numb} with {i} alternatives per uncertainty and {len(ugen.rdfdata.uncertainties)} uncertainties.")
                     for _ in range(NUMB_LOOPS):
@@ -278,7 +272,7 @@ if __name__ == "__main__":
     # ugen = UncertaintyGenerator(deepcopy(rdfdata))
     # rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
     # # rdf_data = ugen.add_pseudorand_uncertainty_flags([19],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
-    # bench._generate_graph_with_model(rdf_data,model)
+    # bench._generate_graph_with_model(rdf_data,model,query)
     # if fuski:
     #     bench.fserver.start_server()
     #     bench.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
@@ -291,18 +285,15 @@ if __name__ == "__main__":
 
 
 
-    # Run benchmark models/queries-------------------------------------------------------------------------------------------------------
-    dictionary = bench.start_boxplot_benchmark()
-
-    for query_numb in range(1,6):
-        query_results = []
-        for model_numb in range(1,10):
-            model_list = []
-            for loop in range(NUMB_LOOPS):
-                model_list.append(dictionary[model_numb][query_numb][loop])
-            query_results.append(model_list)
-        print(query_results)
-        bench.plot_box_plot(query_results)
+    # Run afe benchmark -------------------------------------------------------------------------------------------------------
+    results : list[list[pd.DataFrame]] = bench.start_boxplot_benchmark(fuseki=fuski)
+    print(results)
+    # print(len(results[0][0]),len(results[0][1]))
+    # difference = pd.concat([results[0][0], results[0][1]]).drop_duplicates(keep=False)
+    # difference = difference.applymap(lambda x: "" if str(x)[:3] == "_:b" else x).drop_duplicates(keep=False)
+    # difference.to_csv(Path(UNCO_PATH,"data/output/query_results_fuseki.csv"))
+    # print(difference)
+    # bench.plot_box_plot(results)
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------

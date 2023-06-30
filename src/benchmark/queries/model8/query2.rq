@@ -1,10 +1,9 @@
 PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#>
 
-SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+SELECT ?subject ?object
 WHERE {
     ?subject un:hasUncertainty ?b .
     
-    ?b nmo:hasMint ?o .
+    ?b nmo:hasMint ?object .
 }
-GROUP BY ?subject

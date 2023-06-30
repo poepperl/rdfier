@@ -8,7 +8,7 @@ WHERE {
         ?subject ?predicate ?object .
     }
     MINUS {
-        ?objekt un:hasUncertainty nm:uncertain_value ;
+        ?object un:hasUncertainty nm:uncertain_value ;
             rdf:value ?b .
     }
     MINUS {

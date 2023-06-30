@@ -7,6 +7,14 @@ WHERE {
         ?subject ?predicate ?object .
     }
     MINUS {
-        << ?b1 ?b2 ?b3 >> rdf:type edtfo:UncertainStatement .
+        << ?b1 ?b2 ?b3 >> ?predicate ?object .
+
+        VALUES (?predicate) {
+            (rdf:type)
+        }
+
+        VALUES (?object) {
+            (edtfo:UncertainStatement)
+        }
     }
 }
