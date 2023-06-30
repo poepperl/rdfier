@@ -21,6 +21,8 @@ RDF         = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 RDFS        = Namespace("http://www.w3.org/2000/01/rdf-schema#")
 SKOS        = Namespace("http://www.w3.org/2004/02/skos/core#")
 XSD         = Namespace("http://www.w3.org/2001/XMLSchema#")
+
+# Needed for uncertainty models:
 UN          = Namespace("http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#")
 BMO         = Namespace("http://collection.britishmuseum.org/id/ontology/")
 EDTFO       = Namespace("http://periodo.github.io/edtf-ontology/edtfo.ttl#")
@@ -242,7 +244,7 @@ class GraphGenerator():
         self.graph.add((node, CRM["P141_assigned"], object))
         self.graph.add((node, CRM["P140_assigned_attribute_to"], subject))
         self.graph.add((node, BMO["PX_Property"], predicate))
-        self.graph.add((node, RDF["type"], CRM["E13"]))
+        self.graph.add((node, RDF["type"], CRM["E13_Attribute_Assignment"]))
         self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
 
@@ -354,8 +356,8 @@ class GraphGenerator():
         node = BNode()
         crm_property = "P3.2_uncertain_value" if predicate.n3()[1:-1] not in self.crm_properties else self.crm_properties[predicate.n3()[1:-1]]
         
-        self.graph.add((CRM[crm_property], RDFS["domain"], CRM[f"PC{crm_property.split('.2')[0][1:]}_approximates"]))
-        self.graph.add((CRM[crm_property], RDFS["range"], CRM["E55_Type"]))
+        # self.graph.add((CRM[crm_property], RDFS["domain"], CRM[f"PC{crm_property.split('.2')[0][1:]}_approximates"]))
+        # self.graph.add((CRM[crm_property], RDFS["range"], CRM["E55_Type"]))
         
         self.graph.add((subject, predicate, node))
 

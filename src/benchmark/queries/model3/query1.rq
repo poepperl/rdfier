@@ -1,5 +1,5 @@
-PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
@@ -13,9 +13,12 @@ WHERE {
             crm:T2_assessed_as_reliability ?c ;
             rdf:Property nmo:hasMint ;
             a crm:E13_Attribute_Assignment .
-        ?c a crm:R2_Reliability .
+
         ?a crm:T1_assessed_the_reliability_of ?b ;
             a crm:R1_Reliability_Assessment .
+
+        ?c a crm:R2_Reliability ;
+            crm:P90_has_value ?certainty .
     }
 }
 GROUP BY ?subject

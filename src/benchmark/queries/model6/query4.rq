@@ -1,13 +1,16 @@
-PREFIX edtfo: <https://periodo.github.io/edtf-ontology/edtfo.ttl#>
+PREFIX edtfo: <http://periodo.github.io/edtf-ontology/edtfo.ttl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 SELECT ?subject ?predicate ?object
 WHERE {
-    ?subject ?predicate ?object .
+    {
+        ?subject ?predicate ?object .
+    }
     MINUS {
-        ?subject ?predicate ?o.
+        ?subject ?predicate ?object.
+
         ?b rdf:subject ?subject ;
-            rdf:object ?o ;
+            rdf:object ?object ;
             rdf:predicate ?predicate ;
             a edtfo:UncertainStatement .
     }
