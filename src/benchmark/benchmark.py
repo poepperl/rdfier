@@ -13,7 +13,8 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import sleep, time
 
-NUMB_LOOPS = 11
+MEDIAN_LOOPS = 11
+MEAN_LOOPS = 5
 
 class Benchmark:
     """
@@ -82,15 +83,18 @@ class Benchmark:
             self._generate_graph_with_model(model_numb, fuseki)
             for index, query_numb in enumerate(querylist):
                 print(f"Run query {query_numb} of model {model_numb}.")
+                
+                meanlist = []
+                for _ in range(MEAN_LOOPS):
+                    medianlist = []
+                    for _ in range(MEDIAN_LOOPS):
+                        start_time = time()
+                        _ = self.run_query_of_model(query_numb,model_numb,fuseki)
+                        time_difference = time() - start_time
+                        medianlist.append(time_difference)
+                    meanlist.append(median(medianlist))
+                results[index].append(mean(meanlist))
 
-                looplist = []
-                for _ in range(NUMB_LOOPS):
-                    start_time = time()
-                    _ = self.run_query_of_model(query_numb,model_numb,fuseki)
-                    time_difference = time() - start_time
-                    looplist.append(time_difference)
-                results[index].append(median(looplist))
-        
         if fuski: bench.fserver.stop_server()
 
         return results
@@ -123,7 +127,7 @@ class Benchmark:
                         self._generate_graph_with_model(model_numb, fuseki)
                         loop = []
                         print(f"\nRun query {query_numb} of model {model_numb} with {len(rdf_data.uncertainties)} uncertainties. Graph size: {len(self.graph_generator.graph)}")
-                    for _ in range(NUMB_LOOPS):
+                    for _ in range(MEDIAN_LOOPS):
                         if time_difference > 20:
                             loop.append(time_difference)
                             continue
@@ -199,7 +203,7 @@ class Benchmark:
                         self._generate_graph_with_model(model_numb, fuseki)
                         loop = []
                         print(f"\nRun query {query_numb} of model {model_numb} with {i} alternatives per uncertainty and {len(ugen.rdfdata.uncertainties)} uncertainties.")
-                    for _ in range(NUMB_LOOPS):
+                    for _ in range(MEDIAN_LOOPS):
                         if time_difference > 20:
                             loop.append(time_difference)
                             continue
