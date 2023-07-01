@@ -214,7 +214,6 @@ class Benchmark:
     def start_benchmark_increasing_alternatives(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], start : int = 0, stop : int = 100, step : int = 5, fuseki : bool = True):
         results = [[[] for _ in modellist] for _ in querylist]
         X = range(start, stop, step)
-        print(X)
         # if 0 < numb_steps <= len(X): X = X[:numb_steps]
 
         if fuseki: self.fserver.start_server()
@@ -248,7 +247,7 @@ class Benchmark:
             plt.title(f"Query {query_numb} with increasing numb alternatives")
 
             plt.legend()
-            plt.savefig(f"results/alternatives{query_numb}.pdf", format="pdf", bbox_inches="tight")
+            plt.savefig(Path(UNCO_PATH,f"src/benchmark/results/alternatives{query_numb}.pdf"), format="pdf", bbox_inches="tight")
             plt.show()
 
     
