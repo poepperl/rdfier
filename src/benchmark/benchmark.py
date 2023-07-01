@@ -211,10 +211,10 @@ class Benchmark:
         return query_results
     
 
-    def start_benchmark_increasing_alternatives(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], stepsize : int = 100, numb_steps : int = -1, fuseki : bool = True):
+    def start_benchmark_increasing_alternatives(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], start : int = 0, stop : int = 100, step : int = 5, fuseki : bool = True):
         results = [[[] for _ in modellist] for _ in querylist]
-        X = range(0, len(self.rdfdata.data), stepsize)
-        if 0 < numb_steps <= len(X): X = X[:numb_steps]
+        X = range(start, stop, step)
+        # if 0 < numb_steps <= len(X): X = X[:numb_steps]
 
         if fuseki: self.fserver.start_server()
 
@@ -301,4 +301,4 @@ if __name__ == "__main__":
     # print(bench.start_benchmark_increasing_uncertainties(fuseki=fuski, querylist=[1,6], modellist=[3,9], stepsize=int(len(bench.rdfdata.data)/2)))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
-    print(bench.start_benchmark_increasing_alternatives(fuseki=fuski, querylist=[1], modellist=[7,9], stepsize=3, numb_steps=5))
+    print(bench.start_benchmark_increasing_alternatives(fuseki=fuski))
