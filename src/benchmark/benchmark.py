@@ -247,7 +247,7 @@ class Benchmark:
             plt.title(f"Query {query_numb} with increasing numb alternatives")
 
             plt.legend()
-
+            plt.savefig(f"results/alternatives{query_numb}.pdf", format="pdf", bbox_inches="tight")
             plt.show()
 
     
