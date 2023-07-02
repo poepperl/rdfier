@@ -140,7 +140,7 @@ class Benchmark:
         X = range(start, stop, step)
 
         for count in X:
-            if increasing_alternatives: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[2,3,4,5,6,9,10,11,12,18,19,20,21], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
+            if increasing_alternatives: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[1,5,6,7,8,9], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
             else: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=count,max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
 
             del un_generator
@@ -160,6 +160,7 @@ class Benchmark:
                     output[query_numb][model_numb].append(model_res)
         
         for index, query_numb in enumerate(querylist):
+            fig = plt.figure()
             for modelindex, model_numb in enumerate(modellist):
                 color, linestyle = self._get_color_linestyle_of_model(model_numb)
                 plt.plot(X, output[index][modelindex], color=color, linestyle=linestyle, label=str(model_numb))
@@ -176,6 +177,7 @@ class Benchmark:
             if uncertainties == False: plt.savefig(Path(UNCO_PATH,f"src/benchmark/results/alternatives{query_numb}.pdf"), format="pdf", bbox_inches="tight")
             else: plt.savefig(Path(UNCO_PATH,f"src/benchmark/results/uncertainties{query_numb}.pdf"), format="pdf", bbox_inches="tight")
 
+            plt.close(fig)
             # plt.show()
 
     
@@ -228,5 +230,5 @@ if __name__ == "__main__":
     # print(bench.start_benchmark_increasing_uncertainties(fuseki=fuski, querylist=[1,6], modellist=[3,9], stepsize=int(len(bench.rdfdata.data)/2)))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
-    bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([2,6,7,8,9,10],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
-    print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=20, stop=81))
+    bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,5,6,7,8,9],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
+    print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, querylist=[1,2], modellist=[7,9], start=0, step=1, stop=2))
