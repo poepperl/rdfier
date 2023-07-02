@@ -219,8 +219,8 @@ class Benchmark:
 
         if fuseki: self.fserver.start_server()
 
-        for model_index, model_numb in enumerate(modellist):
-            for i in tqdm(X):
+        for i in tqdm(X):
+            for model_index, model_numb in enumerate(modellist):
                 self.graph_generator = GraphGenerator(self.rdfdata)
                 un_generator = UncertaintyGenerator(self.graph_generator.rdfdata)
                 self.graph_generator.rdfdata = un_generator.add_pseudorand_alternatives(list_of_columns=[2,3,4,5,6,9,10,11,12,18,19,20,21], min_number_of_alternatives=i, max_number_of_alternatives=i) if i > 0 else rdfdata
