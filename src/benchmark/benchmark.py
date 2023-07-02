@@ -151,8 +151,6 @@ class Benchmark:
                 for model_numb, model_res in enumerate(query_res):
                     output[query_numb][model_numb].append(model_res)
 
-        print(list(X))
-        print(output, results)
 
         self._plot_results_increasing_alternatives(X, output, querylist, modellist, increasing_alternatives)
 
@@ -255,4 +253,4 @@ if __name__ == "__main__":
     # print(bench.start_benchmark_increasing_uncertainties(fuseki=fuski, querylist=[1,6], modellist=[3,9], stepsize=int(len(bench.rdfdata.data)/2)))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
-    print(bench.benchmark_increasing_params(fuseki=fuski, modellist=[2], querylist=[2], start=1, step=5, stop=10))
+    print(bench.benchmark_increasing_params(fuseki=fuski, modellist=[2], querylist=[2], start=80, step=20, stop=121))

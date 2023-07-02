@@ -127,6 +127,7 @@ class FusekiServer:
                 raise RuntimeError("Server is already stopped.")
         elif os.name == "posix":
             subprocess.call(['pkill', 'gnome-terminal'])
+            self.server = None
         else:
             print(f"Unknown system{os.name}. Please contact the admin.")
 
