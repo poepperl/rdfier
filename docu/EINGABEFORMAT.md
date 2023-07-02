@@ -116,5 +116,5 @@ Da für den Eintrag `nm:ar; nm:billon` eine Unsicherheit eingetragen wurde, werd
 Die Einträge `0.8; 0.2` sind gewichtete Unsicherheiten. Somit ist die Aussage *afe:13 nmo:hasMaterial nm:ar* unsicher mit der Gewichtung `0.8` und die Aussage *afe:13 nmo:hasMaterial nm:billon* unsicher mit der Gewichtung `0.2`.
 
 Für die Angabe der Unsicherheit gelten Folgende Einschränkungen:
- * Einfache Einträge können mit `u` als unsicher vermerkt werden. Stattdessen kann auch eine einzelne Gewichtung angegeben werden. Die Gewichtung 0 bedeutet in diesem Zusammenhang "vollkommen unsicher" und die Gewichtung "1" ist gleichbedeutend zu "sicher".
- * Mehrfacheinträge lassen sich durch `a` (für *alternatives*) als Unsicherheit mit Alternativen kennzeichnen. Stattdessen kann auch eine Gewichtung angegeben werden, wobei zu jeder Alternative eine Gewichtung erhalten muss.
+ * Einfache Einträge können mit `u` als unsicher vermerkt werden. Stattdessen kann auch eine einzelne Gewichtung angegeben werden. Die Gewichtung 0 bedeutet in diesem Zusammenhang *vollkommen unsicher* und die Gewichtung "1" ist gleichbedeutend zu *sicher*.
+ * Mehrfacheinträge lassen sich durch `a` (für *alternatives*) als unsicher mit Alternativen kennzeichnen. Stattdessen kann auch eine Gewichtung angegeben werden, wobei zu jeder Alternative eine Gewichtung erhalten muss.

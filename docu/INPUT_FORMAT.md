@@ -1,6 +1,6 @@
 INPUT FORMAT
 ============
-The main task of the RDFier is to build an RDF graph from a data set in the form of a csv file. Since more complex concepts in RDF graphs cannot be read easily from a csv table, here we describe how to encode them in the input.
+The main task of the RDFier is to build an RDF graph from a dataset in the form of a csv file. Since more complex concepts in RDF graphs cannot be read easily from a csv table, here we describe how to encode them in the input table.
 
 Basic Structure
 ---------------
@@ -9,7 +9,7 @@ The basic structure of the input is as follows:
 
 Thus, usually the first column denotes subjects and the subsequent columns denote objects with the respective predicate in the column header. The edges (subject, predicate1, object1), (subject, predicate2, object2) and (subject, predicate3, object3) are created from the diagram.
 
-Some namespaces do not need to be inserted themselves, but are already available. These include:
+Frequently used namespaces are directly available. These include:
 |prefix  |namespace                                                               |
 |:---    |:---                                                                    |
 |amt     |http://academic-meta-tool.xyz/vocab#                                    |
@@ -30,28 +30,28 @@ Some namespaces do not need to be inserted themselves, but are already available
 |un      |http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#|
 |xsd     |http://www.w3.org/2001/XMLSchema#                                       |
 
-Additional namespaces can be added using a csv table with the same structure, or overriding those defined above.
+Additional namespaces can be added using a csv table with the same structure or overriding those defined above.
 
 URI's, literals and blank nodes
 -------------------------------
-RDF graphs has resources in the form of URI's, literals and empty nodes. In order for a cell entry to be interpreted correctly, the type of the resource must be specified in addition to the value. The following entries are possible, where the values in curly brackets `{}` are placeholders.
+RDF graphs have resources like URI's, literals and blank nodes. In order for a cell entry to be interpreted correctly, the type of the resource must be specified in addition to the value. The following entries are possible, where the values in curly brackets `{}` must be replaced by the desired values.
  * `<{URI}>^^uri` to specify a full URI, such as: "<http://nomisma.org/id/rome>^^uri".
  * `{prefix}:{label}^^uri` to specify a shorten URI, such as: "nm:rome^^uri".
- * `{value}` bzw. `{value}^^xsd:string` to specify a literal, such as: "2023".
+ * `{value}` or rather `{value}^^xsd:string` to specify a literal, such as: "2023".
  * `{name}^^blank` to specify a blank node. The value *name* is only a placeholder and will be ignored by the module.
 
 Thus, the "^^" marker is used to indicate the type of the resource. Predicates must be of type URI, so the marker in the header has no influence on the type of the predicate. Instead, the marker at this point can be used as a type assignment for all entries in the column without their own type.
 
 **Example**:
-|coins^^uri|nmo:hasMaterial^^uri|
-|:---      |:---                |
-|afe:5     |nm:ae               |
-|afe:13    |kryptonite^^blank   |
-|afe:29    |nm:ar               |
+|coins^^uri|nmo:hasMaterial^^uri      |
+|:---      |:---                      |
+|afe:5     |nm:ar                     |
+|afe:13    |kryptonite^^blank         |
+|afe:29    |<http://nomisma.org/id/ae>|
 
 The marker `coin` is in the column header of the first column with the subjects and thus does not define a predicate, it is discarded by the program and has no effect.
-The two markers `^uri` assign the type uri to all entries in their columns if they have no type of their own. Therefore entries like `nm:ae` are read as URI.
-Since there is no URI for kryptonite in the *nm* namespace, this is realized by an empty node and `^blank` is used as a marker. The entry `kryptonite` has no influence and is discarded by the program.
+The two `^^uri` markers assign the type uri to all entries in their columns if they have no own type. Therefore entries like `nm:ar` and `<http://nomisma.org/id/ae>` are read as URI.
+Since there is no URI for kryptonite in the *nm* namespace, this is realized by an blank node and `^^blank` is used as a marker. The entry `kryptonite` has no influence and is discarded by the program.
 
 
 Datatypes and Languages
@@ -61,46 +61,44 @@ Here the same syntax can be used as in the Turtle format:
  * `literal^^{URI_of_datatype}` to specify a datatype.
  * `literal@{country ISO code}` to specify a language.
 
-Since only literals can have data types and languages, no additional type marking is needed. Thus entries of the form *value^^URI* are always interpreted as literal with datatype. The URI can be specified by a full URI `<{URI}>` or an abbreviated URI `{prefix}:{label}` as described above.
+Since only literals can have datatypes and languages, no additional type marking is needed. Thus entries of the form *value^^URI* are always interpreted as literal with datatype. The URI can be specified by a full URI `<{URI}>` or an abbreviated URI `{prefix}:{label}` as described above.
 A language can be specified by a two-character ISO identifier. A list of all country codes can be found [here](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes).
-Similar to resource types, these markers can be moved to the column header to assign a value to all entries without resource type, data type, or languages.
+Similar to resource types, these markers can be moved to the column header to assign a value to all entries without resource type, datatype or languages.
 
 **Example**:
-|coins^^uri|nmo:hasMaterial^^uri|nmo:hasWeight^^xsd:decimal|
-|:---      |:---                |:---                      |
-|afe:5     |nm:ae               |5.24                      |
-|afe:13    |kryptonite^^blank   |too heavy to weigh@en     |
-|afe:29    |nm:ar               |1.16                      |
+|coins^^uri|nmo:hasMaterial^^uri      |nmo:hasWeight^^xsd:decimal|
+|:---      |:---                      |:---                      |
+|afe:5     |nm:ar                     |5.24                      |
+|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |
+|afe:29    |<http://nomisma.org/id/ae>|1.16                      |
 
 
 Multiple Entries
 ----------------
 Often RDF statements have the same subject-predicate pair. For the csv input, this means that both statements can refer to the same cell.
-For this reason, multiple entries can be created in the cells with objects separated by a semicolon `;`. Thus, for the above example, the text in a second language can easily be specified with `too heavy to weigh@en; zu schwer zum wiegen@de`.
+For this reason, multiple entries can be created in the cells with objects separated by a semicolon `;`. Thus, for the above example, a second language can easily be specified with `too heavy to weigh@en; zu schwer zum wiegen@de`.
 
 Nested Statements
 -----------------
-In order to be able to represent also statements like "A is friends with B and B has the name Luca", the basic structure shown above can be changed.
+In order to be able to represent also statements like "A is a friend of B and B has the name Luca", the basic structure shown above can be changed.
 With the marker `**{id}` at the end of the column name an ID can be assigned to a column and thus marked as a subject column.
-The ID may be any string.
-A subject column with ID can then be referenced with the marker `{id}__` (double underscore) at the beginning of a column name, so that the column contains objects and the predicate to the referenced subject column. For our example, this looks like the following:
+The ID can be any string.
+A subject column with ID can then be referenced with the marker `{id}__` (double underscore) at the beginning of a column name, so that the column contains objects and the predicate to the referenced subject column.
 
-|coins^^uri|nmo:hasMaterial^^uri**1|nmo:hasWeight^^xsd:decimal|1__rdf:value               |
-|:---      |:---                   |:---                      |:---                       |
-|afe:5     |nm:ae                  |5.24                      |                           |
-|afe:13    |kryptonite^^blank      |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
-|afe:29    |nm:ar                  |1.16                      |                           |
+|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |
+|:---      |:---                      |:---                      |:---                       |
+|afe:5     |nm:ar                     |5.24                      |                           |
+|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
+|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |
 
-As a result of this change, the second column is now additionally interpreted as a subject column and the fourth column contains the objects and predicate belonging to it. This creates two new edges starting from the empty node with the predicate `rdf:value` and the two objects `kryptonite` and `kryptonite`.
-By assigning ID 1, the original RDF statements remain.
-
+As a result of this change, the second column is now additionally interpreted as a subject column and the fourth column contains the objects and predicate belonging to it. This creates two new edges starting from the empty node with the predicate `rdf:value` and The assignment does not affect the original RDF statements.
 Also, a column that references another subject column can be assigned an ID, and so on.
 
 Uncertainties
 -------------
 
 Also the indication of uncertain statements, can be noted in the input.
-For this purpose, an ID is assigned to the column of the statement as described above, which can be referred to and with the marker `^^certainty` at the end of the column name, an uncertainty can be assigned to the statements.
+For this purpose, you can assign an ID to the column of the statement as described above, which can be referred to and with the marker `^^certainty` at the end of the column name, an uncertainty can be assigned to the statements.
 It is important to note here that the assignment of uncertainty is done on a cell-by-cell basis and all multiple entries are then counted as uncertainty with alternatives.
 Let's add uncertainty to our example:
 
@@ -110,11 +108,11 @@ Let's add uncertainty to our example:
 |afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|u                           |
 |afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |                            |
 
-Here, some RDF statements of the form *afe:ID nmo:hasMaterial {object}* were marked as unsafe.
+Here, some RDF statements of the form *afe:ID nmo:hasMaterial {object}* were marked as uncertain.
 The entry `u` was used only to describe that it is uncertain that the coin `afe:13` is made of kryptonite.
-Since an uncertainty was entered for the entry `nm:ar; nm:billon`, the two values are considered as alternatives.
+Since an uncertainty was described for the entry `nm:ar; nm:billon`, the two values are considered as alternatives.
 The entries `0.8; 0.2` are weighted uncertainties. Thus the statement *afe:13 nmo:hasMaterial nm:ar* is uncertain with the weighting `0.8` and the statement *afe:13 nmo:hasMaterial nm:billon* is uncertain with the weighting `0.2`.
 
 The following restrictions apply to the specification of uncertainty:
- * Single entries may be noted as uncertain with `u`. Instead, a single weighting can also be specified. In this context, weighting 0 means `totally uncertain` and weighting `1` is equivalent to `certain`.
- * Multiple entries can be indicated by `a` (for *alternatives*) as uncertainty with alternatives. Instead, a weighting can also be specified, in which case a weighting must be assigned to each alternative.
+ * Single entries may be noted as uncertain with `u`. Instead, a single weighting can also be specified. In this context, weighting 0 means *totally uncertain* and weighting "1" is equivalent to *certain*.
+ * Multiple entries can be indicated by `a` (for *alternatives*) as uncertain with alternatives. Instead, a weighting can also be specified, in which case a weighting must be assigned to each alternative.
