@@ -239,10 +239,10 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe = remove_datetimes(dataframe)
 
 
-    dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_ready.csv"),index=False)
-    remove_uncertainties(dataframe).sample(n=100).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
+    dataframe.to_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv"),index=False)
+    remove_uncertainties(dataframe).sample(n=100).to_csv(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
 
-    remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
+    remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
 
     return dataframe
 
@@ -252,7 +252,7 @@ if __name__ == "__main__":
     from unco.data.rdf_data import RDFData
     from unco.features.graph_generator import GraphGenerator
 
-    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe.csv"))
+    dataframe = pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe.csv"))
 
     dataframe = run_pipeline_on_dataframe(dataframe)
 
@@ -262,6 +262,6 @@ if __name__ == "__main__":
 
     gg = GraphGenerator(rdf_data)
 
-    gg.load_prefixes(str(Path(UNCO_PATH,r"tests/testdata/afe/namespaces.csv")))
+    gg.load_prefixes(str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
     gg.generate_solution(xml_format=False,solution_id=9)

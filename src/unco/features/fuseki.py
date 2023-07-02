@@ -16,7 +16,7 @@ class FusekiServer:
         Interface to the fuseki server.
     """
 
-    def __init__(self, fuseki_path: str = Path(UNCO_PATH, "src/fuseki"), gb_ram: int = 4) -> None:
+    def __init__(self, fuseki_path: str = Path(UNCO_PATH, "src/fuseki"), gb_ram: int = 8) -> None:
         """
         Parameters
         ----------

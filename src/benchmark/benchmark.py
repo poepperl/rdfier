@@ -141,10 +141,11 @@ class Benchmark:
         for query_numb in querylist:
             X = range(0, len(self.rdfdata.data), stepsize)[:]
             results = []
-            for model_numb in modellist:
-                model_results = []
-                time_difference = 0
-                for i in tqdm(X):
+            for i in tqdm(X):
+                for model_numb in modellist:
+                    model_results = []
+                    time_difference = 0
+                
                     if time_difference < 20:
                         ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
                         rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i) if i != 0 else rdfdata
