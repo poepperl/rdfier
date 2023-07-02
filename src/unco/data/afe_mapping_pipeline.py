@@ -5,6 +5,18 @@ from random import random
 
 from unco import data
 
+def replace_unreadable_chars(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+        Replaces all uft-8 unreadable characters.
+    
+        Parameters:
+        -----------
+        dataframe : pd.DataFrame
+            Dataframe which should be updated
+    """
+    dataframe = dataframe.replace("•",".",regex=True)
+    return dataframe
+
 def change_afe_coin_id(dataframe : pd.DataFrame) -> pd.DataFrame:
     """
         Turns the ids in column "Coin^^uri" into "afe:"+str(id)
@@ -226,6 +238,7 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
         dataframe : pd.DataFrame
             Dataframe which should be updated
     """
+    dataframe = replace_unreadable_chars(dataframe)
     dataframe = change_afe_coin_id(dataframe)
     dataframe = change_findspot(dataframe)
     dataframe = turn_nomisma_values_to_uris(dataframe)
@@ -240,7 +253,7 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
 
 
     dataframe.to_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv"),index=False)
-    remove_uncertainties(dataframe).sample(n=100).to_csv(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
+    remove_uncertainties(dataframe).sample(n=10).to_csv(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_10rows.csv"),index=False)
 
     remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
 

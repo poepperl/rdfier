@@ -168,14 +168,15 @@ if __name__ == "__main__":
     from unco import UNCO_PATH
     from pathlib import Path
     import pandas as pd
-    file = open(str(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv")), encoding='utf-8')
+    file = open(str(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
 
     rdfdata = RDFData(pd.read_csv(file))
     g = UncertaintyGenerator(rdfdata=rdfdata)
-    # rdfdata = g.add_pseudorand_uncertainty_flags(list_of_columns=[1])
-    rdfdata = g.add_pseudorand_alternatives(list_of_columns=[],min_number_of_alternatives=4,max_number_of_alternatives=4)
+    rdfdata = g.add_pseudorand_uncertainty_flags(list_of_columns=[1],min_uncertainties_per_column=2,max_uncertainties_per_column=2)
+    rdfdata = g.add_pseudorand_uncertainty_flags(list_of_columns=[1],min_uncertainties_per_column=2,max_uncertainties_per_column=2)
+    # rdfdata = g.add_pseudorand_alternatives(list_of_columns=[],min_number_of_alternatives=4,max_number_of_alternatives=4)
 
-    # dd = GraphGenerator(rdfdata)
-    # dd.load_prefixes(str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
-    # dd.generate_solution(8,xml_format=False)
-    # g = Illustrator(Path(UNCO_PATH,"data/output/graph.ttl"))
+    dd = GraphGenerator(rdfdata)
+    dd.load_prefixes(str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
+    dd.generate_solution(8,xml_format=False)
+    g = Illustrator(Path(UNCO_PATH,"data/output/graph.ttl"))
