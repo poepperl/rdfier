@@ -301,4 +301,4 @@ if __name__ == "__main__":
     # print(bench.start_benchmark_increasing_uncertainties(fuseki=fuski, querylist=[1,6], modellist=[3,9], stepsize=int(len(bench.rdfdata.data)/2)))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
-    print(bench.start_benchmark_increasing_alternatives(fuseki=fuski, querylist=[1,6], modellist=[3,9], stop=11))
+    print(bench.start_benchmark_increasing_alternatives(fuseki=fuski, step=5, stop=60))
