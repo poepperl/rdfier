@@ -13,8 +13,8 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import sleep, time
 
-MEDIAN_LOOPS = 11
-MEAN_LOOPS = 5
+MEDIAN_LOOPS = 5
+MEAN_LOOPS = 3
 
 class Benchmark:
     """
@@ -72,6 +72,7 @@ class Benchmark:
             print(f"Warning: Doesn't found query{query_id} for model {model_id}.")
             return pd.DataFrame()
         
+
     def _get_color_linestyle_of_model(self, model_numb):
         color = "r"
         linestyle = "-"
@@ -231,4 +232,4 @@ if __name__ == "__main__":
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,5,6,7,8,9],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
-    print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, querylist=[1,2], modellist=[7,9], start=0, step=1, stop=2))
+    print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=20, stop=81))

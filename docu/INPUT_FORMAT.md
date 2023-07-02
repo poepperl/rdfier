@@ -95,3 +95,26 @@ As a result of this change, the second column is now additionally interpreted as
 By assigning ID 1, the original RDF statements remain.
 
 Also, a column that references another subject column can be assigned an ID, and so on.
+
+Uncertainties
+-------------
+
+Also the indication of uncertain statements, can be noted in the input.
+For this purpose, an ID is assigned to the column of the statement as described above, which can be referred to and with the marker `^^certainty` at the end of the column name, an uncertainty can be assigned to the statements.
+It is important to note here that the assignment of uncertainty is done on a cell-by-cell basis and all multiple entries are then counted as uncertainty with alternatives.
+Let's add uncertainty to our example:
+
+|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |uncertainMaterial^^certainty|
+|:---      |:---                      |:---                      |:---                       |:---                        |
+|afe:5     |nm:ar; nm:billon          |5.24                      |                           |0.8; 0.2                    |
+|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|u                           |
+|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |                            |
+
+Here, some RDF statements of the form *afe:ID nmo:hasMaterial {object}* were marked as unsafe.
+The entry `u` was used only to describe that it is uncertain that the coin `afe:13` is made of kryptonite.
+Since an uncertainty was entered for the entry `nm:ar; nm:billon`, the two values are considered as alternatives.
+The entries `0.8; 0.2` are weighted uncertainties. Thus the statement *afe:13 nmo:hasMaterial nm:ar* is uncertain with the weighting `0.8` and the statement *afe:13 nmo:hasMaterial nm:billon* is uncertain with the weighting `0.2`.
+
+The following restrictions apply to the specification of uncertainty:
+ * Single entries may be noted as uncertain with `u`. Instead, a single weighting can also be specified. In this context, weighting 0 means `totally uncertain` and weighting `1` is equivalent to `certain`.
+ * Multiple entries can be indicated by `a` (for *alternatives*) as uncertainty with alternatives. Instead, a weighting can also be specified, in which case a weighting must be assigned to each alternative.
