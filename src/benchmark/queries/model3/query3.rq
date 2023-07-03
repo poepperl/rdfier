@@ -2,7 +2,7 @@ PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?subject ?object
+SELECT ?subject ?object ?certainty
 WHERE {
     {
         ?subject nmo:hasMint ?object .

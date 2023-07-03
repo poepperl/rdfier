@@ -1,5 +1,4 @@
 import pandas as pd
-from sys import stdout
 from fileinput import input
 from random import random
 from pathlib import Path
@@ -96,6 +95,10 @@ class GraphGenerator():
         xml_format : bool
             Output will be in XML format, otherwise Turtle.
         """
+        if solution_id == 9 | 10 and xml_format == True:
+            print("Warning: XML format is currently not aviable for rdf* models. The format will be changed to turtle.")
+            xml_format = False
+
         self.graph = Graph()
         for prefix, nspaces in self.prefixes.items():
             self.graph.bind(prefix, nspaces)
@@ -125,7 +128,7 @@ class GraphGenerator():
                                 if (row_index,column_index) in self.rdfdata.uncertainties:
                                     # uncertainty_id = ''.join(c for c in pred_name + obj_names[index] if c.isalnum())
                                     uncertainty_id = (subject.n3() + pred_name).replace(":","")
-                                    if solution_id in [3,4,5]:
+                                    if solution_id in [3,4,5,10]:
                                         if "likelihoods" in self.rdfdata.uncertainties[(row_index,column_index)]:
                                             if len(self.rdfdata.uncertainties[(row_index,column_index)]["likelihoods"]) <= index:
                                                 print(f"Coin {subject.n3()} Predicate {pred_name} has uncertainties {self.rdfdata.uncertainties[(row_index,column_index)]['likelihoods']} and object {[ob.n3() for ob in objects]}")
@@ -139,7 +142,7 @@ class GraphGenerator():
                                         case 2:
                                             self._generate_uncertain_value_solution_2(subject, predicate, object)
                                         case 3:
-                                            self.graph.add((BNode("A3"), RDF.type, CRM["R1_Reliability_Assessment"]))
+                                            self.graph.add((BNode("A3"), RDF["type"], CRM["R1_Reliability_Assessment"]))
                                             self._generate_uncertain_value_solution_3(subject, predicate, object, weight)
                                         case 4:
                                             self._generate_uncertain_value_solution_4(subject, predicate, object, weight, uncertainty_id, index)
@@ -153,7 +156,9 @@ class GraphGenerator():
                                         case 8:
                                             self._generate_uncertain_value_solution_8(subject, predicate, object)
                                         case 9:
-                                            self._generate_uncertain_value_solution_9(subject, predicate, object)
+                                            self._generate_uncertain_value_solution_9a(subject, predicate, object)
+                                        case 10:
+                                            self._generate_uncertain_value_solution_9b(subject, predicate, object, weight)
                                         case _:
                                             self.graph.add((subject, predicate, object))
 
@@ -173,7 +178,9 @@ class GraphGenerator():
                     file.write(self.graph.serialize(format="turtle"))
             
             if solution_id == 9:
-                self.change_to_rdf_star()
+                self.change_to_model_9a()
+            elif solution_id == 10:
+                self.change_to_model_9b()
 
 
     def _get_node(self, value: str, type: str, identification : str = ""):
@@ -426,7 +433,8 @@ class GraphGenerator():
 
         self.graph.add((node, predicate, object))
 
-    def _generate_uncertain_value_solution_9(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
+
+    def _generate_uncertain_value_solution_9a(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal) -> None:
         """ Method to create an uncertain value of solution 8.
         Attributes
         ----------
@@ -443,11 +451,23 @@ class GraphGenerator():
 
         self.graph.add((EDTFO[node.n3()[2:]], RDF["star"], Literal(f"{subject.n3(namespace_manager=self.graph.namespace_manager)}$${predicate.n3(namespace_manager=self.graph.namespace_manager)}$${object.n3(namespace_manager=self.graph.namespace_manager)}")))
 
-        # self.graph.add((node, RDF["type"], RDF["Statement"]))
-        # self.graph.add((node, RDF["subject"], subject))
-        # self.graph.add((node, RDF["predicate"], predicate))
-        # self.graph.add((node, RDF["object"], object))
-        # self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
+
+    def _generate_uncertain_value_solution_9b(self, subject : URIRef | Literal, predicate : URIRef, object : URIRef | Literal, weight : float) -> None:
+        """ Method to create an uncertain value of solution 8.
+        Attributes
+        ----------
+        subject : URIRef | Literal
+            Node of the subject, which gets an uncertain value.
+        predicate : URIRef
+            Node of the predicate, which is uncertain.
+        object : URIRef | Literal
+            Node of the object, which is uncertain.
+        uncertainty_id : str
+            Unique string to identify the predicate and object of this uncertain relation.
+        """
+        node = BNode()
+
+        self.graph.add((UN[node.n3()[2:]], RDF["star"], Literal(f"{subject.n3(namespace_manager=self.graph.namespace_manager)}$${predicate.n3(namespace_manager=self.graph.namespace_manager)}$${object.n3(namespace_manager=self.graph.namespace_manager)}$${weight}")))
 
 
     def _get_crm_properties(self):
@@ -514,7 +534,8 @@ class GraphGenerator():
 
         return df
     
-    def change_to_rdf_star(self):
+
+    def change_to_model_9a(self):
         for line in input(str(Path(self.OUTPUT_FOLDER, "graph.ttl")), inplace=True):
             if "rdf:star" in line:
                 splitlist = line.split("rdf:star")
@@ -522,13 +543,24 @@ class GraphGenerator():
 
                 # Delete ":
                 splitlist[0] = splitlist[0][1:]
-                splitlist[2] = splitlist[2][:-1]
-
-                # for i in range(3):
-                #     if splitlist[i][0] != "<":
-                #         splitlist[i] = "\"" + splitlist[i] + "\""
+                splitlist[-1] = splitlist[-1][:-1]
                 
                 line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type edtfo:UncertainStatement .".replace("\\\"","\"")
+
+            print(line)
+        
+
+    def change_to_model_9b(self):
+        for line in input(str(Path(self.OUTPUT_FOLDER, "graph.ttl")), inplace=True):
+            if "rdf:star" in line:
+                splitlist = line.split("rdf:star")
+                splitlist = splitlist[1][:-2].strip().split("$$")
+
+                # Clean lineparts
+                splitlist[0] = splitlist[0][1:]
+                splitlist[-1] = splitlist[-1][:-1]
+                
+                line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> un:hasUncertainty {splitlist[3]} .".replace("\\\"","\"")
 
             print(line)
 
@@ -538,17 +570,19 @@ if __name__ == "__main__":
     # prefixes = str(Path(UNCO_PATH,"tests/test_data/csv_testdata/CorpusNummorum_Beispiel/namespaces.csv"))
 
     # AFE:
-    file = open(str(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_100rows.csv")), encoding='utf-8')
+    file = open(str(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
     prefixes = str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv"))
 
     # Eingabeformat-Test:
     # file = open(str(Path(UNCO_PATH,"data/input/test_eingabeformat/eingabeformat.csv")), encoding='utf-8')
     # prefixes = str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv"))
 
+    from unco.data.uncertainty_generator import UncertaintyGenerator
+
     rdfdata = RDFData(pd.read_csv(file))
-    generator = GraphGenerator(rdfdata)
+    generator = GraphGenerator(UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1],2,2))
     generator.load_prefixes(prefixes)
-    generator.generate_solution(xml_format=False, solution_id=9)
+    generator.generate_solution(xml_format=False, solution_id=10)
 
     test_query =    """
                     PREFIX nmo: <http://nomisma.org/ontology#>

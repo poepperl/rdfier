@@ -1,7 +1,7 @@
 PREFIX crminf: <http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#>
 PREFIX nmo: <http://nomisma.org/ontology#>
 
-SELECT ?subject ?object
+SELECT ?subject ?object ?certainty
 WHERE {
     {
         ?subject nmo:hasMint ?a .
