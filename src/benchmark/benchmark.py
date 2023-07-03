@@ -14,7 +14,7 @@ from pathlib import Path
 from time import sleep, time
 
 MEDIAN_LOOPS = 5
-MEAN_LOOPS = 3
+MEAN_LOOPS = 11
 
 class Benchmark:
     """
@@ -200,7 +200,7 @@ class Benchmark:
 
 if __name__ == "__main__":
     # Load data--------------------------------------------------------------------------------------------------------------------------
-    rdfdata = RDFData(pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/syntatic.csv")))
+    rdfdata = RDFData(pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv")))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
     fuski = True
 
@@ -233,4 +233,4 @@ if __name__ == "__main__":
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,5,6,7,8,9],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
-    # print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=20, stop=81))
+    print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=10, stop=81))
