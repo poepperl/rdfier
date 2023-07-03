@@ -143,8 +143,8 @@ class Benchmark:
         X = range(start, stop, step)
 
         for count in X:
-            if increasing_alternatives: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[1,5,6,7,8,9], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
-            else: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=count,max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
+            if increasing_alternatives: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[3,4,7,15], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
+            else: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([1,2,3,4,5,7],min_uncertainties_per_column=count,max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
 
             del un_generator
             results.append(self.benchmark_current_rdfdata(querylist,modellist,fuseki))
@@ -229,8 +229,11 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    # print(bench.benchmark_increasing_params(increasing_alternatives=False, fuseki=fuski, start=0, step=20, stop=81))
+    print(bench.benchmark_increasing_params(increasing_alternatives=False, fuseki=fuski, start=0, step=100, stop=1000))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,5,6,7,8,9],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
-    print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=10, stop=81))
+    # print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=20, stop=81))
+
+    # print(bench.graph_generator.rdfdata.data.columns[16]) # 1,2,3,4,5,7,
+    # ,4,7,15
