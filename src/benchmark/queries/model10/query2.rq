@@ -3,7 +3,5 @@ PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.
 
 SELECT ?subject ?object
 WHERE {
-    ?subject un:hasUncertainty ?b .
-    
-    ?b nmo:hasMint ?object .
+    << ?subject nmo:hasMint ?object >> un:hasUncertainty ?certainty .
 }

@@ -3,14 +3,13 @@ PREFIX nmo: <http://nomisma.org/ontology#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX un: <http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#>
 
-SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+SELECT ?subject ?object
 WHERE {
     {
-        ?subject nmo:hasMint ?o.
+        ?subject nmo:hasMint ?object.
     }
     MINUS {
-        ?o un:hasUncertainty nm:uncertain_value ;
+        ?object un:hasUncertainty nm:uncertain_value ;
             rdf:value ?b .
     }
 }
-GROUP BY ?subject

@@ -1,13 +1,13 @@
 PREFIX crminf: <http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#>
 PREFIX nmo: <http://nomisma.org/ontology#>
 
-SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+SELECT ?subject ?object
 WHERE {
     {
-        ?subject nmo:hasMint ?o.
+        ?subject nmo:hasMint ?object.
     }
     MINUS {
-        ?o crminf:J2_concluded_that ?b ;
+        ?object crminf:J2_concluded_that ?b ;
             a crminf:I5_Inference_Making .
             
         ?b crminf:J4_that ?ob ;
@@ -16,4 +16,3 @@ WHERE {
             a crminf:I2_Belief .
     }
 }
-GROUP BY ?subject

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from copy import deepcopy
 from tqdm import tqdm
-from statistics import median
+from statistics import median, mean
 from unco import UNCO_PATH, data
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
@@ -13,7 +13,8 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import sleep, time
 
-NUMB_LOOPS = 11
+MEDIAN_LOOPS = 5
+MEAN_LOOPS = 3
 
 class Benchmark:
     """
@@ -40,18 +41,16 @@ class Benchmark:
         rdfdata : RDFData
             Object which contains the data of the rdf graph.
         """
-        self.rdfdata = rdfdata
         self.prefixes_path = prefixes_path
-        self.graph_generator : GraphGenerator
+        self.graph_generator = GraphGenerator(rdfdata)
         self.fserver = FusekiServer(Path(UNCO_PATH,"src/apache-jena-fuseki-4.8.0"))
 
-    def _generate_graph_with_model(self, rdfdata : RDFData, model_id : int, query_id : int) -> None:
-        if not (Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}.rq")).is_file():
-            return
-        self.graph_generator = GraphGenerator(rdfdata)
+    def _generate_graph_with_model(self, model_id : int, fuseki : bool) -> None:
         self.graph_generator.load_prefixes(self.prefixes_path)
         self.graph_generator.generate_solution(model_id, xml_format=False)
-
+        if fuseki:
+            self.fserver.delete_graph()
+            self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
 
     def run_query_of_model(self, query_id : int, model_id : int, run_on_fuseki : bool = False) -> pd.DataFrame:
         """ 
@@ -68,220 +67,152 @@ class Benchmark:
         if (query_path := Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}.rq")).is_file():
             query = query_path.read_text()
             return self.graph_generator.run_query(query,save_result=False) if not run_on_fuseki else self.fserver.run_query(query,save_result=False)
-            # return self.graph_generator.graph.query(query).serialize(destination=str(Path(UNCO_PATH,r"data\output\query_results.csv")),format="xml")
         else:
             print(f"Warning: Doesn't found query{query_id} for model {model_id}.")
             return pd.DataFrame()
         
-    
-    def start_boxplot_benchmark(self, fuseki : bool = True):
-        time_results = dict()
-        if fuseki: self.fserver.start_server()
-        for model_numb in range(1,10):
-            self._generate_graph_with_model(rdfdata=self.rdfdata,model_id=model_numb,query_id=1)
-            query_times = dict()
-            for query_numb in range(1,6):
-                loop = []
-                print(f"Run query {query_numb} of model {model_numb}.")
-                for _ in range(NUMB_LOOPS):
-                    start_time = time()
-                    _ = self.run_query_of_model(query_numb,model_numb,fuseki)
-                    time_difference = time() - start_time
-                    loop.append(time_difference*10)
-                query_times[query_numb] = loop
-            time_results[model_numb] = query_times
-        
-        if fuski: bench.fserver.stop_server()
 
-        return time_results
-    
-    def plot_box_plot(self, list_of_lists : list):
-        plt.style.use('_mpl-gallery')
-
-        _, ax = plt.subplots()
-        ax.boxplot(list_of_lists)
-
-        ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-            ylim=(0, 8), yticks=np.arange(1, 8))
-
-        plt.show()
-
-
-    def start_benchmark_increasing_uncertainties(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], stepsize : int = 100, fuseki : bool = True):
-        query_results = []
-        if fuseki: self.fserver.start_server()
-        for query_numb in querylist:
-            X = range(0, len(self.rdfdata.data), stepsize)[:]
-            results = []
-            for model_numb in modellist:
-                model_results = []
-                time_difference = 0
-                for i in tqdm(X):
-                    if time_difference < 20:
-                        ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
-                        rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=i,max_uncertainties_per_column=i) if i != 0 else rdfdata
-                        self._generate_graph_with_model(rdf_data, model_numb, query_numb)
-                        if fuseki:
-                            self.fserver.delete_graph()
-                            self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
-                        loop = []
-                        print(f"\nRun query {query_numb} of model {model_numb} with {len(rdf_data.uncertainties)} uncertainties. Graph size: {len(self.graph_generator.graph)}")
-                    for _ in range(NUMB_LOOPS):
-                        if time_difference > 20:
-                            loop.append(time_difference)
-                            continue
-                        start_time = time()
-                        output = self.run_query_of_model(query_numb, model_numb, fuseki)
-                        time_difference = time() - start_time
-                        loop.append(time_difference)
-                    print(f"Result length: {len(output)}. Current runtime: {'%.2f' % median(loop)}s.")
-                    model_results.append(median(loop))
-                results.append(model_results)
-            query_results.append(results)
-
-        for index, query in enumerate(querylist):
-            for modelindex, model in enumerate(modellist):
+    def _get_color_linestyle_of_model(self, model_numb):
+        color = "r"
+        linestyle = "-"
+        match model_numb:
+            case 1:
                 color = "r"
                 linestyle = "-"
-                match model:
-                    case 1:
-                        color = "r"
-                        linestyle = "-"
-                    case 2:
-                        color = "g"
-                        linestyle = "-"
-                    case 3:
-                        color = "b"
-                        linestyle = "-"
-                    case 4:
-                        color = "y"
-                        linestyle = "-"
-                    case 5:
-                        color = "m"
-                        linestyle = "-"
-                    case 6:
-                        color = "c"
-                        linestyle = "-"
-                    case 7:
-                        color = "k"
-                        linestyle = "-"
-                    case 8:
-                        color = "r"
-                        linestyle = ":"
-                    case 9:
-                        color = "g"
-                        linestyle = ":"
+            case 2:
+                color = "g"
+                linestyle = "-"
+            case 3:
+                color = "b"
+                linestyle = "-"
+            case 4:
+                color = "y"
+                linestyle = "-"
+            case 5:
+                color = "m"
+                linestyle = "-"
+            case 6:
+                color = "c"
+                linestyle = "-"
+            case 7:
+                color = "k"
+                linestyle = "-"
+            case 8:
+                color = "r"
+                linestyle = ":"
+            case 9:
+                color = "g"
+                linestyle = ":"
+            case 10:
+                color = "b"
+                linestyle = ":"
+        return color, linestyle
+    
 
-                plt.plot(X, query_results[index][modelindex], color=color, linestyle=linestyle, label=str(model))
+    def _get_mean_of_medians(self, query_numb, model_numb, fuseki):
+        meanlist = []
+        for _ in range(MEAN_LOOPS):
+            medianlist = []
+            for _ in range(MEDIAN_LOOPS):
+                start_time = time()
+                _ = self.run_query_of_model(query_numb,model_numb,fuseki)
+                time_difference = time() - start_time
+                medianlist.append(time_difference)
+            meanlist.append(median(medianlist))
 
-            plt.xlabel("#Uncertainties per column")
+        return mean(meanlist)
+    
+    def benchmark_current_rdfdata(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], fuseki : bool = True):
+        results = [[] for _ in querylist]
+        if fuseki: self.fserver.start_server()
+
+        for model_numb in modellist:
+            self._generate_graph_with_model(model_numb, fuseki)
+            for index, query_numb in enumerate(querylist):
+                uncertain_entry = list(self.graph_generator.rdfdata.uncertainties)[0] if len(self.graph_generator.rdfdata.uncertainties) > 0 else (0,0)
+                print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {len(str(self.graph_generator.rdfdata.data.iat[uncertain_entry[0],uncertain_entry[1]]).split(';'))}")
+                results[index].append(self._get_mean_of_medians(query_numb, model_numb, fuseki))
+
+        if fuski: bench.fserver.stop_server()
+
+        return results
+    
+
+    def benchmark_increasing_params(self, increasing_alternatives : bool = False, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], start : int = 0, stop : int = 100, step : int = 5, fuseki : bool = True):
+        results = []
+        X = range(start, stop, step)
+
+        for count in X:
+            if increasing_alternatives: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[1,5,6,7,8,9], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
+            else: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=count,max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
+
+            del un_generator
+            results.append(self.benchmark_current_rdfdata(querylist,modellist,fuseki))
+
+
+        if len(X) > 2: self._plot_results_increasing_alternatives(X, results, querylist, modellist, increasing_alternatives)
+
+        return results
+    
+
+    def _plot_results_increasing_alternatives(self, X : range, results : list[list[list[float]]], querylist : list[int], modellist : list[int], uncertainties : bool):
+        output = [[[] for _ in modellist] for _ in querylist]
+        for res in results:
+            for query_numb, query_res in enumerate(res):
+                for model_numb, model_res in enumerate(query_res):
+                    output[query_numb][model_numb].append(model_res)
+        
+        for index, query_numb in enumerate(querylist):
+            fig = plt.figure()
+            for modelindex, model_numb in enumerate(modellist):
+                color, linestyle = self._get_color_linestyle_of_model(model_numb)
+                plt.plot(X, output[index][modelindex], color=color, linestyle=linestyle, label=str(model_numb))
+
+            if uncertainties == False: plt.xlabel("#Alternatives per uncertain statement")
+            else: plt.xlabel("#Uncertainties per column")
+
             plt.ylabel("Time in seconds")
-            plt.title(f"Query {query} with increasing numb uncertainties")
+            if uncertainties == False: plt.title(f"Query {query_numb} with increasing numb alternatives")
+            else: plt.title(f"Query {query_numb} with increasing numb uncertainties")
 
             plt.legend()
 
-            plt.show()
-        if fuski: bench.fserver.stop_server()
-        
-        return query_results
-    
+            if uncertainties == False: plt.savefig(Path(UNCO_PATH,f"src/benchmark/results/alternatives{query_numb}.pdf"), format="pdf", bbox_inches="tight")
+            else: plt.savefig(Path(UNCO_PATH,f"src/benchmark/results/uncertainties{query_numb}.pdf"), format="pdf", bbox_inches="tight")
 
-    def start_benchmark_increasing_alternatives(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9], stepsize : int = 100, fuseki : bool = True):
-        query_results = []
-        if fuseki: self.fserver.start_server()
-        for query_numb in querylist:
-            X = range(0, len(self.rdfdata.data), stepsize)[:20]
-            results = []
-            for model_numb in modellist:
-                model_results = []
-                time_difference = 0
-                for i in tqdm(X):
-                    if time_difference < 20:
-                        ugen = UncertaintyGenerator(deepcopy(self.rdfdata))
-                        rdf_data = ugen.add_pseudorand_alternatives(list_of_columns=[2,3,4,5,6,9,10,11,12,18,19,20,21], min_number_of_alternatives=i, max_number_of_alternatives=i) if i != 0 else rdfdata
-                        self._generate_graph_with_model(rdf_data, model_numb, query_numb)
-                        if fuseki:
-                            self.fserver.delete_graph()
-                            self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
-                        loop = []
-                        print(f"\nRun query {query_numb} of model {model_numb} with {i} alternatives per uncertainty and {len(ugen.rdfdata.uncertainties)} uncertainties.")
-                    for _ in range(NUMB_LOOPS):
-                        if time_difference > 20:
-                            loop.append(time_difference)
-                            continue
-                        start_time = time()
-                        output = self.run_query_of_model(query_numb, model_numb, fuseki)
-                        time_difference = time() - start_time
-                        loop.append(time_difference)
-                    print(f"Result length: {len(output)}. Current runtime: {'%.2f' % median(loop)}s.")
-                    model_results.append(median(loop))
-                results.append(model_results)
-            query_results.append(results)
+            plt.close(fig)
+            # plt.show()
+
+    
+    def pretty_print_results(self, resultlist : list[list[float]], querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10]):
+        print(f"         |", end="")
+        for model in modellist:
+            print(f"model {model}|", end="")
+        
+        print("\n",end="")
 
         for index, query in enumerate(querylist):
-            for modelindex, model in enumerate(modellist):
-                color = "r"
-                linestyle = "-"
-                match model:
-                    case 1:
-                        color = "r"
-                        linestyle = "-"
-                    case 2:
-                        color = "g"
-                        linestyle = "-"
-                    case 3:
-                        color = "b"
-                        linestyle = "-"
-                    case 4:
-                        color = "y"
-                        linestyle = "-"
-                    case 5:
-                        color = "m"
-                        linestyle = "-"
-                    case 6:
-                        color = "c"
-                        linestyle = "-"
-                    case 7:
-                        color = "k"
-                        linestyle = "-"
-                    case 8:
-                        color = "r"
-                        linestyle = ":"
-                    case 9:
-                        color = "g"
-                        linestyle = ":"
-
-                plt.plot(X, query_results[index][modelindex], color=color, linestyle=linestyle, label=str(model))
-
-            plt.xlabel("#Alternatives per uncertain statement")
-            plt.ylabel("Time in seconds")
-            plt.title(f"Query {query} with increasing numb alternatives")
-
-            plt.legend()
-
-            plt.show()
-        if fuski: bench.fserver.stop_server()
-
-        return query_results
+            print(f"query {query}: | ", end="")
+            for res in resultlist[index]:
+                print("%.3f" % res + " | ", end="")
+            print("\n",end="")
     
 
 if __name__ == "__main__":
     # Load data--------------------------------------------------------------------------------------------------------------------------
-    input = open(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv"), encoding='utf-8')
-    rdfdata = RDFData(pd.read_csv(input))
+    rdfdata = RDFData(pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_10rows.csv")))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
     fuski = True
 
     # Test query of model----------------------------------------------------------------------------------------------------------------
-    # model = 8
-    # query = 5
-    # ugen = UncertaintyGenerator(deepcopy(rdfdata))
-    # rdf_data = ugen.add_pseudorand_uncertainty_flags([2,3,4,5,6,9,10,11,12,18,19,20,21],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
+    # model = 10
+    # query = 6
+    # bench.graph_generator.rdfdata = UncertaintyGenerator(bench.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2,3,4],min_uncertainties_per_column=2,max_uncertainties_per_column=2)
     # # rdf_data = ugen.add_pseudorand_uncertainty_flags([19],min_uncertainties_per_column=10,max_uncertainties_per_column=10)
-    # bench._generate_graph_with_model(rdf_data,model)
     # if fuski:
     #     bench.fserver.start_server()
-    #     bench.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
+
+    # bench._generate_graph_with_model(model,fuski)
     # start = time()
     # print(bench.run_query_of_model(query,model,fuski))
 
@@ -291,22 +222,15 @@ if __name__ == "__main__":
 
 
 
-    # Run benchmark models/queries-------------------------------------------------------------------------------------------------------
-    dictionary = bench.start_boxplot_benchmark()
-
-    for query_numb in range(1,6):
-        query_results = []
-        for model_numb in range(1,10):
-            model_list = []
-            for loop in range(NUMB_LOOPS):
-                model_list.append(dictionary[model_numb][query_numb][loop])
-            query_results.append(model_list)
-        print(query_results)
-        bench.plot_box_plot(query_results)
+    # Run afe benchmark -------------------------------------------------------------------------------------------------------
+    results : list[list[pd.DataFrame]] = bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=1, stop=1)
+    print(results)
+    bench.pretty_print_results(results[0])
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
     # print(bench.start_benchmark_increasing_uncertainties(fuseki=fuski, querylist=[1,6], modellist=[3,9], stepsize=int(len(bench.rdfdata.data)/2)))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
-    # print(bench.start_benchmark_increasing_alternatives(fuseki=fuski, stepsize=3))
+    # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,5,6,7,8,9],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
+    # print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=20, stop=81))

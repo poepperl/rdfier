@@ -4,7 +4,9 @@ PREFIX nm: <http://nomisma.org/id/>
 
 SELECT ?subject ?predicate ?object
 WHERE {
-    ?subject ?predicate ?object .
+    {
+        ?subject ?predicate ?object .
+    }
     MINUS {
         ?subject ?predicate ?object.
         
@@ -15,9 +17,9 @@ WHERE {
             bmo:PX_likelihood nm:uncertain_value .
     }
     MINUS {
-        ?subject crm:P140_assigned_attribute_to ?b1 ;
-            crm:P141_assigned ?b2 ;
-            bmo:PX_Property ?b3 ;
+        ?subject crm:P140_assigned_attribute_to ?s ;
+            crm:P141_assigned ?o ;
+            bmo:PX_Property ?p ;
             a crm:E13_Attribute_Assignment ;
             bmo:PX_likelihood nm:uncertain_value .
     }

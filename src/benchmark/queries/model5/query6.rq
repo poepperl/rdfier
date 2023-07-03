@@ -9,11 +9,11 @@ WHERE {
         }
         MINUS {
             ?subject ?predicate ?object .
-
+            
             ?object amt:weight ?c1 ;
-                ?p1 ?o1 .
+                ?p2 ?o1 .
 
-            VALUES (?p1) {
+            VALUES (?p2) {
                 (crm:P3.2_uncertain_value)
                 (crm:P189.2_uncertain_place)
                 (crm:P107.2_uncertain_member)
@@ -32,9 +32,9 @@ WHERE {
         }
         MINUS {
             ?subject amt:weight ?c2 ;
-                ?p2 ?o2 .
-
-            VALUES (?p2) {
+                ?p3 ?o2 .
+                
+            VALUES (?p3) {
                 (crm:P3.2_uncertain_value)
                 (crm:P189.2_uncertain_place)
                 (crm:P107.2_uncertain_member)
@@ -75,6 +75,6 @@ WHERE {
             (crm:P19.2_uncertain_mode)
             (crm:P62.2_uncertain_depiction)
         }
-        FILTER(?certainty > 0.5).
+        FILTER(?certainty >= 0.5).
     }
 }

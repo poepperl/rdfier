@@ -3,10 +3,10 @@ PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX nm: <http://nomisma.org/id/>
 PREFIX nmo: <http://nomisma.org/ontology#>
 
-SELECT ?subject (group_concat(distinct ?o;separator="; ") as ?objects)
+SELECT ?subject ?object
 WHERE {
     {
-        ?subject nmo:hasMint ?o.
+        ?subject nmo:hasMint ?object.
     }
     MINUS {
         ?b crm:P140_assigned_attribute_to ?subject ;
@@ -16,4 +16,3 @@ WHERE {
             bmo:PX_likelihood nm:uncertain_value .
     }
 }
-GROUP BY ?subject

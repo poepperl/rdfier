@@ -1,9 +1,21 @@
 from sys import prefix
 import pandas as pd
 from pathlib import Path
-from random import random
+from random import random, choices
 
 from unco import data
+
+def replace_unreadable_chars(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+        Replaces all uft-8 unreadable characters.
+    
+        Parameters:
+        -----------
+        dataframe : pd.DataFrame
+            Dataframe which should be updated
+    """
+    dataframe = dataframe.replace("•",".",regex=True)
+    return dataframe
 
 def change_afe_coin_id(dataframe : pd.DataFrame) -> pd.DataFrame:
     """
@@ -217,6 +229,37 @@ def remove_corrosion_legend_without_obreverse(dataframe : pd.DataFrame) -> pd.Da
     return dataframe
 
 
+def create_syntetic_afe(dataframe : pd.DataFrame, size : int) -> pd.DataFrame:
+    """
+        Takes the afe dataframe and size, and creates a new dataframe with new entries.
+    
+        Parameters:
+        -----------
+        dataframe : pd.DataFrame
+            Dataframe which should be used to generate the syntetic dataframe
+        size : int
+            Number of rows of the new dataframe
+    """
+    column_dict = {}
+
+    for col_index, column in enumerate(dataframe.columns):
+        set_of_column_entries = set()
+
+        for row in range(len(dataframe)):
+            entry = dataframe.iat[row,col_index]
+            if pd.notna(entry):
+                splitlist = str(entry).split(";")
+                for e in splitlist:
+                    set_of_column_entries.add(e.strip())
+        
+        column_dict[column] = choices(list(set_of_column_entries), k=size)
+    
+    column_dict[dataframe.columns[0]] = [f"afe:{i+1}" for i in range(size)]
+    
+    new_dataframe = pd.DataFrame(data=column_dict)
+    new_dataframe.to_csv(Path(UNCO_PATH,"tests/testdata/afe/syntatic.csv"),index=False)
+
+
 def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     """
         Takes float entries of gyear columns and change them to int.
@@ -226,6 +269,7 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
         dataframe : pd.DataFrame
             Dataframe which should be updated
     """
+    dataframe = replace_unreadable_chars(dataframe)
     dataframe = change_afe_coin_id(dataframe)
     dataframe = change_findspot(dataframe)
     dataframe = turn_nomisma_values_to_uris(dataframe)
@@ -239,10 +283,12 @@ def run_pipeline_on_dataframe(dataframe : pd.DataFrame) -> pd.DataFrame:
     dataframe = remove_datetimes(dataframe)
 
 
-    dataframe.to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_public_ready.csv"),index=False)
-    remove_uncertainties(dataframe).sample(n=100).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afemapping_changed_100rows.csv"),index=False)
+    dataframe.to_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_ready.csv"),index=False)
+    remove_uncertainties(dataframe).sample(n=10).to_csv(Path(UNCO_PATH,"tests/testdata/afe/afemapping_changed_10rows.csv"),index=False)
 
-    remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
+    remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"),index=False)
+
+    create_syntetic_afe(remove_uncertainties(dataframe),16554)
 
     return dataframe
 
@@ -252,16 +298,16 @@ if __name__ == "__main__":
     from unco.data.rdf_data import RDFData
     from unco.features.graph_generator import GraphGenerator
 
-    dataframe = pd.read_csv(Path(UNCO_PATH,r"tests/testdata/afe/afe.csv"))
+    dataframe = pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe.csv"))
 
     dataframe = run_pipeline_on_dataframe(dataframe)
 
     print(dataframe)
 
-    rdf_data = RDFData(dataframe)
+    # rdf_data = RDFData(dataframe)
 
-    gg = GraphGenerator(rdf_data)
+    # gg = GraphGenerator(rdf_data)
 
-    gg.load_prefixes(str(Path(UNCO_PATH,r"tests/testdata/afe/namespaces.csv")))
+    # gg.load_prefixes(str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
 
-    gg.generate_solution(xml_format=False,solution_id=9)
+    # gg.generate_solution(xml_format=False,solution_id=9)

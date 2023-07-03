@@ -185,7 +185,7 @@ class RDFData:
         """
         Method which extracts the type/language of a string.
         """
-        greek2latin = str.maketrans('ΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω・','AaBbGgDdEeZzHhJjIiKkLlMmNnXxOoPpRrSssTtUuFfQqYyWw.')
+        greek2latin = str.maketrans('ΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω・•','AaBbGgDdEeZzHhJjIiKkLlMmNnXxOoPpRrSssTtUuFfQqYyWw..')
         string = string.translate(greek2latin)
         type_splitlist = string.split("^^")
 

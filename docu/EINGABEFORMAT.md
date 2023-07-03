@@ -1,15 +1,15 @@
 Eingabeformat
 =============
-Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei, einen RDF-Graph zu bauen. Da komplexere Konzepte in RDF-Graphen nicht ohne weiteres aus einer csv-Tabelle gelesen werden können, wird hier beschrieben wie diese in der Eingabe codiert werden können.
+Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei, einen RDF-Graph zu bauen. Da komplexere Konzepte in RDF-Graphen nicht ohne Weiteres aus einem beliebigen Format gelesen werden können, wird hier beschrieben wie solche in der Eingabe codiert werden können.
 
 Grundstruktur
 -------------
 Die Grundstruktur der Eingabe ist folgende:
 <img src="images/basic_structure.JPG" alt="basic_structure" width="1000"/>
 
-Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltenkopf. Aus dem Schaubild enstehen somit die RDF-Aussagen (subject, predicate1, object1), (subject, predicate2, object2) und (subject, predicate3, object3).
+Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltennamen. Aus dem Schaubild enstehen somit die RDF-Aussagen (subject, predicate1, object1), (subject, predicate2, object2) und (subject, predicate3, object3).
 
-Manche Namensräume müssen nicht selbst eingefügt werden, sondern stehen bereits zur Verfügung. Dazu gehören:
+Häufig verwendete Namensräume stehen dabei direkt zu Verfügung. Dazu gehören:
 |prefix  |namespace                                                               |
 |:---    |:---                                                                    |
 |amt     |http://academic-meta-tool.xyz/vocab#                                    |
@@ -30,33 +30,33 @@ Manche Namensräume müssen nicht selbst eingefügt werden, sondern stehen berei
 |un      |http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#|
 |xsd     |http://www.w3.org/2001/XMLSchema#                                       |
 
-Weitere Namensräume lassen sich mit einer csv-Tabelle mit der gleichen Struktur hinzufügen oder die oben definierten überschreiben.
+Weitere Namensräume lassen sich mit einer csv-Tabelle mit den gleichen Spalten hinzufügen oder die oben definierten überschreiben.
 
 URI's, Literale und leere Knoten
 --------------------------------
-RDF-Graphen besitzt Ressourcen in Form von URI's, Literalen und leeren Knoten. Damit ein Zelleneintrag richtig interpretiert wird, muss zusätzlich zu dem Wert auch der Typ der Ressource angegeben werden. Die folgenden Einträge sind möglich, wobei die in geschwungenen Klammern `{}` Werte Platzhalter sind.
+RDF-Graphen besitzen Ressourcen in Form von URI's, Literalen und leeren Knoten. Damit ein Zelleneintrag richtig interpretiert wird, muss zusätzlich zu dem Wert auch der Typ der Ressource angegeben werden. Die folgenden Einträge sind möglich, wobei die Werte in geschwungenen Klammern `{}` durch die erwünschten Werte ersetzt werden müssen.
  * `<{URI}>^^uri` zum Angeben einer vollständigen URI, wie z.B.: "<http://nomisma.org/id/rome>^^uri".
  * `{prefix}:{label}^^uri` zum Angeben einer abgekürzten URI, wie z.B.: "nm:rome^^uri".
  * `{value}` bzw. `{value}^^xsd:string` zum Angeben eines Literals, wie z.B. "2023".
  * `{name}^^blank` zum Angeben eines leeren Knotens. Der Wert von *name* hat dabei keine Bedeutung und wird intern verworfen.
 
-Somit wird der Marker "^^" dazu verwendet den Type der Ressource anzugeben. Prädikate müssen vom Typ URI sein, weshalb der Marker im header keinen Einfluss auf den Typ des Prädikats hat. Stattdessen kann der Marker an dieser Stelle als Typzuweisung genutzt werden für alle Einträge der Spalte ohne eigenen Typ.
+Somit wird der Marker "^^" dazu verwendet den Typ der Ressource anzugeben. Prädikate müssen vom Typ URI sein, weshalb der Marker im Spaltennamen keinen Einfluss auf den Typ des Prädikats hat. Stattdessen kann der Marker an dieser Stelle als Typzuweisung für alle Einträge der Spalte ohne eigenen Typ genutzt werden.
 
 **Beispiel**:
-|coins^^uri|nmo:hasMaterial^^uri|
-|:---      |:---                |
-|afe:5     |nm:ae               |
-|afe:13    |kryptonite^^blank   |
-|afe:29    |nm:ar               |
+|coins^^uri|nmo:hasMaterial^^uri      |
+|:---      |:---                      |
+|afe:5     |nm:ar                     |
+|afe:13    |kryptonite^^blank         |
+|afe:29    |<http://nomisma.org/id/ae>|
 
-Das Stichwort `coin` ist im Spaltenkopf der ersten Spalte mit den Subjekten und definiert somit kein Prädikat, es wird vom Programm verworfen und hat keine Auswirkungen.
-Die beiden Marker `^^uri` weisen allen Einträgen in ihren Spalten den Typ uri zu, wenn diese keinen eigenen Typ haben. Daher werden Einträge wie `nm:ae` als URI gelesen.
-Da es für Kryptonit keine URI im Namensraum *nm* gibt, wird diese durch einen leeren Knoten realisiert und `^^blank` als Marker genutzt. Der Eintrag `kryptonite` hat dabei keinen Einfluss und wird vom Programm verworfen.
+Das Stichwort `coin` ist im Spaltennamen der ersten Spalte der Subjekte und definiert somit kein Prädikat, es wird vom Programm verworfen und hat keine Auswirkungen.
+Die beiden `^^uri` Marker weisen allen Einträgen in ihren Spalten den Typ URI zu, wenn diese keinen eigenen Typ haben. Daher werden die Einträge `nm:ar` und `<http://nomisma.org/id/ae>` als URI gelesen.
+Da es für Kryptonit keine URI im Namensraum *nm* gibt, wird diese durch einen leeren Knoten realisiert, indem `^^blank` als Marker genutzt wird. Der Eintrag `kryptonite` hat dabei keinen Einfluss und wird vom Programm verworfen.
 
 
 Datentypen und Sprachen
 -----------------------
-Zu Literalen lassen sich in RDF-Graphen Datentypen und Sprachen zugeordnen. Daher braucht es eine Möglichkeit diese in der Eingabe zu kennzeichnen.
+Zu Literalen lassen sich in RDF-Graphen Datentypen und Sprachen zuordnen. Daher braucht es eine Möglichkeit diese in der Eingabe zu kennzeichnen.
 Hier kann die gleiche Syntax genutzt werden wie im Turtle-Format:
  * `literal^^{URI_of_datatype}` zum Angeben eines Datentyps.
  * `literal@{country ISO code}` zum Angeben einer Sprache.
@@ -66,17 +66,18 @@ Eine Sprache lässt sich durch eine zweistellige ISO Kennzeichnung angeben. Eine
 Ähnlich zu den Ressourcen Typen, lassen sich auch diese Marker in den Spaltenkopf verschieben, um allen Einträgen ohne Ressourcentyp, Datentyp und Sprachen einen Wert zuzuordnen.
 
 **Beispiel**:
-|coins^^uri|nmo:hasMaterial^^uri|nmo:hasWeight^^xsd:decimal|
-|:---      |:---                |:---                      |
-|afe:5     |nm:ae               |5.24                      |
-|afe:13    |kryptonite^^blank   |too heavy to weigh@en     |
-|afe:29    |nm:ar               |1.16                      |
+|coins^^uri|nmo:hasMaterial^^uri      |nmo:hasWeight^^xsd:decimal|
+|:---      |:---                      |:---                      |
+|afe:5     |nm:ar                     |5.24                      |
+|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |
+|afe:29    |<http://nomisma.org/id/ae>|1.16                      |
 
 
 Mehrfacheinträge
 ----------------
-Häufig besitzen RDF-Aussagen das gleiche Subjekt-Prädikat-Paar. Für die csv Eingabe bedeutet das, dass sich beide Aussagen auf die selbe Zelle beziehen können.
-Aus diesem Grund lassen sich in die Zellen mit Objekten auch Mehrfacheinträge getrennt durch ein Semikolon `;` erstellen. So lässt sich leicht für das obige Beispiel der Text in einer zweiten Sprache angeben mit `too heavy to weigh@en; zu schwer zum wiegen@de`.
+Häufig besitzen RDF-Aussagen das gleiche Subjekt-Prädikat-Paar. Für die Eingabe bedeutet das, dass sich beide Aussagen auf die selbe Zelle der CSV beziehen können.
+Aus diesem Grund lassen sich in die Zellen mit Objekten auch Mehrfacheinträge getrennt durch ein Semikolon `;` erstellen. So lässt sich leicht für das obige Beispiel der Text in einer zweiten Sprache angeben: `too heavy to weigh@en; zu schwer zum wiegen@de`.
+
 
 Verkettete Aussagen
 -------------------
@@ -85,13 +86,35 @@ Durch den Marker `**{id}` am Ende des Spaltennamens lässt sich einer Spalte ein
 Die ID darf dabei eine beliebige Zeichekette sein.
 Auf eine Subjekt-Spalte mit ID kann dann mit dem Marker `{id}__` (doppelter Unterstrich) am Anfang eines Spaltennamens referenziert werden, sodass die Spalte Objekte und das Prädikat zur referenzierten Subjekt-Spalte enthält. Für unser Beispiel sieht das wie Folgt aus:
 
-|coins^^uri|nmo:hasMaterial^^uri**1|nmo:hasWeight^^xsd:decimal|1__rdf:value               |
-|:---      |:---                   |:---                      |:---                       |
-|afe:5     |nm:ae                  |5.24                      |                           |
-|afe:13    |kryptonite^^blank      |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
-|afe:29    |nm:ar                  |1.16                      |                           |
+|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |
+|:---      |:---                      |:---                      |:---                       |
+|afe:5     |nm:ar                     |5.24                      |                           |
+|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
+|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |
 
-Durch diese Veränderung wird die zweite Spalte nun zusätzlich als Subjekt-Spalte interpretiert und die vierte Spalte enthält die dazu gehörenden Objekte und das Prädikat. Dadurch entstehen zwei neue Kanten vom leeren Knoten ausgehende mit dem Prädikat `rdf:value` und den beiden Objekten `kryptonite` und `Kryptonit`.
-Durch die Zuweisung von ID 1 bleiben die ursprünglichen RDF-Aussagen bestehen.
-
+Durch diese Veränderung wird die zweite Spalte nun zusätzlich als Subjekt-Spalte interpretiert und die vierte Spalte enthält die dazu gehörenden Objekte und das Prädikat. Dadurch entstehen zwei neue Kanten vom leeren Knoten ausgehend mit dem Prädikat `rdf:value` und den beiden Objekten `kryptonite` und `Kryptonit`.
+Durch die Zuweisung bleiben die ursprünglichen RDF-Aussagen unbetroffen.
 Auch lässt sich eine Spalte, die auf eine andere Subjekt-Spalte referenziert wiederrum eine ID zuweisen, usw.
+
+
+Unsichere Aussagen
+------------------
+Auch die Angabe von unsicheren Aussagen, lassen sich in der Eingabe vermerken.
+Dazu wird der Spalte der Aussage wie oben beschrieben eine ID zugewiesen, auf die verwiesen werden kann und mit dem Marker `^^certainty` am Ende des Spaltennamens kann den Aussagen eine Unsicherheit zugewiesen werden.
+Wichtig ist hierbei, dass die Zuweisung der Unsicherheit zellenweise erfolgt und alle Mehrfacheinträge dann als Unsicherheit mit Alternativen gewertet werden.
+Fügen wir unserem Beispiel Unsicherheiten hinzu:
+
+|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |uncertainMaterial^^certainty|
+|:---      |:---                      |:---                      |:---                       |:---                        |
+|afe:5     |nm:ar; nm:billon          |5.24                      |                           |0.8; 0.2                    |
+|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|u                           |
+|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |                            |
+
+Hier wurden manchen RDF-Aussagen der Form *afe:ID nmo:hasMaterial {object}* als unsicher markiert.
+Mit dem Eintrag `u` wurde lediglich beschrieben, dass es unsicher ist, dass die Münze `afe:13` aus Kryptonit besteht.
+Da für den Eintrag `nm:ar; nm:billon` eine Unsicherheit eingetragen wurde, werden die beiden Werte als Alternativen betrachtet.
+Die Einträge `0.8; 0.2` sind gewichtete Unsicherheiten. Somit ist die Aussage *afe:13 nmo:hasMaterial nm:ar* unsicher mit der Gewichtung `0.8` und die Aussage *afe:13 nmo:hasMaterial nm:billon* unsicher mit der Gewichtung `0.2`.
+
+Für die Angabe der Unsicherheit gelten Folgende Einschränkungen:
+ * Einfache Einträge können mit `u` als unsicher vermerkt werden. Stattdessen kann auch eine einzelne Gewichtung angegeben werden. Die Gewichtung 0 bedeutet in diesem Zusammenhang *vollkommen unsicher* und die Gewichtung "1" ist gleichbedeutend zu *sicher*.
+ * Mehrfacheinträge lassen sich durch `a` (für *alternatives*) als unsicher mit Alternativen kennzeichnen. Stattdessen kann auch eine Gewichtung angegeben werden, wobei zu jeder Alternative eine Gewichtung erhalten muss.
