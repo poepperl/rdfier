@@ -129,8 +129,8 @@ class Benchmark:
             if fuseki: self.fserver.start_server()
             self._generate_graph_with_model(model_numb, fuseki)
             for index, query_numb in enumerate(querylist):
-                uncertain_entry = list(self.graph_generator.rdfdata.uncertainties)[0] if len(self.graph_generator.rdfdata.uncertainties) > 0 else (0,0)
-                print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {len(str(self.graph_generator.rdfdata.data.iat[uncertain_entry[0],uncertain_entry[1]]).split(';'))}")
+                altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
+                print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {median(altlist)}")
                 results[index].append(self._get_mean_of_medians(query_numb, model_numb, fuseki))
 
             if fuski: bench.fserver.stop_server()
