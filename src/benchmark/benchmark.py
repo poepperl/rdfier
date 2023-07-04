@@ -128,7 +128,7 @@ class Benchmark:
                 _ = self.run_query_of_model(query_numb,model_numb,fuseki)
                 time_difference = time() - start_time
                 medianlist.append(time_difference)
-            meanlist.append(median(medianlist))
+            meanlist.append(min(medianlist))
 
         return mean(meanlist)
     
@@ -239,7 +239,7 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    print(bench.benchmark_increasing_params(increasing_alternatives=False, fuseki=fuski, start=0, step=20, stop=301))
+    print(bench.benchmark_increasing_params(increasing_alternatives=False, querylist=[4], fuseki=fuski, start=0, step=10, stop=301))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,2,3,4,5,7],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
