@@ -13,8 +13,8 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import sleep, time
 
-MEDIAN_LOOPS = 5
-MEAN_LOOPS = 11
+MEDIAN_LOOPS = 9
+MEAN_LOOPS = 5
 
 class Benchmark:
     """
@@ -122,28 +122,31 @@ class Benchmark:
     
 
     def _get_mean_of_medians(self, query_numb, model_numb, fuseki):
-        meanlist = []
-        for _ in range(MEAN_LOOPS):
-            # medianlist = []
-            for _ in range(MEDIAN_LOOPS):
-                time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
-                # medianlist.append(time_difference)
-                meanlist.append(time_difference)
+        medianlist = []
+        for _ in range(MEDIAN_LOOPS):
+            time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
+            medianlist.append(time_difference)
 
-        return mean(meanlist)
+        medianlist = medianlist[4:]
+        print(medianlist)
+        return mean(medianlist)
     
     def benchmark_current_rdfdata(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], fuseki : bool = True):
         results = [[] for _ in querylist]
 
         for model_numb in modellist:
-            if fuseki: self.fserver.start_server()
-            self._generate_graph_with_model(model_numb, fuseki)
-            for index, query_numb in enumerate(querylist):
-                altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
-                print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {median(altlist) if len(altlist)>0 else 0}")
-                results[index].append(self._get_mean_of_medians(query_numb, model_numb, fuseki))
-
-            if fuski: bench.fserver.stop_server()
+            meanlist = [[] for _ in querylist]
+            for _ in range(MEAN_LOOPS):
+                if fuseki: self.fserver.start_server()
+                self._generate_graph_with_model(model_numb, fuseki)
+                for index, query_numb in enumerate(querylist):
+                    altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
+                    print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {median(altlist) if len(altlist)>0 else 0}")
+                    meanlist[index].append(self._get_mean_of_medians(query_numb, model_numb, fuseki))
+                if fuski: bench.fserver.stop_server()
+            
+            for index, sublist in enumerate(meanlist):
+                results[index].append(mean(sublist))
 
         return results
     
@@ -215,6 +218,7 @@ if __name__ == "__main__":
     rdfdata = RDFData(pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv")))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
     fuski = True
+    full_time = time()
 
     # Test query of model----------------------------------------------------------------------------------------------------------------
     # model = 10
@@ -248,3 +252,5 @@ if __name__ == "__main__":
     # print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, step=20, stop=81))
 
     # print(bench.graph_generator.rdfdata.data.columns[1]) # 2,3,4,7,8,9,10,16,17,18,19
+
+    print(f"Insgesamte Laufzeit: {'%.0f' % (time()-full_time)}")

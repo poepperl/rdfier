@@ -22,11 +22,11 @@ SKOS        = Namespace("http://www.w3.org/2004/02/skos/core#")
 XSD         = Namespace("http://www.w3.org/2001/XMLSchema#")
 
 # Needed for uncertainty models:
-UN          = Namespace("http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#")
-BMO         = Namespace("http://collection.britishmuseum.org/id/ontology/")
-EDTFO       = Namespace("http://periodo.github.io/edtf-ontology/edtfo.ttl#")
-CRMINF      = Namespace("http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#")
 AMT         = Namespace("http://academic-meta-tool.xyz/vocab#")
+BMO         = Namespace("http://collection.britishmuseum.org/id/ontology/")
+CRMINF      = Namespace("http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#")
+EDTFO       = Namespace("http://periodo.github.io/edtf-ontology/edtfo.ttl#")
+UN          = Namespace("http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#")
 # UNCO        = Namespace("localhost:8501/id/")
 
 class GraphGenerator():
