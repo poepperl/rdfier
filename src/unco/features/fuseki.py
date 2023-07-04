@@ -56,13 +56,11 @@ class FusekiServer:
                 raise RuntimeError("Server is already running.")
             else:
                 self.server = subprocess.Popen(self.starter_path, creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
-                time.sleep(3)
         elif os.name == "posix":
             if self.server:
                 raise RuntimeError("Server is already running.")
             else:
                 self.server = subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'cd /home/luca/Dokumente/repositories/unco/src/unco/features; ./server_starter.sh; bash'], stdout=subprocess.PIPE, preexec_fn=os.setsid)
-                time.sleep(3)
         else:
             print(f"Unknown system{os.name}. Please contact the admin. Notice: the benchmark is currently not aviable for Mac users.")
     
