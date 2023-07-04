@@ -18,35 +18,45 @@ MEAN_LOOPS = 11
 
 class Benchmark:
     """
-        Class that represents the dataset of an unco input.
+        Class that starts the benchmark methods of unco.
 
     Attributes
     ----------
-    data : pd.DataFrame
-        DataFrame wich includes the data from Reader.
-    triple_plan: dict
-        Dictionary to save which columns are interpreted as subjects and their corresponding object columns. 
-    types_and_languages: dict
-        Dictionary to save the datatype or language of a value.
-    uncertainty_flags: dict
-        Dictionary to save some uncertainty flags. A flag is saved as: uncertainty_flags[column_indices] = list(row_indices)
-    alternatives: dict
-        Dictionary to save some alternatives for all uncertain values. The slternatives are saved as: alternatives[(row,column)] = list(alternatives)
+    prefixes_path : str
+        Path to the prefix-namespace table.
+    graph_generator : GraphGenerator
+        Instance of the GraphGenerator which contains the inputed RDFData.
+    fserver : FusekiServer
+        Object which can interact with the fuseki server.
     """
 
-    def __init__(self, rdfdata : RDFData, prefixes_path : str) -> None:
+
+    def __init__(self, rdfdata : RDFData, prefixes_path : str = None) -> None:
         """
         Parameters
         ----------
         rdfdata : RDFData
             Object which contains the data of the rdf graph.
+        prefixes_path : str
+            Path to the prefix-namespace table.
         """
         self.prefixes_path = prefixes_path
         self.graph_generator = GraphGenerator(rdfdata)
         self.fserver = FusekiServer(Path(UNCO_PATH,"src/apache-jena-fuseki-4.8.0"))
 
+
     def _generate_graph_with_model(self, model_id : int, fuseki : bool) -> None:
-        self.graph_generator.load_prefixes(self.prefixes_path)
+        """
+        Generates the rdf graph of the current dataset with the given model_id.
+
+        Parameters
+        ----------
+        model_id : int
+            ID of the model which should be used to insert uncertaint statements
+        fuseki : bool
+            Boolean value if the graph should be uploaded to the fuseki server
+        """
+        if self.prefixes_path: self.graph_generator.load_prefixes(self.prefixes_path)
         self.graph_generator.generate_solution(model_id, xml_format=False)
         if fuseki:
             self.fserver.delete_graph()
