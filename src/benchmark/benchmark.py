@@ -62,7 +62,7 @@ class Benchmark:
             self.fserver.delete_graph()
             self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
 
-    def run_query_of_model(self, query_id : int, model_id : int, run_on_fuseki : bool = False) -> pd.DataFrame:
+    def run_query_of_model(self, query_id : int, model_id : int, run_on_fuseki : bool = False) -> float:
         """ 
             Method which takes the SPARQL query "src/benchmark/queries/model{model_id}/query{query_id}.rq" and runs the query on self.graph.
             Outputs the DataFrame of the SPARQL result.
@@ -76,10 +76,12 @@ class Benchmark:
         """
         if (query_path := Path(UNCO_PATH,f"src/benchmark/queries/model{model_id}/query{query_id}.rq")).is_file():
             query = query_path.read_text()
-            return self.graph_generator.run_query(query,save_result=False) if not run_on_fuseki else self.fserver.run_query(query,save_result=False)
+            start_time = time()
+            self.graph_generator.run_query(query,save_result=False) if not run_on_fuseki else self.fserver.run_query(query,save_result=False)
+            return time()-start_time
         else:
             print(f"Warning: Doesn't found query{query_id} for model {model_id}.")
-            return pd.DataFrame()
+            return 0
         
 
     def _get_color_linestyle_of_model(self, model_numb):
@@ -122,13 +124,11 @@ class Benchmark:
     def _get_mean_of_medians(self, query_numb, model_numb, fuseki):
         meanlist = []
         for _ in range(MEAN_LOOPS):
-            medianlist = []
+            # medianlist = []
             for _ in range(MEDIAN_LOOPS):
-                start_time = time()
-                _ = self.run_query_of_model(query_numb,model_numb,fuseki)
-                time_difference = time() - start_time
-                medianlist.append(time_difference)
-            meanlist.append(min(medianlist))
+                time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
+                # medianlist.append(time_difference)
+                meanlist.append(time_difference)
 
         return mean(meanlist)
     
@@ -176,6 +176,8 @@ class Benchmark:
             fig = plt.figure()
             for modelindex, model_numb in enumerate(modellist):
                 color, linestyle = self._get_color_linestyle_of_model(model_numb)
+                if model_numb == 9: model_numb = "9a"
+                model_numb = "9b" if model_numb == 10 else str(model_numb)
                 plt.plot(X, output[index][modelindex], color=color, linestyle=linestyle, label=str(model_numb))
 
             if increasing_alternatives: plt.xlabel("#Alternatives per uncertain statement")
@@ -239,7 +241,7 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    print(bench.benchmark_increasing_params(increasing_alternatives=False, querylist=[4], fuseki=fuski, start=0, step=10, stop=301))
+    print(bench.benchmark_increasing_params(increasing_alternatives=False, querylist=[4], modellist=[1], fuseki=fuski, start=0, step=20, stop=301))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,2,3,4,5,7],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
