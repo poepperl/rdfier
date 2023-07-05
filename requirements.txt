@@ -19,7 +19,7 @@ requests==2.31.0    # communication between python and fuseki server
 pathlib==1.0.1      # path management
 psutil==5.9.5       # close fuseki console
 matplotlib==3.7.1   # benchmark plots
-numpy
+numpy==1.25.0
 
 # UI
 streamlit == 1.24.0 # Application
