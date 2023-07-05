@@ -297,8 +297,9 @@ if __name__ == "__main__":
     from unco import UNCO_PATH
     from unco.data.rdf_data import RDFData
     from unco.features.graph_generator import GraphGenerator
+    from unco.data.data_util import data_optimize
 
-    dataframe = pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe.csv"))
+    dataframe = data_optimize(pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe.csv")))
 
     dataframe = run_pipeline_on_dataframe(dataframe)
 

@@ -1,20 +1,17 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-from copy import deepcopy
-from tqdm import tqdm
 from statistics import median, mean
-from unco import UNCO_PATH, data
+from unco import UNCO_PATH
+from unco.data.data_util import data_optimize
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
-from unco.features import fuseki
 from unco.features.fuseki import FusekiServer
 from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
-from time import sleep, time
+from time import time
 
 MEDIAN_LOOPS = 9
-MEAN_LOOPS = 5
+MEAN_LOOPS = 4
 
 class Benchmark:
     """
@@ -122,31 +119,30 @@ class Benchmark:
     
 
     def _get_mean_of_medians(self, query_numb, model_numb, fuseki):
-        medianlist = []
-        for _ in range(MEDIAN_LOOPS):
-            time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
-            medianlist.append(time_difference)
+        meanlist = []
+        for _ in range(MEAN_LOOPS):
+            medianlist = []
+            for _ in range(MEDIAN_LOOPS):
+                time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
+                medianlist.append(time_difference)
 
-        medianlist = medianlist[4:]
-        print(medianlist)
+            meanlist.append(median(medianlist))
         return mean(medianlist)
     
+
     def benchmark_current_rdfdata(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], fuseki : bool = True):
         results = [[] for _ in querylist]
 
         for model_numb in modellist:
-            meanlist = [[] for _ in querylist]
-            for _ in range(MEAN_LOOPS):
-                if fuseki: self.fserver.start_server()
-                self._generate_graph_with_model(model_numb, fuseki)
-                for index, query_numb in enumerate(querylist):
-                    altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
-                    print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {median(altlist) if len(altlist)>0 else 0}")
-                    meanlist[index].append(self._get_mean_of_medians(query_numb, model_numb, fuseki))
-                if fuski: bench.fserver.stop_server()
-            
-            for index, sublist in enumerate(meanlist):
-                results[index].append(mean(sublist))
+            if fuseki: self.fserver.start_server()
+            self._generate_graph_with_model(model_numb, fuseki)
+            for index, query_numb in enumerate(querylist):
+                altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
+                print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {median(altlist) if len(altlist)>0 else 0}")
+                results[index].append(self._get_mean_of_medians(query_numb, model_numb, fuseki))
+
+            if fuski: bench.fserver.stop_server()
+
 
         return results
     
@@ -157,7 +153,7 @@ class Benchmark:
 
         for count in X:
             if increasing_alternatives: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[3,4,7,15], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
-            else: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2,3,4,7,8,9,10,16,17,18,19],min_uncertainties_per_column=count,max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
+            else: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2,3,4,7],min_uncertainties_per_column=count,max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
 
             del un_generator
             results.append(self.benchmark_current_rdfdata(querylist,modellist,fuseki))
@@ -215,8 +211,9 @@ class Benchmark:
 
 if __name__ == "__main__":
     # Load data--------------------------------------------------------------------------------------------------------------------------
-    rdfdata = RDFData(pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv")))
+    rdfdata = RDFData(data_optimize(pd.read_csv(Path(UNCO_PATH,"tests/testdata/afe/afe_noUn_ready.csv"))))
     bench = Benchmark(rdfdata,str(Path(UNCO_PATH,"tests/testdata/afe/namespaces.csv")))
+    del rdfdata
     fuski = True
     full_time = time()
 
@@ -245,7 +242,7 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    print(bench.benchmark_increasing_params(increasing_alternatives=False, querylist=[4], modellist=[1], fuseki=fuski, start=0, step=20, stop=301))
+    print(bench.benchmark_increasing_params(increasing_alternatives=False, fuseki=fuski, start=0, step=1000, stop=10001))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,2,3,4,5,7],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)

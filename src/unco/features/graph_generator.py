@@ -82,6 +82,8 @@ class GraphGenerator():
 
         for prefix in self.prefixes:
             self.graph.bind(prefix, self.prefixes[prefix])
+
+        del namespaces
     
 
     def generate_solution(self,solution_id : int = 4, xml_format : bool = True) -> None:
@@ -528,7 +530,7 @@ class GraphGenerator():
     def run_query(self, query : str, save_result : bool = True) -> pd.DataFrame:
         result = self.graph.query(query)
 
-        df = pd.DataFrame(result.bindings)
+        df = data_optimize(pd.DataFrame(result.bindings))
 
         if save_result: df.to_csv(str(Path(UNCO_PATH, "data/output/query_results_fuseki.csv")))
 
@@ -578,8 +580,9 @@ if __name__ == "__main__":
     # prefixes = str(Path(UNCO_PATH,"data/input/test_eingabeformat/namespaces.csv"))
 
     from unco.data.uncertainty_generator import UncertaintyGenerator
+    from unco.data.data_util import data_optimize
 
-    rdfdata = RDFData(pd.read_csv(file))
+    rdfdata = RDFData(data_optimize(pd.read_csv(file)))
     generator = GraphGenerator(UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1],2,2))
     generator.load_prefixes(prefixes)
     generator.generate_solution(xml_format=False, solution_id=10)
