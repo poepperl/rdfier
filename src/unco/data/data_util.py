@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def data_optimize(df, object_option=False):
     """Reduce the size of the input dataframe
 
