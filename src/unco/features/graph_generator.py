@@ -193,7 +193,7 @@ class GraphGenerator:
             String which includes the cell position to identify a blank node.
         """
         value = value.strip()
-        if datatype is None:
+        if not datatype:
             return Literal(value)
         elif datatype[0:2] == "^^":
             if datatype == "^^blank":
