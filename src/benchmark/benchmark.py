@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import tqdm
 from statistics import median, mean
 from unco import UNCO_PATH
 from unco.data.data_util import data_optimize
@@ -10,7 +11,7 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import time
 
-MEDIAN_LOOPS = 3
+MEDIAN_LOOPS = 5
 MEAN_LOOPS = 1
 
 class Benchmark:
@@ -122,7 +123,7 @@ class Benchmark:
             time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
             medianlist.append(time_difference)
 
-        return medianlist[-1]
+        return median(medianlist[1:])
     
 
     def benchmark_current_rdfdata(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], fuseki : bool = True):
@@ -154,7 +155,7 @@ class Benchmark:
         results = []
         X = range(start, stop, step)
 
-        for count in X:
+        for count in tqdm(X):
             if increasing_alternatives: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[7,8,9,16,17,18,19], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
             else: un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2,3,4,7],min_uncertainties_per_column=count,max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
 
