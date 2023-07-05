@@ -12,7 +12,7 @@ from pathlib import Path
 from time import time
 
 MEDIAN_LOOPS = 5
-MEAN_LOOPS = 1
+MEAN_LOOPS = 5
 
 class Benchmark:
     """
@@ -119,17 +119,16 @@ class Benchmark:
 
     def _get_median(self, query_numb, model_numb, fuseki):
         medianlist = []
-        for _ in range(MEDIAN_LOOPS+2):
+        for _ in range(MEDIAN_LOOPS+3):
             time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
             medianlist.append(time_difference)
-        print(f"medianlist: {medianlist[2:]}")
-        return median(medianlist[2:])
+        return median(medianlist[3:])
     
 
     def benchmark_current_rdfdata(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], fuseki : bool = True):
         results = [[[] for _ in modellist] for _ in querylist]
 
-        for _ in range(MEAN_LOOPS+1):
+        for _ in tqdm(range(MEAN_LOOPS+1)):
             for model_index, model_numb in enumerate(modellist):
                 if fuseki: self.fserver.start_server()
                 self._generate_graph_with_model(model_numb, fuseki)
@@ -245,7 +244,7 @@ if __name__ == "__main__":
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,2,3,4,5,7],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
-    print(bench.benchmark_increasing_params(increasing_alternatives=True, modellist=[1,1,1,1,1], querylist=[4], fuseki=fuski, start=0, stop=301, step=30))
+    print(bench.benchmark_increasing_params(increasing_alternatives=True, fuseki=fuski, start=0, stop=301, step=30))
 
     # print(bench.graph_generator.rdfdata.data.columns[1]) # 2,3,4,7,8,9,10,16,17,18,19
 
