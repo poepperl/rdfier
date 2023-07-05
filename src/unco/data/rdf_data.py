@@ -9,7 +9,7 @@ class RDFData:
     Attributes
     ----------
     data : pd.DataFrame
-        DataFrame which includes the data in the defined input format.
+        Pandas dataframe which includes the data in the defined input format.
     triple_plan: dict
         Dictionary to save which columns are interpreted as subjects and their corresponding object columns. 
     types_and_languages: dict
@@ -28,7 +28,6 @@ class RDFData:
         self.data = dataframe
         self.triple_plan: dict = {}
         self.types_and_languages: dict[tuple[int, int], list[str]] = {}
-
         self.uncertainties: dict = {}
 
         self._generate_triple_plan()
@@ -91,7 +90,10 @@ class RDFData:
 
             self.data.rename({column: new_column_name}, axis=1, inplace=True)
 
-    def _load_uncertainties(self):
+    def _load_uncertainties(self) -> None:
+        """
+        Takes all uncertainty columns from the triple_plan and load their uncertainties into th uncertainties dictionary.
+        """
         for plan in self.triple_plan.values():
             if "certainties" in plan:
                 sub_column = next(iter(plan["subject"]))
@@ -106,9 +108,21 @@ class RDFData:
                     raise SyntaxError(
                         f"Subject-column {self.data.columns[sub_column]} has more than one certainty-column.")
 
-    def _get_uncertainty_dict(self, subject: str, uncertainty: str) -> dict:
+    def _get_uncertainty_dict(self, subjects: str, uncertainty: str) -> dict:
+        """
+        Method to generate a dictionary with all important informations about a uncertain statement
+        like if it has alternatives and which weights.
+
+        Parameters
+        ----------
+        subjects: str
+            String of the subject(s) which get(s) the uncertainty. The uncertain statement is a nested statement and
+            refers to the statement which has the subject(s) as its object(s).
+        uncertainty: str
+            String of the uncertainty mode. Can be `u` for uncertain or `a` for alternatives. Will be removed in a future release.
+        """
         uncertainty = uncertainty.strip().lower()
-        sub_splitlist = subject.split(";")
+        sub_splitlist = subjects.split(";")
         unc_splitlist = uncertainty.split(";")
 
         if uncertainty == "c":
@@ -125,7 +139,7 @@ class RDFData:
             try:
                 numb = float(uncertainty)
                 if 0 <= numb < 1:
-                    return {"mode": "ou", "likelihoods": [numb]}
+                    return {"mode": "ou", "weights": [numb]}
                 elif numb == 1:
                     return dict()
                 elif not pd.isna(numb):
@@ -141,19 +155,19 @@ class RDFData:
                 pass
             if all(isinstance(n, float) for n in unc_splitlist):
                 if sum(unc_splitlist) == 1:
-                    return {"mode": "a", "likelihoods": unc_splitlist}
+                    return {"mode": "a", "weights": unc_splitlist}
                 elif 0 <= sum(unc_splitlist) < 1:
-                    return {"mode": "au", "likelihoods": unc_splitlist}
+                    return {"mode": "au", "weights": unc_splitlist}
             warn(f"\033[93mUnknown distribution \"{uncertainty}\". No uncertainties will be transmit.\033[0m")
             return dict()
         elif len(sub_splitlist) != len(unc_splitlist):
             warn(
-                f"\033[93mEntry \"{subject}\" hasn't the correct number of uncertainties \"{uncertainty}\"."
+                f"\033[93mEntry \"{subjects}\" hasn't the correct number of uncertainties \"{uncertainty}\"."
                 f" No uncertainties will be transmit.\033[0m")
             return dict()
         else:
             warn(
-                f"\033[93mEntry \"{subject}\" hasn't identiefiable uncertainties \"{uncertainty}\". "
+                f"\033[93mEntry \"{subjects}\" hasn't identiefiable uncertainties \"{uncertainty}\". "
                 f"No uncertainties will be transmit.\033[0m")
             return dict()
 
@@ -163,7 +177,7 @@ class RDFData:
         """
         # Column type or language:
         for col_index, column in enumerate(self.data):
-            column_type_language, column_name = self._get_type_language(str(column))
+            column_type_language, column_name = self._get_datatype_language(str(column))
 
             # Entry type or language:
             for cell_index, cell in enumerate(self.data.iloc[:, col_index]):
@@ -171,11 +185,11 @@ class RDFData:
                     splitlist = str(cell).split(";")
                     cell_types_languages = splitlist.copy()
                     for entry_index, entry in enumerate(splitlist):
-                        tl, entry_name = self._get_type_language(entry)
+                        tl, entry_name = self._get_datatype_language(entry)
                         splitlist[entry_index] = entry_name.strip()
                         cell_types_languages[entry_index] = \
                             tl.strip() if tl != "" else column_type_language if \
-                                column_type_language != "" else self._get_datatype(entry)
+                                column_type_language != "" else self._get_fitting_datatype(entry)
 
                     self.types_and_languages[(cell_index, col_index)] = cell_types_languages
 
@@ -183,36 +197,41 @@ class RDFData:
 
             if column_name != str(column): self.data.columns.values[col_index] = column_name  # Rename column
 
-    def _get_type_language(self, string: str) -> tuple[str, str]:
+    def _get_datatype_language(self, entry: str) -> tuple[str, str]:
         """
         Method which extracts the type/language of a string.
+
+        Parameters
+        ----------
+        entry: str
+            String of a cell entry.
         """
         greek2latin = str.maketrans('ΑαΒβΓγΔδΕεΖζΗηΘθΙιΚκΛλΜμΝνΞξΟοΠπΡρΣσςΤτΥυΦφΧχΨψΩω・•',
                                     'AaBbGgDdEeZzHhJjIiKkLlMmNnXxOoPpRrSssTtUuFfQqYyWw..')
-        string = string.translate(greek2latin)
-        type_splitlist = string.split("^^")
+        entry = entry.translate(greek2latin)
+        type_splitlist = entry.split("^^")
 
         if len(type_splitlist) >= 2:
-            return "^^" + type_splitlist[-1], string[:-len(type_splitlist[-1]) - 2]
+            return "^^" + type_splitlist[-1], entry[:-len(type_splitlist[-1]) - 2]
 
-        language_splitlist = string.split("@")
+        language_splitlist = entry.split("@")
 
         if len(language_splitlist) >= 2:
             if 1 <= len(language_splitlist[-1]) <= 3:
-                return "@" + language_splitlist[-1], string[:-len(language_splitlist[-1]) - 1]
+                return "@" + language_splitlist[-1], entry[:-len(language_splitlist[-1]) - 1]
             else:
                 warn(f"\033[93mEntry \"{language_splitlist[-1]}\" is not a right language acronym.\033[0m")
 
-        return "", string
+        return "", entry
 
-    def _get_datatype(self, string: str) -> str:
+    def _get_fitting_datatype(self, string: str) -> str:
         """
             Method which tries to find the best fitting datatype of a value.
 
         Parameters
         ----------
         string : str
-            Value which should get a datatype.
+            Value for which no datatype or language was specified.
         """
         try:
             _ = int(string)

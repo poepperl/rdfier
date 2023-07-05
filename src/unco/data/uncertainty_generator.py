@@ -162,17 +162,17 @@ class UncertaintyGenerator:
 
                 self.rdfdata.types_and_languages[(row, column)] += [t for _, t in possible_values]
 
-                likelihoods = []
+                weights = []
                 summe = 0
                 for _ in current_values:
                     randomvalue = random.randint(1, 10)
                     summe += randomvalue
-                    likelihoods.append(randomvalue)
+                    weights.append(randomvalue)
 
-                likelihoods = np.array(likelihoods)
-                likelihoods = np.around(np.divide(likelihoods, summe), decimals=2)
+                weights = np.array(weights)
+                weights = np.around(np.divide(weights, summe), decimals=2)
 
-                self.rdfdata.uncertainties[(row, column)]["likelihoods"] = likelihoods
+                self.rdfdata.uncertainties[(row, column)]["weights"] = weights
 
         return self.rdfdata
 

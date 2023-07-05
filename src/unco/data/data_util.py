@@ -1,20 +1,16 @@
 import numpy as np
+from pandas import DataFrame
 
-
-def data_optimize(df, object_option=False):
-    """Reduce the size of the input dataframe
+def data_optimize(df: DataFrame, object_option=False):
+    """
+    Reduce the size of the input dataframe
 
     Parameters
     ----------
     df: pd.DataFrame
-        input DataFrame
-    object_option : bool, default=False
-        if true, try to convert object to category
-
-    Returns
-    -------
-    df: pd.DataFrame
-        data type optimized output dataframe
+        Input dataframe which should get smaller.
+    object_option: bool
+        If true, try to convert object to category.
 
     """
 

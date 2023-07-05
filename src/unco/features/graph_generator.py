@@ -128,10 +128,10 @@ class GraphGenerator:
                             for index, objekt in enumerate(objects):
                                 if (row_index, column_index) in self.rdfdata.uncertainties:
                                     if model_id in [3, 4, 5, 10]:
-                                        if "likelihoods" in self.rdfdata.uncertainties[(row_index, column_index)]:
-                                            if len(self.rdfdata.uncertainties[(row_index, column_index)]["likelihoods"]) <= index:
-                                                print(f"Coin {subject.n3()} Predicate {pred_name} has uncertainties {self.rdfdata.uncertainties[(row_index, column_index)]['likelihoods']} and object {[ob.n3() for ob in objects]}")
-                                            weight = self.rdfdata.uncertainties[(row_index, column_index)]["likelihoods"][index]
+                                        if "weights" in self.rdfdata.uncertainties[(row_index, column_index)]:
+                                            if len(self.rdfdata.uncertainties[(row_index, column_index)]["weights"]) <= index:
+                                                print(f"Coin {subject.n3()} Predicate {pred_name} has uncertainties {self.rdfdata.uncertainties[(row_index, column_index)]['weights']} and object {[ob.n3() for ob in objects]}")
+                                            weight = self.rdfdata.uncertainties[(row_index, column_index)]["weights"][index]
                                         else:
                                             weight = float("%.2f" % random())
                                     match model_id:
