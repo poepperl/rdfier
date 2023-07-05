@@ -1,4 +1,5 @@
 import random
+import pandas as pd
 import numpy as np
 from unco.data.rdf_data import RDFData
 from unco.features.graph_generator import GraphGenerator
@@ -181,7 +182,6 @@ if __name__ == "__main__":
     from unco import UNCO_PATH
     from unco.data.data_util import data_optimize
     from pathlib import Path
-    import pandas as pd
 
     file = open(str(Path(UNCO_PATH, "tests/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
 
