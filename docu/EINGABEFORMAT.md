@@ -88,7 +88,7 @@ Auf eine Subjekt-Spalte mit ID kann dann mit dem Marker `{id}__` (doppelter Unte
 
 |coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |
 |:---      |:---                      |:---                      |:---                       |
-|afe:5     |nm:ar                     |5.24                      |                           |
+|afe:5     |nm:ar; nm:billon          |5.24                      |                           |
 |afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
 |afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |
 
@@ -96,6 +96,7 @@ Durch diese Veränderung wird die zweite Spalte nun zusätzlich als Subjekt-Spal
 Durch die Zuweisung bleiben die ursprünglichen RDF-Aussagen unbetroffen.
 Auch lässt sich eine Spalte, die auf eine andere Subjekt-Spalte referenziert wiederrum eine ID zuweisen, usw.
 
+Mehrfacheinträge können auch als Subjekte für neue Aussagen genutzt werden. 
 
 Unsichere Aussagen
 ------------------
