@@ -1,6 +1,7 @@
 Eingabeformat
 =============
 Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei, einen RDF-Graph zu bauen. Da komplexere Konzepte in RDF-Graphen nicht ohne Weiteres aus einem beliebigen Format gelesen werden können, wird hier beschrieben wie solche in der Eingabe codiert werden können.
+Das hier verwendete Beispiel ist im Projekt-Ordner unter *data/input/example/input_format.csv* gespeichert, ebenso die verwendete Tabelle der Namensräume unter *data/input/example/namespaces.csv*.
 
 Grundstruktur
 -------------
@@ -88,7 +89,7 @@ Auf eine Subjekt-Spalte mit ID kann dann mit dem Marker `{id}__` (doppelter Unte
 
 |coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |
 |:---      |:---                      |:---                      |:---                       |
-|afe:5     |nm:ar                     |5.24                      |                           |
+|afe:5     |nm:ar; nm:billon          |5.24                      |                           |
 |afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
 |afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |
 
@@ -96,6 +97,19 @@ Durch diese Veränderung wird die zweite Spalte nun zusätzlich als Subjekt-Spal
 Durch die Zuweisung bleiben die ursprünglichen RDF-Aussagen unbetroffen.
 Auch lässt sich eine Spalte, die auf eine andere Subjekt-Spalte referenziert wiederrum eine ID zuweisen, usw.
 
+Mehrfacheinträge müssen zunächst aufgelößt werden, um als Subjekte für Aussagen zu dienen.
+Möchten wir der Ressource `nm:billon` ein Kommentar hinzufügen, kann das über eine weitere Zeile der Tabelle erfolgen:
+
+|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |1__rdfs:comment              |
+|:---      |:---                      |:---                      |:---                       |:---                         |
+|afe:5     |nm:ar                     |5.24                      |                           |                             |
+|afe:5     |nm:billon                 |                          |                           |alloy of copper and silver@en|
+|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|                             |
+|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |                             |
+
+In diesem Fall wurde eine weitere Zeile hinzugefügt, in der `nm:billon` eine eigene Zelle besitzt und somit eine verkettete Aussage leicht realisiert werden kann.
+Zusätzlich muss `afe:5` ebenso in die Zeile eingefügt werden, damit das Tripel *afe:5 nmo:hasMaterial nm:billon* erstellt wird.
+Das Gewicht von `afe:5` muss hingegen nicht erneut gesetzt werden.
 
 Unsichere Aussagen
 ------------------

@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide")
 
 def update():
-    st.session_state.rdfdata = RDFData(st.session_state.dataframe.copy())
+    st.session_state.rdf_data = RDFData(st.session_state.df.copy())
 
 def activate_rerun():
     st.session_state.rerun = True
@@ -29,12 +29,12 @@ uploaded_file = button1.file_uploader("Upload", type=["csv"], accept_multiple_fi
 uploaded_prefixes = button2.file_uploader("Prefixes", type=["csv"], accept_multiple_files=False)
 
 if not uploaded_file:
-    st.session_state.dataframe = None
+    st.session_state.df = None
     st.session_state.generate = False
-    st.session_state.rdfdata = None
+    st.session_state.rdf_data = None
     st.session_state.rerun = True
 else:
-    st.session_state.dataframe = st.data_editor(pd.read_csv(uploaded_file), on_change=activate_rerun)
+    st.session_state.df = st.data_editor(pd.read_csv(uploaded_file), on_change=activate_rerun)
     if st.session_state.rerun:
         update()
 
@@ -58,7 +58,7 @@ else:
     if st.session_state.generate:
         if st.session_state.rerun:
             st.session_state.rerun = False
-            generator = GraphGenerator(st.session_state.rdfdata)
+            generator = GraphGenerator(st.session_state.rdf_data)
             if uploaded_prefixes: generator.load_prefixes(pd.read_csv(uploaded_prefixes))
             generator.generate_solution(model_id=solution,xml_format=(xml_format=="XML"))
 

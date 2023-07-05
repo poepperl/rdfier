@@ -1,0 +1,5 @@
+coin^^uri,nmo:hasMaterial^^uri**1,nmo:hasWeight^^xsd:decimal,1__rdf:value,1__rdfs:comment
+afe:5,nm:ar,5.24,,
+afe:5,nm:billon,,,alloy of copper and silver@en
+afe:13,kryptonite^^blank,too heavy to weigh@en,kryptonite@en; Kryptonit@de,
+afe:29,<http://nomisma.org/id/ae>,1.16,,

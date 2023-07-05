@@ -13,7 +13,7 @@ st.set_page_config(
     layout="wide")
 
 if "rdfdata" not in st.session_state:
-    st.session_state.rdfdata = None
+    st.session_state.rdf_data = None
 
 if "generate" not in st.session_state:
     st.session_state.generate = False
@@ -31,7 +31,7 @@ if "generator" not in st.session_state:
     st.session_state.generator = None
 
 if "dataframe" not in st.session_state:
-    st.session_state.dataframe = None
+    st.session_state.df = None
 
 # Begin webpage---------------------------------------------------------------------------
 
@@ -40,25 +40,25 @@ st.title('Uncertainty Comparator')
 uploaded_file = st.file_uploader("Upload", type=["csv"], accept_multiple_files=False)
 
 if uploaded_file and not st.session_state.uploaded:
-    st.session_state.dataframe = pd.read_csv(uploaded_file)
-    st.session_state.rdfdata = RDFData(st.session_state.dataframe.copy())
+    st.session_state.df = pd.read_csv(uploaded_file)
+    st.session_state.rdf_data = RDFData(st.session_state.df.copy())
     st.session_state.uploaded = True
 
 elif st.session_state.uploaded and not uploaded_file:
     st.session_state.uploaded = False
     st.session_state.generate = False
-    st.session_state.rdfdata = None
+    st.session_state.rdf_data = None
     st.session_state.data_state = (0,0,0,0,0)
     st.session_state.path = None
     st.session_state.generator = None
 
-if st.session_state.rdfdata is not None:
+if st.session_state.rdf_data is not None:
 
-    dataframe = st.experimental_data_editor(st.session_state.dataframe)
+    dataframe = st.experimental_data_editor(st.session_state.df)
 
-    if not dataframe.equals(st.session_state.dataframe):
-        st.session_state.rdfdata = RDFData(dataframe.copy())
-        st.session_state.dataframe = dataframe
+    if not dataframe.equals(st.session_state.df):
+        st.session_state.rdf_data = RDFData(dataframe.copy())
+        st.session_state.df = dataframe
         st.session_state.data_state = (0,0,0,0,0)
 
     with st.container():
@@ -71,16 +71,16 @@ if st.session_state.rdfdata is not None:
     with st.expander("Generiere Unsicherheiten"):
         checkcol1, checkcol2, checkcol3 = st.columns(3)
         solution = checkcol1.selectbox("Modellierung auswählen:", (1,2,3,4,5,6,7,8))
-        numb_uncertain_values = checkcol3.number_input("Anzahl unsicherer Werte pro Spalte:", min_value=0, max_value=len(st.session_state.rdfdata.data), step=1)
+        numb_uncertain_values = checkcol3.number_input("Anzahl unsicherer Werte pro Spalte:", min_value=0, max_value=len(st.session_state.rdf_data.data), step=1)
 
         manuel = st.checkbox("Spalten manuell auswählen", key="disabled")
-        numb_uncertain_columns = checkcol2.number_input("Anzahl unsicherer Spalten:", min_value=0, max_value=len(list(st.session_state.rdfdata.data.columns))-1, step=1, disabled=manuel)
+        numb_uncertain_columns = checkcol2.number_input("Anzahl unsicherer Spalten:", min_value=0, max_value=len(list(st.session_state.rdf_data.data.columns)) - 1, step=1, disabled=manuel)
 
         options = []
         if manuel:
             options = st.multiselect(
             'Wähle die Subjektspalten aus, in denen Unsicherheit generiert werden soll:',
-            list(st.session_state.rdfdata.data.columns)[1:])
+                list(st.session_state.rdf_data.data.columns)[1:])
 
     uploaded_prefixes = st.file_uploader("Präfixtabelle", type=["csv"], accept_multiple_files=False)
 
@@ -96,13 +96,13 @@ if st.session_state.rdfdata is not None:
         if (xml_format, solution, numb_uncertain_values, numb_uncertain_columns, options) != st.session_state.data_state:
             st.session_state.data_state = (xml_format, solution, numb_uncertain_values, numb_uncertain_columns, options)
             if numb_uncertain_values != 0:
-                u_generator = UncertaintyGenerator(st.session_state.rdfdata)
-                options = [rdf_data.data.columns.get_loc(c) for c in options if c in st.session_state.rdfdata.data]
+                u_generator = UncertaintyGenerator(st.session_state.rdf_data)
+                options = [rdf_data.data.columns.get_loc(c) for c in options if c in st.session_state.rdf_data.data]
 
                 rdf_data = u_generator.add_uncertainty_flags(number_of_uncertain_columns=numb_uncertain_columns, list_of_columns=options, uncertainties_per_column=numb_uncertain_values)
             
             else:
-                rdf_data = st.session_state.rdfdata
+                rdf_data = st.session_state.rdf_data
 
             st.session_state.generator = GraphGenerator(rdf_data)
             st.session_state.generator.load_prefixes(pd.read_csv(uploaded_prefixes))

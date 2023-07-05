@@ -3,7 +3,8 @@ from unco import UNCO_PATH
 import shutil
 import requests
 
-class Illustrator():
+
+class Illustrator:
     """
         Class which gets a graphical version of a generated rdf file.
 
@@ -22,9 +23,8 @@ class Illustrator():
         """
         self.path = path
         self.get_illustration(path)
-    
 
-    def get_illustration(self, path : str | Path):
+    def get_illustration(self, path: str | Path):
         """
             Method, which downloads the graphical version of the given rdf graph. Output will be saved in "data/output/downloaded_graph.png".
         Attributes
@@ -43,7 +43,7 @@ class Illustrator():
         
         response = requests.post('https://www.ldf.fi/service/rdf-grapher', params=params, stream=True)
 
-        filename = str(Path(UNCO_PATH,"data/output/downloaded_graph.png"))
+        filename = str(Path(UNCO_PATH, "data/output/downloaded_graph.png"))
         if response.status_code == 200:
             with open(filename, 'wb') as f:
                 shutil.copyfileobj(response.raw, f)

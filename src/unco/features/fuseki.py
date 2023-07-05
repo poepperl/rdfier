@@ -4,32 +4,29 @@ import time
 import requests
 import pandas as pd
 import os
-import signal
 from io import StringIO
 from pathlib import Path
 from unco import UNCO_PATH
-from unco.data.data_util import data_optimize
 
-OUTPUT_FOLDER  = Path(UNCO_PATH, "data/output")
+OUTPUT_FOLDER = Path(UNCO_PATH, "data/output")
+
 
 class FusekiServer:
     """
         Interface to the fuseki server.
     """
 
-    def __init__(self, fuseki_path: str = Path(UNCO_PATH, "src/fuseki"), gb_ram: int = 8) -> None:
+    def __init__(self, fuseki_path: str | Path = Path(UNCO_PATH, "src/fuseki"), gb_ram: int = 8) -> None:
         """
         Parameters
         ----------
         fuseki_path : str
             Path to the fuseki server folder.
-        mb_ram : int
-            RAM size in GB for the fuseki server.
         """
         self.FUSEKI_PATH = str(fuseki_path)
         self.GB_RAM = gb_ram
         self.server = None
-        self.starter_path : str
+        self.starter_path: str
         self._initialize()
 
     def _initialize(self) -> None:
@@ -74,17 +71,16 @@ class FusekiServer:
         path : str
             Path to the file that should be uploaded.
         """
-        if self.server == None:
+        if self.server is None:
             raise RuntimeError("Server is shut down. Please start the server.")
         if path[-3:] == "rdf" or path[-3:] == "xml" or path[-3:] == "txt":
             headers = {'Content-Type': r'application/rdf+xml;charset=utf-8', 'Filename' : path}
         elif path[-3:] == "ttl":
             headers = {'Content-Type': r'text/turtle;charset=utf-8'}
         else:
-            raise ValueError("Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input.")
+            raise ValueError("Unknown Datatype. Please use \".rdf\" or \".ttl\" files as input.")
         data = open(path, 'r', encoding='latin1').read()
         requests.post('http://localhost:3030/ds/data', data=data.encode('utf-8'), headers=headers)
-
 
     def delete_graph(self) -> None:
         """
@@ -97,13 +93,12 @@ class FusekiServer:
         """
         requests.post(f"http://localhost:3030/ds/update", headers={"Content-Type": "application/sparql-update"}, data=sparql_query)
 
-
-    def run_query(self, query : str, save_result : bool = True) -> pd.DataFrame:
+    def run_query(self, query: str, save_result : bool = True) -> pd.DataFrame:
         """
             Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
         """
-        headers = {"Accept" : "text/csv"}
-        params = {"query" : query}
+        headers = {"Accept": "text/csv"}
+        params = {"query": query}
         response = requests.get('http://localhost:3030/ds/query', params=params, headers=headers)
 
         # csvdata = data_optimize(pd.read_csv(StringIO(response.text), encoding='utf-8'))
@@ -115,7 +110,6 @@ class FusekiServer:
         _ = StringIO(response.text)
 
         return ""
-
 
     def stop_server(self) -> None:
         """
@@ -136,10 +130,10 @@ class FusekiServer:
 
 
 if __name__ == "__main__":
-    f = FusekiServer(Path(UNCO_PATH,"src/apache-jena-fuseki-4.8.0"))
+    f = FusekiServer(Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0"))
     f.start_server()
     f.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
-    query = """
+    querytext = """
     PREFIX nmo: <http://nomisma.org/ontology#>
     PREFIX nm: <http://nomisma.org/id/>
 
@@ -154,10 +148,6 @@ if __name__ == "__main__":
 
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
-    print(f.run_query(query))
+    print(f.run_query(querytext))
     time.sleep(7)
     f.stop_server()
-
-
-    # response = requests.post('http://localhost:3030/ds/sparql', data={'query': 'SELECT * WHERE {?sub ?pred ?obj .} LIMIT 10'})
-    # print(response.json())
