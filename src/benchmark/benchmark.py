@@ -137,7 +137,7 @@ class Benchmark:
                     self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
                 for index, query_numb in enumerate(querylist):
                     altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
-                    print(f"Run query {query_numb} of model {model_numb}. #uncertain cells = {len(self.graph_generator.rdfdata.uncertainties)}. #uncertain statements = {sum(altlist) if len(altlist)>0 else 0}", end="\r")
+                    tqdm.write(f"Run query {query_numb} of model {model_numb}. #uncertain cells = {len(self.graph_generator.rdfdata.uncertainties)}. #uncertain statements = {sum(altlist) if len(altlist)>0 else 0}")
                     results[index][model_index].append(self._get_median(query_numb, model_numb, fuseki))
 
                 if fuski: bench.fserver.stop_server()
