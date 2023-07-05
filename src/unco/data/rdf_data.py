@@ -222,7 +222,7 @@ class RDFData:
 
         try:
             _ = float(string)
-            return "^^xsd:float"
+            return "^^xsd:decimal"
         except:
             pass
 
