@@ -10,8 +10,8 @@ from unco.features.graph_generator import GraphGenerator
 from pathlib import Path
 from time import time
 
-MEDIAN_LOOPS = 9
-MEAN_LOOPS = 4
+MEDIAN_LOOPS = 5
+MEAN_LOOPS = 3
 
 class Benchmark:
     """
@@ -133,15 +133,15 @@ class Benchmark:
     def benchmark_current_rdfdata(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], fuseki : bool = True):
         results = [[] for _ in querylist]
 
+        if fuseki: self.fserver.start_server()
         for model_numb in modellist:
-            if fuseki: self.fserver.start_server()
             self._generate_graph_with_model(model_numb, fuseki)
             for index, query_numb in enumerate(querylist):
                 altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
                 print(f"Run query {query_numb} of model {model_numb}. #uncertainties = {len(self.graph_generator.rdfdata.uncertainties)}. #alternatives = {median(altlist) if len(altlist)>0 else 0}")
                 results[index].append(self._get_mean_of_medians(query_numb, model_numb, fuseki))
 
-            if fuski: bench.fserver.stop_server()
+        if fuski: bench.fserver.stop_server()
 
 
         return results
@@ -242,7 +242,7 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    print(bench.benchmark_increasing_params(increasing_alternatives=False, fuseki=fuski, start=0, step=1000, stop=10001))
+    print(bench.benchmark_increasing_params(increasing_alternatives=False, modellist=[1,1,1,2,2,2,3,3,3,4,4,4,5,5,5], fuseki=fuski, start=0, step=1000, stop=10001))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,2,3,4,5,7],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
