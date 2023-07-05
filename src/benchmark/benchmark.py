@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import tqdm
+from tqdm import tqdm
 from statistics import median, mean
 from unco import UNCO_PATH
 from unco.data.data_util import data_optimize
@@ -119,36 +119,31 @@ class Benchmark:
 
     def _get_median(self, query_numb, model_numb, fuseki):
         medianlist = []
-        for _ in range(MEDIAN_LOOPS):
+        for _ in range(MEDIAN_LOOPS+2):
             time_difference = self.run_query_of_model(query_numb,model_numb,fuseki)
             medianlist.append(time_difference)
-
-        return median(medianlist[1:])
+        print(f"medianlist: {medianlist[2:]}")
+        return median(medianlist[2:])
     
 
     def benchmark_current_rdfdata(self, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], fuseki : bool = True):
-        results = [[] for _ in querylist]
+        results = [[[] for _ in modellist] for _ in querylist]
 
-        for model_numb in modellist:
-            if fuseki: self.fserver.start_server()
-            self._generate_graph_with_model(model_numb, fuseki)
-            looplist = [[] for _ in querylist]
-            for _ in range(MEAN_LOOPS):
+        for _ in range(MEAN_LOOPS+1):
+            for model_index, model_numb in enumerate(modellist):
+                if fuseki: self.fserver.start_server()
+                self._generate_graph_with_model(model_numb, fuseki)
                 if fuseki:
                     self.fserver.delete_graph()
                     self.fserver.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
                 for index, query_numb in enumerate(querylist):
                     altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0],key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
                     print(f"Run query {query_numb} of model {model_numb}. #uncertain cells = {len(self.graph_generator.rdfdata.uncertainties)}. #uncertain statements = {sum(altlist) if len(altlist)>0 else 0}")
-                    looplist[index].append(self._get_median(query_numb, model_numb, fuseki))
+                    results[index][model_index].append(self._get_median(query_numb, model_numb, fuseki))
 
-            for i, list in enumerate(looplist):
-                results[i].append(mean(list[:]))
+                if fuski: bench.fserver.stop_server()
 
-            if fuski: bench.fserver.stop_server()
-
-
-        return results
+        return [[mean(models) for models in sublist] for sublist in results]
     
 
     def benchmark_increasing_params(self, increasing_alternatives : bool = False, querylist : list[int] = [1,2,3,4,5,6], modellist : list[int] = [1,2,3,4,5,6,7,8,9,10], start : int = 0, stop : int = 100, step : int = 5, fuseki : bool = True):
