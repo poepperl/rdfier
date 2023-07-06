@@ -1,7 +1,6 @@
 import pandas as pd
 from warnings import warn
 
-
 class RDFData:
     """
         Class that represents the RDF data.
@@ -255,5 +254,4 @@ if __name__ == "__main__":
     from unco import UNCO_PATH
     from pathlib import Path
 
-    file = open(Path(UNCO_PATH, r"tests\testdata\afe\afemapping_1_public_changed.csv"), encoding="utf-8")
-    p = RDFData(pd.read_csv(Path(UNCO_PATH, r"tests\testdata\afe\afemapping_1_public_changed.csv")))
+    p = RDFData(pd.read_csv(Path(UNCO_PATH, "tests/testdata/afe/afe_ready.csv")))
