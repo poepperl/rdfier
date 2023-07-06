@@ -7,40 +7,48 @@ import os
 from io import StringIO
 from pathlib import Path
 from unco import UNCO_PATH
+from unco.data.data_util import data_optimize
 
 OUTPUT_FOLDER = Path(UNCO_PATH, "data/output")
 
 
 class FusekiServer:
     """
-        Interface to the fuseki server.
+    Interface to the fuseki server.
+
+    Attributes
+    ----------
+    FUSEKI_PATH: str
+        Path to the fuseki server folder.
+    server: subprocess.Popen
+        Server instance, if the fuseki server is running.
+    starter_path: 
+
     """
 
-    def __init__(self, fuseki_path: str | Path = Path(UNCO_PATH, "src/fuseki"), gb_ram: int = 8) -> None:
+    def __init__(self, fuseki_path: str | Path = Path(UNCO_PATH, "src/fuseki")) -> None:
         """
         Parameters
         ----------
-        fuseki_path : str
+        fuseki_path: str | Path
             Path to the fuseki server folder.
         """
         self.FUSEKI_PATH = str(fuseki_path)
-        self.GB_RAM = gb_ram
         self.server = None
-        self.starter_path: str
+
         self._initialize()
 
     def _initialize(self) -> None:
         """
             Method, which creates the server_starter.bat which starts the fuseki server.
         """
+        starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.bat"))
         if os.name == "nt":
-            self.starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.bat"))
-            with open(self.starter_path, 'w') as starter:
+            with open(starter_path, 'w') as starter:
                 starter.write("echo 'Running fuseki server'\ncd \"" + self.FUSEKI_PATH + "\"\n")
-                starter.write("java -Xmx" + str(self.GB_RAM) + "G -jar \"fuseki-server.jar\" --update --mem /ds %*")
+                starter.write("java -Xmx4G -jar \"fuseki-server.jar\" --update --mem /ds %*")
         elif os.name == "posix":
-            self.starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.sh"))
-            with open(self.starter_path, 'w') as starter:
+            with open(starter_path, 'w') as starter:
                 starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
         else:
             print(f"Unknown system{os.name}. Please contact the admin.")
@@ -53,7 +61,7 @@ class FusekiServer:
             if self.server:
                 raise RuntimeError("Server is already running.")
             else:
-                self.server = subprocess.Popen(self.starter_path, creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
+                self.server = subprocess.Popen(str(Path(UNCO_PATH, "src/unco/features/server_starter.bat")), creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
         elif os.name == "posix":
             if self.server:
                 raise RuntimeError("Server is already running.")
@@ -68,7 +76,7 @@ class FusekiServer:
 
         Parameters
         ----------
-        path : str
+        path: str
             Path to the file that should be uploaded.
         """
         if self.server is None:
@@ -95,21 +103,27 @@ class FusekiServer:
 
     def run_query(self, query: str, save_result : bool = True) -> pd.DataFrame:
         """
-            Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
+        Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
+
+        Parameter
+        ---------
+        query: str
+            String of the hole query.
+        save_result: bool
+            If True, the method saves the result in data/output/query_results_fuseki.csv.
         """
         headers = {"Accept": "text/csv"}
         params = {"query": query}
         response = requests.get('http://localhost:3030/ds/query', params=params, headers=headers)
 
-        # csvdata = data_optimize(pd.read_csv(StringIO(response.text), encoding='utf-8'))
-
-        # if save_result: csvdata.to_csv(str(Path(OUTPUT_FOLDER, "query_results_fuseki.csv")))
-
-        # return csvdata
+        if save_result:
+            csvdata = data_optimize(pd.read_csv(StringIO(response.text), encoding='utf-8'))
+            csvdata.to_csv(str(Path(OUTPUT_FOLDER, "query_results_fuseki.csv")))
+            return csvdata
 
         _ = StringIO(response.text)
 
-        return ""
+        return
 
     def stop_server(self) -> None:
         """

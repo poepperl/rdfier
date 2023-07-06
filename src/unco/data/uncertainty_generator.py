@@ -18,7 +18,6 @@ class UncertaintyGenerator:
 
     def __init__(self, rdfdata: RDFData) -> None:
         self.rdfdata = rdfdata
-        self.NUMBER_OF_ALTERNATIVES: int
 
     def add_pseudorand_uncertainty_flags(self, list_of_columns=None, min_uncertainties_per_column: int = 0,
                                          max_uncertainties_per_column: int = 2) -> RDFData:
@@ -27,11 +26,11 @@ class UncertaintyGenerator:
 
         Parameters
         ----------
-        list_of_columns: list[int], optional
+        list_of_columns: list[int]
             List of columns which should get uncertainty flags.
-        min_uncertainties_per_column: int, optional
+        min_uncertainties_per_column: int
             Minimal number of uncertainties each column.
-        max_uncertainties_per_column: int, optional
+        max_uncertainties_per_column: int
             Maximal number of uncertainties each column.
         """
         if list_of_columns is None:
@@ -94,12 +93,12 @@ class UncertaintyGenerator:
 
         Parameters
         ----------
-        min_number_of_alternatives : int, optional
+        min_number_of_alternatives : int
             The least number of alternatives, which should be added to every uncertainty flag. Has to be 1 or higher.
-        max_number_of_alternatives : int, optional
+        max_number_of_alternatives : int
             The largest number of alternatives, which should be added to every uncertainty flag. Has to be 1 or higher.
             If there is an entry which has already more then the maximum, this method has no effect on this entry.
-        list_of_columns: list[int], optional
+        list_of_columns: list[int]
             List of columns which should get alternatives. If no columns are choosen, every column will be processed.
         """
         if list_of_columns is None:

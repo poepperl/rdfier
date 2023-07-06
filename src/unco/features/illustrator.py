@@ -6,7 +6,7 @@ import requests
 
 class Illustrator:
     """
-        Class which gets a graphical version of a generated rdf file.
+    Class which gets a graphical version of a generated rdf file.
 
     Attributes
     ----------
@@ -26,7 +26,8 @@ class Illustrator:
 
     def get_illustration(self, path: str | Path):
         """
-            Method, which downloads the graphical version of the given rdf graph. Output will be saved in "data/output/downloaded_graph.png".
+        Method, which downloads the graphical version of the given rdf graph. Output will be saved in "data/output/downloaded_graph.png".
+        
         Attributes
         ----------
         path : Path
