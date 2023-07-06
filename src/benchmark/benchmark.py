@@ -241,7 +241,7 @@ if __name__ == "__main__":
     
 
     # Run benchmark numb of uncertainties------------------------------------------------------------------------------------------------
-    print(bench.benchmark_increasing_params(increasing_alternatives=False, fuseki=fuski, start=0, step=100, stop=1000))
+    print(bench.benchmark_increasing_params(increasing_alternatives=False, fuseki=fuski, start=0, stop=5000, step=1000))
 
     # Run benchmark numb of alternatives-------------------------------------------------------------------------------------------------
     # bench.graph_generator.rdfdata = UncertaintyGenerator(rdfdata).add_pseudorand_uncertainty_flags([1,2,3,4,5,7],min_uncertainties_per_column=1000,max_uncertainties_per_column=1000)
@@ -250,3 +250,4 @@ if __name__ == "__main__":
     # print(bench.graph_generator.rdfdata.data.columns[1]) # 2,3,4,7,8,9,10,16,17,18,19
 
     print(f"Insgesamte Laufzeit: {'%.0f' % (time()-full_time)}")
+    
