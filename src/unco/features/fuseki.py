@@ -62,6 +62,7 @@ class FusekiServer:
                 raise RuntimeError("Server is already running.")
             else:
                 self.server = subprocess.Popen(str(Path(UNCO_PATH, "src/unco/features/server_starter.bat")), creationflags=subprocess.CREATE_NEW_CONSOLE, start_new_session=True)
+                time.sleep(2)
         elif os.name == "posix":
             if self.server:
                 raise RuntimeError("Server is already running.")

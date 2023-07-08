@@ -1,59 +1,137 @@
 import streamlit.web.bootstrap
+import pandas as pd
+from unco.data import RDFData, UncertaintyGenerator, data_optimize
+from unco.features import GraphGenerator
+from src.benchmark.benchmark import Benchmark
+from unco import UNCO_PATH
+from pathlib import Path
+from time import time
+
+def benchmark():
+    increasing_alternatives = None
+    modellist = [None]
+    querylist = [None]
+    x_range: range = None
+    path = ""
+
+    all_model_ids = ["1","2","3","4","5","6","7","8","9","10"]
+    all_query_ids = ["1","2","3","4","5","6"]
+
+    while not Path(path).is_file() and path[-4:] != ".csv":
+        print("|--- Input your parameters:                    ---|")
+        print("|---                                           ---|")
+        print("|--- Select the input csv-file.                ---|")
+        path = input(">>>> Insert the path (example input):").strip()
+        if path == "Q": quit()
+        if path == "":
+            path = str(Path(UNCO_PATH,"data/input/example/input_format.csv"))
+        
+        if not Path(path).is_file() and path[-4:] != ".csv":
+            print("!!!! There is no csv-file on this path!        !!!!")
+
+    rdf_data = RDFData(data_optimize(pd.read_csv(path)))
+    path = ""
+
+    while not Path(path).is_file() and path[-4:] != ".csv":
+        print("|---                                           ---|")
+        print("|--- Select the namespaces csv-file.           ---|")
+        path = input(">>>> Insert a input path (example namespaces):").strip()
+        if path == "Q": quit()
+        if path == "":
+            path = str(Path(UNCO_PATH,"data/input/example/namespaces.csv"))
+        
+        if not Path(path).is_file() and path[-4:] != ".csv":
+            print("!!!! There is no csv-file on this path!        !!!!")
+
+    bench = Benchmark(rdf_data, path)
+    del rdf_data
+
+    while increasing_alternatives not in ["0", "1", ""]:
+        print("|---                                           ---|")
+        print("|--- Which parameter should be increased each  ---|")
+        print("|--- step?                                     ---|")
+        print("|--- 0 - Set mode to increasing uncertainties  ---|")
+        print("|--- 1 - Set mode to increasing alternatives   ---|")
+        increasing_alternatives = input(">>>> Choose your mode (0):").strip()
+        if increasing_alternatives == "Q": quit()
+        if increasing_alternatives not in ["0", "1", ""]: print("!!!! Wrong input!                              !!!!")
+    
+    increasing_alternatives = 0 if increasing_alternatives == "" else int(increasing_alternatives)
+    
+    while not all(ids in all_model_ids for ids in modellist):
+        print("|---                                           ---|")
+        print("|--- Choose the list of models.                ---|")
+        print("|--- Numbers from 1 to 10 separated by commas  ---|")
+        modellist = [number.strip() for number in input(">>>> Choose the models (all):").split(",")]
+        if modellist == ["Q"]: quit()
+        if modellist == [""]: modellist = all_model_ids
+        if not all(ids in all_model_ids for ids in modellist): print("!!!! Wrong input!                              !!!!")
+    
+    modellist = list(map(int, modellist))
+
+    while not all(ids in all_query_ids for ids in querylist):
+        print("|---                                           ---|")
+        print("|--- Choose the list of queries.               ---|")
+        print("|--- Numbers from 1 to 6 separated by commas   ---|")
+        querylist = [number.strip() for number in input(">>>> Choose the queries (all):").split(",")]
+        if querylist == ["Q"]: quit()
+        if querylist == [""]: querylist = all_query_ids
+        if not all(ids in all_query_ids for ids in querylist): print("!!!! Wrong input!                              !!!!")
+
+    querylist = list(map(int, querylist))
+
+    while not x_range:
+        print("|---                                           ---|")
+        print("|--- Choose the range of increasing.           ---|")
+        print("|--- Defined by Integers start, stop and step: ---|")
+        start = input(">>>> Set start (0):")
+        if start == "Q": quit()
+        stop = input(">>>> Set stop (1):")
+        if stop == "Q": quit()
+        step = input(">>>> Set step (1):")
+        if step == "Q": quit()
+
+        start = 0 if start == "" else start
+        stop = 1 if stop == "" else stop
+        step = 1 if step == "" else step
+
+        try:
+            start, stop, step = int(start), int(stop), int(step)
+        except ValueError:
+            print("!!!! Wrong input! Found non-integer values!    !!!!")
+            continue
+
+        if step < 1:
+            print("!!!! Step must be greater than 0!              !!!!")
+            continue
+        if stop <= start:
+            print("!!!! Stop must be greater than start!          !!!!")
+            continue
+        x_range = range(start, stop, step)
+        if not x_range:
+            print("!!!! Range must contain at least one number!   !!!!")
+    
+    full_time = time()
+
+    print(bench.run_benchmarktest(increasing_alternatives=increasing_alternatives, querylist=querylist, modellist=modellist, x_range=x_range))
+
+    print(f"full runtime: {'%.0f' % (time()-full_time)} seconds")
 
 def main():
-    print("|--- Welcome to UnCo. What do you want to do? ---|")
-    print("|--- 0 - Start a benchmark                    ---|")
-    print("|--- 1 - Start RDFier                         ---|")
-    mode = input(">>>> Choose the mode (0):")
+    mode = None
+    while mode not in ["0", "1", "2"]:
+        print("|--- Welcome to UnCo. What do you want to do?  ---|")
+        print("|--- 0 - Start a benchmark                     ---|")
+        print("|--- 1 - Start RDFier                          ---|")
+        print("|--- Q - Quit (you can quit in every step)     ---|")
+        mode = input(">>>> Choose the mode (0):")
+        if not mode: mode = "0"
+        if mode not in ["0", "1", "2"]: print("!!!! Wrong input!                              !!!!")
+
     if mode == "1":
         streamlit.web.bootstrap.run("src/app/RDFier.py", "", [], [])
     elif mode == "0":
-        increasing_alternatives = None
-        modellist = None
-        querylist = None
-        x_range: range = range(0, 301, 30)
-
-        while increasing_alternatives not in ["0", "1", ""]:
-            print("|--- Input your parameters:                   ---|")
-            print("|---                                          ---|")
-            print("|--- Increase alternatives?                   ---|")
-            print("|--- 0 - Set mode to increasing uncertainties ---|")
-            print("|--- 1 - Set mode to increasing uncertainties ---|")
-            increasing_alternatives = input(">>>> Choose your mode (0):").strip()
-            if increasing_alternatives not in ["0", "1", ""]: print("!!!! Wrong input!                             !!!!")
-        
-        increasing_alternatives = 0 if increasing_alternatives == "" else int(increasing_alternatives)
-        
-        while not all(ids in [1,2,3,4,5,6,7,8,9,10] for ids in modellist):
-            print("|---                                          ---|")
-            print("|--- Choose the list of models.               ---|")
-            print("|--- Numbers from 1 to 10 separated by commas ---|")
-            modellist = map(int, input(">>>> Choose the models (all):").split(","))
-            if not all(ids in [1,2,3,4,5,6,7,8,9,10] for ids in modellist): print("!!!! Wrong input!                             !!!!")
-        
-        if not modellist: modellist = [1,2,3,4,5,6,7,8,9,10]
-
-        while not all(ids in [1,2,3,4,5,6] for ids in querylist):
-            print("|---                                          ---|")
-            print("|--- Choose the list of queries.              ---|")
-            print("|--- Numbers from 1 to 6 separated by commas  ---|")
-            querylist = map(int, input(">>>> Choose the queries (all):").split(","))
-            if not all(ids in [1,2,3,4,5,6] for ids in querylist): print("!!!! Wrong input!                             !!!!")
-
-        if not querylist: querylist = [1,2,3,4,5,6]
-
-        while not x_range:
-            print("|---                                          ---|")
-            print("|--- Choose the range of increasing.          ---|")
-            print("|--- Defined by start, stop and step.         ---|")
-            start = input(">>>> Set start (0):")
-            stop = input(">>>> Set stop (301):")
-            step = input(">>>> Set step (30):")
-            start = 0 if start == "" else int(start)
-            stop = 301 if stop == "" else int(stop)
-            step = 30 if step == "" else int(step)
-            x_range = range(start, stop, step)
-            if not x_range: print("!!!! Wrong input!                             !!!!")
+        benchmark()
 
 if __name__ == "__main__":
     main()

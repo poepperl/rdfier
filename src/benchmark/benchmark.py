@@ -163,12 +163,12 @@ class Benchmark:
                     self.fserver.delete_graph()
                     self.fserver.upload_data(str(Path(UNCO_PATH, "data/output/graph.ttl")))
                 for index, query_numb in enumerate(querylist):
-                    altlist = [len(str(self.graph_generator.rdf_data.data.iat[key[0], key[1]]).split(';')) for key in self.graph_generator.rdf_data.uncertainties]
-                    tqdm.write(f"Run query {query_numb} of model {model_numb}. #uncertain cells = {len(self.graph_generator.rdf_data.uncertainties)}. #uncertain statements = {sum(altlist) if len(altlist) > 0 else 0}")
+                    altlist = [len(str(self.graph_generator.rdfdata.data.iat[key[0], key[1]]).split(';')) for key in self.graph_generator.rdfdata.uncertainties]
+                    tqdm.write(f"Run query {query_numb} of model {model_numb}. #uncertain cells = {len(self.graph_generator.rdfdata.uncertainties)}. #uncertain statements = {sum(altlist) if len(altlist) > 0 else 0}")
                     results[index][model_index].append(self._get_median(query_numb, model_numb))
 
                 if self.run_on_fuseki:
-                    bench.fserver.stop_server()
+                    self.fserver.stop_server()
 
         return [[mean(models[1:]) for models in sublist] for sublist in results]
 
@@ -192,9 +192,9 @@ class Benchmark:
 
         for count in tqdm(x_range):
             if increasing_alternatives:
-                un_generator = UncertaintyGenerator(self.graph_generator.rdf_data).add_pseudorand_alternatives(list_of_columns=[7, 8, 9, 16, 17, 18, 19], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdf_data
+                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[7, 8, 9, 16, 17, 18, 19], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
             else:
-                un_generator = UncertaintyGenerator(self.graph_generator.rdf_data).add_pseudorand_uncertainty_flags([2, 3, 4, 7], min_uncertainties_per_column=count, max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdf_data
+                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2, 3, 4, 7], min_uncertainties_per_column=count, max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
 
             del un_generator
             results.append(self._run_benchmark_unit(querylist, modellist))
@@ -203,7 +203,7 @@ class Benchmark:
         if len(x_range) > 2:
             self._plot_results_increasing_params(increasing_alternatives, x_range, results, querylist, modellist)
         else:
-            self.pretty_print_results(results, querylist, modellist)
+            self.pretty_print_results(results[0], querylist, modellist)
 
         return results
 
@@ -289,21 +289,3 @@ class Benchmark:
                 print("%.3f" % res + " | ", end="")
             print("\n", end="")
 
-
-if __name__ == "__main__":
-    # Load data---------------------------------------------------------------------------------------------------------
-    rdf_data = RDFData(data_optimize(pd.read_csv(Path(UNCO_PATH, "tests/testdata/afe/afe_noUn_ready.csv"))))
-    bench = Benchmark(rdf_data, str(Path(UNCO_PATH, "tests/testdata/afe/namespaces.csv")))
-    del rdf_data
-    full_time = time()
-
-    # Run afe benchmark ------------------------------------------------------------------------------------------------
-    # results : list[list[pd.DataFrame]] = bench.run_benchmarktest(increasing_alternatives=True, x_range=range(1))
-
-    # Run benchmark numb of uncertainties-------------------------------------------------------------------------------
-    # print(bench.run_benchmarktest(increasing_alternatives=False, x_range=range(0, 5000, 1000)))
-
-    # Run benchmark numb of alternatives--------------------------------------------------------------------------------
-    print(bench.run_benchmarktest(increasing_alternatives=True, x_range=range(0, 301, 30)))
-
-    print(f"Insgesamte Laufzeit: {'%.0f' % (time()-full_time)}")
