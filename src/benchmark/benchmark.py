@@ -45,7 +45,7 @@ class Benchmark:
         self.graph_generator = GraphGenerator(rdfdata)
         self.fserver = FusekiServer(Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0"))
         self.MEDIAN_LOOPS = 5
-        self.MEAN_LOOPS = 5
+        self.MEAN_LOOPS = 1
         self.run_on_fuseki = True
 
     def _generate_graph_with_model(self, model_id: int) -> None:
@@ -136,10 +136,10 @@ class Benchmark:
             ID of the model which was used to generate the current graph.
         """
         medianlist = []
-        for _ in range(self.MEDIAN_LOOPS+3):
+        for _ in range(self.MEDIAN_LOOPS+5):
             time_difference = self.run_query_of_model(query_id, model_id)
             medianlist.append(time_difference)
-        return median(medianlist[3:])
+        return median(medianlist[5:])
 
     def _run_benchmark_unit(self, querylist: list[int] = [1, 2, 3, 4, 5, 6], modellist: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]):
         """
