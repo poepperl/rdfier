@@ -45,7 +45,7 @@ class Benchmark:
         self.graph_generator = GraphGenerator(rdfdata)
         self.fserver = FusekiServer(Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0"))
         self.MEDIAN_LOOPS = 5
-        self.MEAN_LOOPS = 1
+        self.MEAN_LOOPS = 5
         self.run_on_fuseki = True
 
     def _generate_graph_with_model(self, model_id: int) -> None:
