@@ -1,72 +1,64 @@
 # Table of Contents
 
-* [run](#run)
-* [\_\_init\_\_](#__init__)
-* [data](#data)
-* [data.afe\_mapping\_pipeline](#data.afe_mapping_pipeline)
-  * [replace\_unreadable\_chars](#data.afe_mapping_pipeline.replace_unreadable_chars)
-  * [change\_afe\_coin\_id](#data.afe_mapping_pipeline.change_afe_coin_id)
-  * [change\_findspot](#data.afe_mapping_pipeline.change_findspot)
-  * [turn\_nomisma\_values\_to\_uris](#data.afe_mapping_pipeline.turn_nomisma_values_to_uris)
-  * [combine\_mint\_and\_denomination](#data.afe_mapping_pipeline.combine_mint_and_denomination)
-  * [simplify\_all\_id\_columns](#data.afe_mapping_pipeline.simplify_all_id_columns)
-  * [remove\_wrong\_context\_from\_obverse](#data.afe_mapping_pipeline.remove_wrong_context_from_obverse)
-  * [remove\_wrong\_context\_from\_reverse](#data.afe_mapping_pipeline.remove_wrong_context_from_reverse)
-  * [change\_gyear\_format](#data.afe_mapping_pipeline.change_gyear_format)
-  * [replace\_uncertainties\_with\_random\_certainties](#data.afe_mapping_pipeline.replace_uncertainties_with_random_certainties)
-  * [remove\_datetime](#data.afe_mapping_pipeline.remove_datetime)
-  * [remove\_uncertainties](#data.afe_mapping_pipeline.remove_uncertainties)
-  * [remove\_corrosion\_legend\_without\_obreverse](#data.afe_mapping_pipeline.remove_corrosion_legend_without_obreverse)
-  * [create\_synthetic\_afe](#data.afe_mapping_pipeline.create_synthetic_afe)
-  * [run\_pipeline\_on\_dataframe](#data.afe_mapping_pipeline.run_pipeline_on_dataframe)
-* [data.analysis](#data.analysis)
-* [data.rdf\_data](#data.rdf_data)
-  * [RDFData](#data.rdf_data.RDFData)
-    * [\_\_init\_\_](#data.rdf_data.RDFData.__init__)
-    * [data\_optimize](#data.rdf_data.RDFData.data_optimize)
-* [data.uncertainty\_generator](#data.uncertainty_generator)
-  * [UncertaintyGenerator](#data.uncertainty_generator.UncertaintyGenerator)
-    * [add\_pseudorand\_uncertainty\_flags](#data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_uncertainty_flags)
-    * [add\_pseudorand\_alternatives](#data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_alternatives)
-* [features](#features)
-* [features.fuseki](#features.fuseki)
-  * [FusekiServer](#features.fuseki.FusekiServer)
-    * [\_\_init\_\_](#features.fuseki.FusekiServer.__init__)
-    * [start\_server](#features.fuseki.FusekiServer.start_server)
-    * [upload\_data](#features.fuseki.FusekiServer.upload_data)
-    * [delete\_graph](#features.fuseki.FusekiServer.delete_graph)
-    * [run\_query](#features.fuseki.FusekiServer.run_query)
-    * [stop\_server](#features.fuseki.FusekiServer.stop_server)
-* [features.graph\_generator](#features.graph_generator)
-  * [GraphGenerator](#features.graph_generator.GraphGenerator)
-    * [\_\_init\_\_](#features.graph_generator.GraphGenerator.__init__)
-    * [load\_prefixes](#features.graph_generator.GraphGenerator.load_prefixes)
-    * [generate\_solution](#features.graph_generator.GraphGenerator.generate_solution)
-    * [run\_query](#features.graph_generator.GraphGenerator.run_query)
-    * [change\_to\_model\_9a](#features.graph_generator.GraphGenerator.change_to_model_9a)
-    * [change\_to\_model\_9b](#features.graph_generator.GraphGenerator.change_to_model_9b)
-* [features.illustrator](#features.illustrator)
-  * [Illustrator](#features.illustrator.Illustrator)
-    * [\_\_init\_\_](#features.illustrator.Illustrator.__init__)
-    * [get\_illustration](#features.illustrator.Illustrator.get_illustration)
+* [unco](#unco)
+* [unco.data.afe\_mapping\_pipeline](#unco.data.afe_mapping_pipeline)
+  * [replace\_unreadable\_chars](#unco.data.afe_mapping_pipeline.replace_unreadable_chars)
+  * [change\_afe\_coin\_id](#unco.data.afe_mapping_pipeline.change_afe_coin_id)
+  * [change\_findspot](#unco.data.afe_mapping_pipeline.change_findspot)
+  * [turn\_nomisma\_values\_to\_uris](#unco.data.afe_mapping_pipeline.turn_nomisma_values_to_uris)
+  * [combine\_mint\_and\_denomination](#unco.data.afe_mapping_pipeline.combine_mint_and_denomination)
+  * [simplify\_all\_id\_columns](#unco.data.afe_mapping_pipeline.simplify_all_id_columns)
+  * [remove\_wrong\_context\_from\_obverse](#unco.data.afe_mapping_pipeline.remove_wrong_context_from_obverse)
+  * [remove\_wrong\_context\_from\_reverse](#unco.data.afe_mapping_pipeline.remove_wrong_context_from_reverse)
+  * [change\_gyear\_format](#unco.data.afe_mapping_pipeline.change_gyear_format)
+  * [replace\_uncertainties\_with\_random\_certainties](#unco.data.afe_mapping_pipeline.replace_uncertainties_with_random_certainties)
+  * [remove\_datetime](#unco.data.afe_mapping_pipeline.remove_datetime)
+  * [remove\_uncertainties](#unco.data.afe_mapping_pipeline.remove_uncertainties)
+  * [remove\_corrosion\_legend\_without\_obreverse](#unco.data.afe_mapping_pipeline.remove_corrosion_legend_without_obreverse)
+  * [create\_synthetic\_afe](#unco.data.afe_mapping_pipeline.create_synthetic_afe)
+  * [run\_pipeline\_on\_dataframe](#unco.data.afe_mapping_pipeline.run_pipeline_on_dataframe)
+* [unco.data.analysis](#unco.data.analysis)
+* [unco.data.rdf\_data](#unco.data.rdf_data)
+  * [RDFData](#unco.data.rdf_data.RDFData)
+    * [\_\_init\_\_](#unco.data.rdf_data.RDFData.__init__)
+    * [data\_optimize](#unco.data.rdf_data.RDFData.data_optimize)
+* [unco.data.uncertainty\_generator](#unco.data.uncertainty_generator)
+  * [UncertaintyGenerator](#unco.data.uncertainty_generator.UncertaintyGenerator)
+    * [add\_pseudorand\_uncertainty\_flags](#unco.data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_uncertainty_flags)
+    * [add\_pseudorand\_alternatives](#unco.data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_alternatives)
+* [unco.data](#unco.data)
+* [unco.features.fuseki](#unco.features.fuseki)
+  * [FusekiServer](#unco.features.fuseki.FusekiServer)
+    * [\_\_init\_\_](#unco.features.fuseki.FusekiServer.__init__)
+    * [start\_server](#unco.features.fuseki.FusekiServer.start_server)
+    * [upload\_data](#unco.features.fuseki.FusekiServer.upload_data)
+    * [delete\_graph](#unco.features.fuseki.FusekiServer.delete_graph)
+    * [run\_query](#unco.features.fuseki.FusekiServer.run_query)
+    * [stop\_server](#unco.features.fuseki.FusekiServer.stop_server)
+* [unco.features.graph\_generator](#unco.features.graph_generator)
+  * [GraphGenerator](#unco.features.graph_generator.GraphGenerator)
+    * [\_\_init\_\_](#unco.features.graph_generator.GraphGenerator.__init__)
+    * [load\_prefixes](#unco.features.graph_generator.GraphGenerator.load_prefixes)
+    * [generate\_solution](#unco.features.graph_generator.GraphGenerator.generate_solution)
+    * [run\_query](#unco.features.graph_generator.GraphGenerator.run_query)
+    * [change\_to\_model\_9a](#unco.features.graph_generator.GraphGenerator.change_to_model_9a)
+    * [change\_to\_model\_9b](#unco.features.graph_generator.GraphGenerator.change_to_model_9b)
+* [unco.features.illustrator](#unco.features.illustrator)
+  * [Illustrator](#unco.features.illustrator.Illustrator)
+    * [\_\_init\_\_](#unco.features.illustrator.Illustrator.__init__)
+    * [get\_illustration](#unco.features.illustrator.Illustrator.get_illustration)
+* [unco.features](#unco.features)
+* [unco.run](#unco.run)
 
-<a id="run"></a>
+<a id="unco"></a>
 
-# run
+# unco
 
-<a id="__init__"></a>
+<a id="unco.data.afe_mapping_pipeline"></a>
 
-# \_\_init\_\_
+# unco.data.afe\_mapping\_pipeline
 
-<a id="data"></a>
-
-# data
-
-<a id="data.afe_mapping_pipeline"></a>
-
-# data.afe\_mapping\_pipeline
-
-<a id="data.afe_mapping_pipeline.replace_unreadable_chars"></a>
+<a id="unco.data.afe_mapping_pipeline.replace_unreadable_chars"></a>
 
 #### replace\_unreadable\_chars
 
@@ -82,7 +74,7 @@ Replaces all uft-8 unreadable characters.
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.change_afe_coin_id"></a>
+<a id="unco.data.afe_mapping_pipeline.change_afe_coin_id"></a>
 
 #### change\_afe\_coin\_id
 
@@ -98,7 +90,7 @@ Turns the ids in column "Coin^^uri" into "afe:"+str(id)
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.change_findspot"></a>
+<a id="unco.data.afe_mapping_pipeline.change_findspot"></a>
 
 #### change\_findspot
 
@@ -114,7 +106,7 @@ Turns the urls in column "nmo:hasFindspot^^uri" into "gaz:"+str(id)
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.turn_nomisma_values_to_uris"></a>
+<a id="unco.data.afe_mapping_pipeline.turn_nomisma_values_to_uris"></a>
 
 #### turn\_nomisma\_values\_to\_uris
 
@@ -130,7 +122,7 @@ Turns the values in nomisma columns "nm:"+str(value)
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.combine_mint_and_denomination"></a>
+<a id="unco.data.afe_mapping_pipeline.combine_mint_and_denomination"></a>
 
 #### combine\_mint\_and\_denomination
 
@@ -146,7 +138,7 @@ Combines the two mint and denomination columns.
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.simplify_all_id_columns"></a>
+<a id="unco.data.afe_mapping_pipeline.simplify_all_id_columns"></a>
 
 #### simplify\_all\_id\_columns
 
@@ -162,7 +154,7 @@ All id values will be replaced with "1".
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.remove_wrong_context_from_obverse"></a>
+<a id="unco.data.afe_mapping_pipeline.remove_wrong_context_from_obverse"></a>
 
 #### remove\_wrong\_context\_from\_obverse
 
@@ -178,7 +170,7 @@ Removes reverse context from obverse.
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.remove_wrong_context_from_reverse"></a>
+<a id="unco.data.afe_mapping_pipeline.remove_wrong_context_from_reverse"></a>
 
 #### remove\_wrong\_context\_from\_reverse
 
@@ -194,7 +186,7 @@ Removes obverse context from reverse.
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.change_gyear_format"></a>
+<a id="unco.data.afe_mapping_pipeline.change_gyear_format"></a>
 
 #### change\_gyear\_format
 
@@ -210,7 +202,7 @@ Takes float entries of gyear columns and change them to int.
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.replace_uncertainties_with_random_certainties"></a>
+<a id="unco.data.afe_mapping_pipeline.replace_uncertainties_with_random_certainties"></a>
 
 #### replace\_uncertainties\_with\_random\_certainties
 
@@ -227,7 +219,7 @@ Replaces all not-null-entries in the columns with "^^certainty" with pseudo rand
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.remove_datetime"></a>
+<a id="unco.data.afe_mapping_pipeline.remove_datetime"></a>
 
 #### remove\_datetime
 
@@ -243,7 +235,7 @@ Remove all columns with "^^xsd:gYear".
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.remove_uncertainties"></a>
+<a id="unco.data.afe_mapping_pipeline.remove_uncertainties"></a>
 
 #### remove\_uncertainties
 
@@ -259,7 +251,7 @@ Remove all columns with "^^certainty".
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.remove_corrosion_legend_without_obreverse"></a>
+<a id="unco.data.afe_mapping_pipeline.remove_corrosion_legend_without_obreverse"></a>
 
 #### remove\_corrosion\_legend\_without\_obreverse
 
@@ -276,7 +268,7 @@ Remove all corrosions and legends, without a ob- or reverse.
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.afe_mapping_pipeline.create_synthetic_afe"></a>
+<a id="unco.data.afe_mapping_pipeline.create_synthetic_afe"></a>
 
 #### create\_synthetic\_afe
 
@@ -294,7 +286,7 @@ Takes the afe dataframe and size, and creates a new dataframe with new entries.
   size : int
   Number of rows of the new dataframe
 
-<a id="data.afe_mapping_pipeline.run_pipeline_on_dataframe"></a>
+<a id="unco.data.afe_mapping_pipeline.run_pipeline_on_dataframe"></a>
 
 #### run\_pipeline\_on\_dataframe
 
@@ -310,15 +302,15 @@ Takes float entries of gyear columns and change them to int.
   dataframe : pd.DataFrame
   Dataframe which should be updated
 
-<a id="data.analysis"></a>
+<a id="unco.data.analysis"></a>
 
-# data.analysis
+# unco.data.analysis
 
-<a id="data.rdf_data"></a>
+<a id="unco.data.rdf_data"></a>
 
-# data.rdf\_data
+# unco.data.rdf\_data
 
-<a id="data.rdf_data.RDFData"></a>
+<a id="unco.data.rdf_data.RDFData"></a>
 
 ## RDFData Objects
 
@@ -339,7 +331,7 @@ types_and_languages: dict
 uncertainties: dict
     Dictionary with (row, column) of an uncertain cell as key and the uncertainty as value.
 
-<a id="data.rdf_data.RDFData.__init__"></a>
+<a id="unco.data.rdf_data.RDFData.__init__"></a>
 
 #### \_\_init\_\_
 
@@ -352,7 +344,7 @@ Parameters
 dataframe : pd.DataFrame
     Dataframe of the data which gets pseudorandom uncertainty.
 
-<a id="data.rdf_data.RDFData.data_optimize"></a>
+<a id="unco.data.rdf_data.RDFData.data_optimize"></a>
 
 #### data\_optimize
 
@@ -369,11 +361,11 @@ df: pd.DataFrame
 object_option: bool
     If true, try to convert object to category.
 
-<a id="data.uncertainty_generator"></a>
+<a id="unco.data.uncertainty_generator"></a>
 
-# data.uncertainty\_generator
+# unco.data.uncertainty\_generator
 
-<a id="data.uncertainty_generator.UncertaintyGenerator"></a>
+<a id="unco.data.uncertainty_generator.UncertaintyGenerator"></a>
 
 ## UncertaintyGenerator Objects
 
@@ -388,7 +380,7 @@ Attributes
 rdfdata : RDFData
     The RDFData, which should get the uncertainties.
 
-<a id="data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_uncertainty_flags"></a>
+<a id="unco.data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_uncertainty_flags"></a>
 
 #### add\_pseudorand\_uncertainty\_flags
 
@@ -410,7 +402,7 @@ min_uncertainties_per_column: int
 max_uncertainties_per_column: int
     Maximal number of uncertainties each column.
 
-<a id="data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_alternatives"></a>
+<a id="unco.data.uncertainty_generator.UncertaintyGenerator.add_pseudorand_alternatives"></a>
 
 #### add\_pseudorand\_alternatives
 
@@ -433,15 +425,15 @@ max_number_of_alternatives : int
 list_of_columns: list[int]
     List of columns which should get alternatives. If no columns are choosen, every column will be processed.
 
-<a id="features"></a>
+<a id="unco.data"></a>
 
-# features
+# unco.data
 
-<a id="features.fuseki"></a>
+<a id="unco.features.fuseki"></a>
 
-# features.fuseki
+# unco.features.fuseki
 
-<a id="features.fuseki.FusekiServer"></a>
+<a id="unco.features.fuseki.FusekiServer"></a>
 
 ## FusekiServer Objects
 
@@ -458,7 +450,7 @@ FUSEKI_PATH: str
 server: subprocess.Popen
     Server instance, if the fuseki server is running.
 
-<a id="features.fuseki.FusekiServer.__init__"></a>
+<a id="unco.features.fuseki.FusekiServer.__init__"></a>
 
 #### \_\_init\_\_
 
@@ -471,7 +463,7 @@ Parameters
 fuseki_path: str | Path
     Path to the fuseki server folder.
 
-<a id="features.fuseki.FusekiServer.start_server"></a>
+<a id="unco.features.fuseki.FusekiServer.start_server"></a>
 
 #### start\_server
 
@@ -481,7 +473,7 @@ def start_server() -> None
 
 Method, which starts the fuseki server.
 
-<a id="features.fuseki.FusekiServer.upload_data"></a>
+<a id="unco.features.fuseki.FusekiServer.upload_data"></a>
 
 #### upload\_data
 
@@ -496,7 +488,7 @@ Parameters
 path: str
     Path to the file that should be uploaded.
 
-<a id="features.fuseki.FusekiServer.delete_graph"></a>
+<a id="unco.features.fuseki.FusekiServer.delete_graph"></a>
 
 #### delete\_graph
 
@@ -506,7 +498,7 @@ def delete_graph() -> None
 
 Method, which deletes the current graph ds.
 
-<a id="features.fuseki.FusekiServer.run_query"></a>
+<a id="unco.features.fuseki.FusekiServer.run_query"></a>
 
 #### run\_query
 
@@ -523,7 +515,7 @@ query: str
 save_result: bool
     If True, the method saves the result in data/output/query_results_fuseki.csv.
 
-<a id="features.fuseki.FusekiServer.stop_server"></a>
+<a id="unco.features.fuseki.FusekiServer.stop_server"></a>
 
 #### stop\_server
 
@@ -533,11 +525,11 @@ def stop_server() -> None
 
 Method, which stops the fuseki server.
 
-<a id="features.graph_generator"></a>
+<a id="unco.features.graph_generator"></a>
 
-# features.graph\_generator
+# unco.features.graph\_generator
 
-<a id="features.graph_generator.GraphGenerator"></a>
+<a id="unco.features.graph_generator.GraphGenerator"></a>
 
 ## GraphGenerator Objects
 
@@ -558,7 +550,7 @@ OUTPUT_FOLDER: Path
 prefixes: dict
     Dictionary which contains the prefixes and namespaces which binds to the graph.
 
-<a id="features.graph_generator.GraphGenerator.__init__"></a>
+<a id="unco.features.graph_generator.GraphGenerator.__init__"></a>
 
 #### \_\_init\_\_
 
@@ -571,7 +563,7 @@ Parameters
 rdfdata: RDFData
     Object which contains the data of the rdf graph.
 
-<a id="features.graph_generator.GraphGenerator.load_prefixes"></a>
+<a id="unco.features.graph_generator.GraphGenerator.load_prefixes"></a>
 
 #### load\_prefixes
 
@@ -586,7 +578,7 @@ Parameters
 path_data: str | DataFrame
     Path to the csv file with header: (prefix, namespace) or DataFrame of the file.
 
-<a id="features.graph_generator.GraphGenerator.generate_solution"></a>
+<a id="unco.features.graph_generator.GraphGenerator.generate_solution"></a>
 
 #### generate\_solution
 
@@ -604,7 +596,7 @@ xml_format: bool
     If True, the generated graph will be saved in data/output/graph.ttl in turtle format.
     Otherwise it will be saved in data/output/graph.rdf in xml format.
 
-<a id="features.graph_generator.GraphGenerator.run_query"></a>
+<a id="unco.features.graph_generator.GraphGenerator.run_query"></a>
 
 #### run\_query
 
@@ -621,7 +613,7 @@ query: str
 save_result: bool
     If True, the method saves the result in data/output/query_results_fuseki.csv.
 
-<a id="features.graph_generator.GraphGenerator.change_to_model_9a"></a>
+<a id="unco.features.graph_generator.GraphGenerator.change_to_model_9a"></a>
 
 #### change\_to\_model\_9a
 
@@ -631,7 +623,7 @@ def change_to_model_9a() -> None
 
 Creates all rdf* uncertain statements of solution 9a.
 
-<a id="features.graph_generator.GraphGenerator.change_to_model_9b"></a>
+<a id="unco.features.graph_generator.GraphGenerator.change_to_model_9b"></a>
 
 #### change\_to\_model\_9b
 
@@ -641,11 +633,11 @@ def change_to_model_9b() -> None
 
 Creates all rdf* uncertain statements of solution 9b.
 
-<a id="features.illustrator"></a>
+<a id="unco.features.illustrator"></a>
 
-# features.illustrator
+# unco.features.illustrator
 
-<a id="features.illustrator.Illustrator"></a>
+<a id="unco.features.illustrator.Illustrator"></a>
 
 ## Illustrator Objects
 
@@ -660,7 +652,7 @@ Attributes
 path : Path
     Path to the rdf data which should get a graphical version.
 
-<a id="features.illustrator.Illustrator.__init__"></a>
+<a id="unco.features.illustrator.Illustrator.__init__"></a>
 
 #### \_\_init\_\_
 
@@ -673,7 +665,7 @@ Parameters
 path : str | Path
     Path to the rdf file.
 
-<a id="features.illustrator.Illustrator.get_illustration"></a>
+<a id="unco.features.illustrator.Illustrator.get_illustration"></a>
 
 #### get\_illustration
 
@@ -687,4 +679,12 @@ Attributes
 ----------
 path : Path
     Path to the rdf data which should get a graphical version.
+
+<a id="unco.features"></a>
+
+# unco.features
+
+<a id="unco.run"></a>
+
+# unco.run
 
