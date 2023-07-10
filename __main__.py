@@ -90,6 +90,7 @@ def benchmark():
         if not all(cols in set_of_columns for cols in column_list): print("!!!! Wrong input!                              !!!!")
     
     del set_of_columns
+    column_list = list(map(int, column_list))
     
     while not all(ids in all_model_ids for ids in modellist):
         print("|---                                           ---|")
