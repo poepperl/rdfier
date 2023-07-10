@@ -326,7 +326,7 @@ def create_synthetic_afe(dataframe: pd.DataFrame, size: int) -> None:
     column_dict[dataframe.columns[0]] = [f"afe:{i+1}" for i in range(size)]
     
     new_dataframe = pd.DataFrame(data=column_dict)
-    new_dataframe.to_csv(Path(UNCO_PATH, "tests/testdata/afe/synthetic.csv"), index=False)
+    new_dataframe.to_csv(Path(UNCO_PATH, "data/testdata/afe/synthetic.csv"), index=False)
 
 
 def run_pipeline_on_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -351,12 +351,12 @@ def run_pipeline_on_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = replace_uncertainties_with_random_certainties(dataframe)
     dataframe = remove_datetime(dataframe)
 
-    dataframe.to_csv(Path(UNCO_PATH, "tests/testdata/afe/afe_ready.csv"), index=False)
+    dataframe.to_csv(Path(UNCO_PATH, "data/testdata/afe/afe_ready.csv"), index=False)
     remove_uncertainties(dataframe)\
         .sample(n=10)\
-        .to_csv(Path(UNCO_PATH, "tests/testdata/afe/afemapping_changed_10rows.csv"), index=False)
+        .to_csv(Path(UNCO_PATH, "data/testdata/afe/afemapping_changed_10rows.csv"), index=False)
 
-    remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH, "tests/testdata/afe/afe_noUn_ready.csv"), index=False)
+    remove_uncertainties(dataframe).to_csv(Path(UNCO_PATH, "data/testdata/afe/afe_noUn_ready.csv"), index=False)
 
     create_synthetic_afe(remove_uncertainties(dataframe), 16554)
 
@@ -367,7 +367,7 @@ if __name__ == "__main__":
     from unco import UNCO_PATH
     from unco.data.data_util import data_optimize
 
-    df = data_optimize(pd.read_csv(Path(UNCO_PATH, "tests/testdata/afe/afe.csv")))
+    df = data_optimize(pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/afe.csv")))
 
     df = run_pipeline_on_dataframe(df)
 
@@ -380,6 +380,6 @@ if __name__ == "__main__":
 
     # gg = GraphGenerator(rdf_data)
 
-    # gg.load_prefixes(str(Path(UNCO_PATH, "tests/testdata/afe/namespaces.csv")))
+    # gg.load_prefixes(str(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv")))
 
     # gg.generate_solution(xml_format=False, model_id=9)

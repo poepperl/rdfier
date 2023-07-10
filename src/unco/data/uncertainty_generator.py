@@ -191,13 +191,13 @@ if __name__ == "__main__":
     from unco.data.data_util import data_optimize
     from pathlib import Path
 
-    file = open(str(Path(UNCO_PATH, "tests/testdata/afe/afe_ready.csv")), encoding='utf-8')
+    file = open(str(Path(UNCO_PATH, "data/testdata/afe/afe_ready.csv")), encoding='utf-8')
 
     rdf_data = RDFData(data_optimize(pd.read_csv(file)))
     g = UncertaintyGenerator(rdfdata=rdf_data)
     rdf_data = g.add_pseudorand_alternatives(list_of_columns=None, min_number_of_alternatives=5, max_number_of_alternatives=5)
 
     dd = GraphGenerator(rdf_data)
-    dd.load_prefixes(str(Path(UNCO_PATH, "tests/testdata/afe/namespaces.csv")))
+    dd.load_prefixes(str(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv")))
     dd.generate_solution(8, xml_format=False)
     g = Illustrator(Path(UNCO_PATH, "data/output/graph.ttl"))

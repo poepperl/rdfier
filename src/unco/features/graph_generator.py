@@ -571,8 +571,8 @@ class GraphGenerator:
 
 
 if __name__ == "__main__":
-    afe = open(str(Path(UNCO_PATH, "tests/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
-    prefixes = str(Path(UNCO_PATH, "tests/testdata/afe/namespaces.csv"))
+    afe = open(str(Path(UNCO_PATH, "data/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
+    prefixes = str(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv"))
 
     from unco.data.uncertainty_generator import UncertaintyGenerator
     from unco.data.data_util import data_optimize
