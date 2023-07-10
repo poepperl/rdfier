@@ -1,7 +1,6 @@
 import streamlit.web.bootstrap
 import pandas as pd
-from unco.data import RDFData, UncertaintyGenerator
-from unco.features import GraphGenerator
+from unco.data import RDFData
 from src.benchmark.benchmark import Benchmark
 from unco import UNCO_PATH
 from pathlib import Path
