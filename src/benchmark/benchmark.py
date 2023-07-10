@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from statistics import median, mean
 from unco import UNCO_PATH
-from unco.data.data_util import data_optimize
 from unco.data.rdf_data import RDFData
 from unco.data.uncertainty_generator import UncertaintyGenerator
 from unco.features.fuseki import FusekiServer

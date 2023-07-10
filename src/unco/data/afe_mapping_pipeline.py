@@ -365,9 +365,8 @@ def run_pipeline_on_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     from unco import UNCO_PATH
-    from unco.data.data_util import data_optimize
 
-    df = data_optimize(pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/afe.csv")))
+    df = pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/afe.csv"))
 
     df = run_pipeline_on_dataframe(df)
 

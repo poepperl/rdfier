@@ -7,7 +7,6 @@ import os
 from io import StringIO
 from pathlib import Path
 from unco import UNCO_PATH
-from unco.data.data_util import data_optimize
 
 OUTPUT_FOLDER = Path(UNCO_PATH, "data/output")
 
@@ -116,7 +115,7 @@ class FusekiServer:
         response = requests.get('http://localhost:3030/ds/query', params=params, headers=headers)
 
         if save_result:
-            csvdata = data_optimize(pd.read_csv(StringIO(response.text), encoding='utf-8'))
+            csvdata = pd.read_csv(StringIO(response.text), encoding='utf-8')
             csvdata.to_csv(str(Path(OUTPUT_FOLDER, "query_results_fuseki.csv")))
             return csvdata
 

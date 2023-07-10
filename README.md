@@ -1,6 +1,10 @@
 Uncertainty Comparator
 ======================
 
+Description
+-----------
+This project contains tools for importing datasets with uncertainties, transforming them into rdf graphs and executing SPARQL queries.
+Furthermore, benchmarks can be executed to compare different models of uncertainties in RDF graphs.
 
 Project Organization
 --------------------
@@ -49,3 +53,12 @@ source .venv/bin/activate
 pip3 install -r requirements.txt
 python3 .
 ```
+
+If you want to run a benchmark, you must first download a [Apache Jena Fuseki](https://jena.apache.org/download/index.cgi) server and install a suitable Java distribution.
+When starting UnCo, the location of the server folder is requested. If no path is given, the program expects a "apache-jena-fuseki-4.8.0" folder in src.
+
+--------
+
+Documentation
+-------------
+A documentation of UnCo is available in English ([here](docu/0_en_documentation.md)) and German ([here](docu/0_de_dokumentation.md)).

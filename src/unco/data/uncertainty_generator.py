@@ -188,12 +188,11 @@ class UncertaintyGenerator:
 
 if __name__ == "__main__":
     from unco import UNCO_PATH
-    from unco.data.data_util import data_optimize
     from pathlib import Path
 
     file = open(str(Path(UNCO_PATH, "data/testdata/afe/afe_ready.csv")), encoding='utf-8')
 
-    rdf_data = RDFData(data_optimize(pd.read_csv(file)))
+    rdf_data = RDFData(pd.read_csv(file))
     g = UncertaintyGenerator(rdfdata=rdf_data)
     rdf_data = g.add_pseudorand_alternatives(list_of_columns=None, min_number_of_alternatives=5, max_number_of_alternatives=5)
 

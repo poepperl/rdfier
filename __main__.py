@@ -1,6 +1,6 @@
 import streamlit.web.bootstrap
 import pandas as pd
-from unco.data import RDFData, UncertaintyGenerator, data_optimize
+from unco.data import RDFData, UncertaintyGenerator
 from unco.features import GraphGenerator
 from src.benchmark.benchmark import Benchmark
 from unco import UNCO_PATH
@@ -29,7 +29,7 @@ def benchmark():
         if not Path(path).is_file() and path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
 
-    rdf_data = RDFData(data_optimize(pd.read_csv(path)))
+    rdf_data = RDFData(pd.read_csv(path))
     path = ""
 
     while not Path(path).is_file() and path[-4:] != ".csv":

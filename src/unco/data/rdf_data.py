@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from warnings import warn
 
 class RDFData:
@@ -24,7 +25,7 @@ class RDFData:
         dataframe : pd.DataFrame
             Dataframe of the data which gets pseudorandom uncertainty.
         """
-        self.data = dataframe
+        self.data = self.data_optimize(dataframe)
         self.triple_plan: dict = {}
         self.types_and_languages: dict[tuple[int, int], list[str]] = {}
         self.uncertainties: dict = {}
@@ -32,6 +33,62 @@ class RDFData:
         self._generate_triple_plan()
         self._load_uncertainties()
         self._generate_type_and_language_plan()
+
+    def data_optimize(self, dataframe: pd.DataFrame, object_option=True):
+        """
+        Reduce the size of the input dataframe
+
+        Parameters
+        ----------
+        df: pd.DataFrame
+            Input dataframe which should get smaller.
+        object_option: bool
+            If true, try to convert object to category.
+        """
+
+        # loop columns in the dataframe to downcast the dtype
+        for col in dataframe.columns:
+            # process the int columns
+            if dataframe[col].dtype == 'int':
+                col_min = dataframe[col].min()
+                col_max = dataframe[col].max()
+                # if all are non-negative, change to uint
+                if col_min >= 0:
+                    if col_max < np.iinfo(np.uint8).max:
+                        dataframe[col] = dataframe[col].astype(np.uint8)
+                    elif col_max < np.iinfo(np.uint16).max:
+                        dataframe[col] = dataframe[col].astype(np.uint16)
+                    elif col_max < np.iinfo(np.uint32).max:
+                        dataframe[col] = dataframe[col].astype(np.uint32)
+                    else:
+                        dataframe[col] = dataframe[col]
+                else:
+                    # if it has negative values, downcast based on the min and max
+                    if col_max < np.iinfo(np.int8).max and col_min > np.iinfo(np.int8).min:
+                        dataframe[col] = dataframe[col].astype(np.int8)
+                    elif col_max < np.iinfo(np.int16).max and col_min > np.iinfo(np.int16).min:
+                        dataframe[col] = dataframe[col].astype(np.int16)
+                    elif col_max < np.iinfo(np.int32).max and col_min > np.iinfo(np.int32).min:
+                        dataframe[col] = dataframe[col].astype(np.int32)
+                    else:
+                        dataframe[col] = dataframe[col]
+                        
+            # process the float columns
+            elif dataframe[col].dtype == 'float':
+                col_min = dataframe[col].min()
+                col_max = dataframe[col].max()
+                # downcast based on the min and max
+                if col_min > np.finfo(np.float32).min and col_max < np.finfo(np.float32).max:
+                    dataframe[col] = dataframe[col].astype(np.float32)
+                else:
+                    dataframe[col] = dataframe[col]
+
+            if object_option:
+                if dataframe[col].dtype == 'object':
+                    if len(dataframe[col].value_counts()) < 0.5 * dataframe.shape[0]:
+                        dataframe[col] = dataframe[col].astype('category')
+
+        return dataframe
 
     def _generate_triple_plan(self):
         """
