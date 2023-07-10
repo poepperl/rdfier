@@ -1,53 +1,51 @@
-RDFier
-======
+Uncertainty Comparator
+======================
 
 
 Project Organization
 --------------------
 
     ├── data
-    │   └── output          <- Output files.
+    |   ├── input           <- Example input files.
+    |   ├── output          <- Output files.
+    |   ├── results         <- Results of the master thesis benchmarks.
+    │   └── thesis_graphs   <- Graphs and Code which is shown in the thesis.
     |
-    ├── docs                <- The documentation of RDFier.
+    ├── docu                <- The documentation of UnCo.
+    │  
+    ├── execution           <- Execution and installation files.
     │  
     ├── src
-    |   ├── setup.py            <- Makes project pip-installable (pip install -e .).
-    |   ├── app                 <- Streamlit webpage of the RDFier.
-    |   ├── app_unco            <- Streamlit webpage includes a method to create pseudorandom uncertainties.
-    |   ├── fuseki              <- Fuseki server for benchmarktests.
-    |   ├── unco                <- This is the RDFier!
-    │       ├── data
-    │       └── features
+    |   ├── benchmark       <- Scripts and queries needed for benchmarking.
+    |   ├── rdfier_app      <- The streamlit application RDFier.
+    |   ├── unco            <- This is UnCo!
+    |   └── setup.py        <- Makes project pip-installable (pip install -e ./src).
     |
-    ├── tests               <- Tests and test data.
+    ├── __main__.py         <- Starts UnCo with "python ."
     |
-    ├── requirements.txt    <- Required python libraries.
+    ├── README.md           <- This document.
     |
-    └── README.md           <- This document.
+    └── requirements.txt    <- Required python libraries.
 
 --------
 
-Installation
-------------
-Windows:
-Required installations: python 3.10 or higher. To install the project please start "installation.bat" or use the following command lines:
+Installation and Execution
+--------------------------
+The project was tested on Windows and Linux (Ubuntu). Required installations: python 3.10 or higher and for linux python3.10-venv.
+To install and execute UnCo, you can execute the files in the execution folder, or enter the following commands in the console (should be navigated in the project folder):
+
+**Windows**:
 ```shell
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+python .
 ```
 
-Linux:
-Required installations: python3 and python3.10-venv.
+**Linux**:
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
 pip3 install -r requirements.txt
+python3 .
 ```
-
-Start RDFier
-------------
-```shell
-streamlit run src/app/RDFier.py
-```
-

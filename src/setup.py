@@ -11,7 +11,7 @@ setup(
     version='0.2.0',
     description='The Uncertainty Comparator compares diffrent models of uncertain rdf data.',
     author='Luca Poepperl',
-    author_email = "scrumbleton97@gmail.com",
+    author_email = "luca.poepperl@gmail.com",
     url = "https://github.com/UncertaintyC/unco",
     long_description=read('../README.md'),
 )

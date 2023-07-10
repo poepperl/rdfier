@@ -22,8 +22,6 @@ class FusekiServer:
         Path to the fuseki server folder.
     server: subprocess.Popen
         Server instance, if the fuseki server is running.
-    starter_path: 
-
     """
 
     def __init__(self, fuseki_path: str | Path = Path(UNCO_PATH, "src/fuseki")) -> None:
