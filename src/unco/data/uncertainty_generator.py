@@ -52,7 +52,6 @@ class UncertaintyGenerator:
 
         else:
             # catch wrong inputs:
-            print(list_of_columns)
             if not (all(n in object_set for n in list_of_columns)):
                 raise ValueError("Wrong column indices.")
 
