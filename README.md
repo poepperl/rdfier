@@ -62,3 +62,10 @@ When starting UnCo, the location of the server folder is requested. If no path i
 Documentation
 -------------
 A documentation of UnCo is available in English ([here](docu/0_en_documentation.md)) and German ([here](docu/0_de_dokumentation.md)).
+
+Update UnCo Documentation
+-------------------------
+```shell
+cd docu/unco_docu
+pydoc-markdown -I ../src/unco --render-toc > unco.md 
+```
