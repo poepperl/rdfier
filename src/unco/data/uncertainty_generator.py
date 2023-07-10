@@ -102,22 +102,31 @@ class UncertaintyGenerator:
             List of columns which should get alternatives. If no columns are choosen, every column will be processed.
         """
         if list_of_columns is None:
-            list_of_columns = []
+            list_of_columns = list(range(len(self.rdfdata.data.columns)))
+
         list_of_columns = list(set(list_of_columns))  # Remove all duplicates from list
 
         # Cache wrong inputs:
         if not (all(isinstance(n, int) for n in list_of_columns)):
             raise ValueError("List of columns includes none integers.")
 
-        elif not (all(0 < n < self.rdfdata.data.shape[1] for n in list_of_columns)) or len(list_of_columns) > \
+        elif not (all(0 <= n < self.rdfdata.data.shape[1] for n in list_of_columns)) or len(list_of_columns) > \
                 self.rdfdata.data.shape[1]:
             raise ValueError("Wrong column indices.")
 
         if min_number_of_alternatives < 1 or max_number_of_alternatives < 1 or min_number_of_alternatives > max_number_of_alternatives:
             raise ValueError("Wrong bounds for alternatives.")
 
-        if len(list_of_columns) == 0:
-            list_of_columns = list(range(len(self.rdfdata.data.columns)))
+        # Remove columns without uncertainties:
+        possible_columns = {c for _, c in self.rdfdata.uncertainties}
+        list_of_columns = [c for c in list_of_columns if c in possible_columns]
+
+        count_uncert = {}
+        for _, c in self.rdfdata.uncertainties:
+            if c not in count_uncert:
+                count_uncert[c] = 1
+            else:
+                count_uncert[c] += 1
 
         dict_of_entries = dict()
 
@@ -182,12 +191,11 @@ if __name__ == "__main__":
     from unco.data.data_util import data_optimize
     from pathlib import Path
 
-    file = open(str(Path(UNCO_PATH, "tests/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
+    file = open(str(Path(UNCO_PATH, "tests/testdata/afe/afe_ready.csv")), encoding='utf-8')
 
     rdf_data = RDFData(data_optimize(pd.read_csv(file)))
     g = UncertaintyGenerator(rdfdata=rdf_data)
-    rdf_data = g.add_pseudorand_uncertainty_flags(list_of_columns=[1], min_uncertainties_per_column=2,
-                                                  max_uncertainties_per_column=2)
+    rdf_data = g.add_pseudorand_alternatives(list_of_columns=None, min_number_of_alternatives=5, max_number_of_alternatives=5)
 
     dd = GraphGenerator(rdf_data)
     dd.load_prefixes(str(Path(UNCO_PATH, "tests/testdata/afe/namespaces.csv")))

@@ -192,7 +192,7 @@ class Benchmark:
 
         for count in tqdm(x_range):
             if increasing_alternatives:
-                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[7, 8, 9, 16, 17, 18, 19], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
+                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[2, 3, 4, 7, 10, 16, 17, 18, 19], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
             else:
                 un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2, 3, 4, 7], min_uncertainties_per_column=count, max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
 
