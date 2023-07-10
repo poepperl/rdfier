@@ -256,7 +256,8 @@ class Benchmark:
 
             plt.legend()
 
-            plt.savefig(Path(UNCO_PATH, f"data/results/plots/matplot_test{query_numb}.pdf"), format="pdf", bbox_inches="tight")
+            if increasing_alternatives: plt.savefig(Path(UNCO_PATH, f"data/results/plots/alternatives{query_numb}.pdf"), format="pdf", bbox_inches="tight")
+            else: plt.savefig(Path(UNCO_PATH, f"data/results/plots/uncertainties{query_numb}.pdf"), format="pdf", bbox_inches="tight")
 
             plt.close(fig)
 
