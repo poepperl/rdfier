@@ -82,7 +82,7 @@ class GraphGenerator:
 
         del namespaces
 
-    def generate_solution(self, model_id: int = 4, xml_format: bool = True) -> None:
+    def generate_graph(self, model_id: int = 8, xml_format: bool = True) -> None:
         """ 
             Generates and saves the RDF graph.
 
@@ -136,26 +136,26 @@ class GraphGenerator:
                                             weight = float("%.2f" % random())
                                     match model_id:
                                         case 1:
-                                            self._generate_uncertain_value_solution_1(subject, predicate, objekt)
+                                            self._generate_uncertain_statement_model_1(subject, predicate, objekt)
                                         case 2:
-                                            self._generate_uncertain_value_solution_2(subject, predicate, objekt)
+                                            self._generate_uncertain_statement_model_2(subject, predicate, objekt)
                                         case 3:
                                             self.graph.add((BNode("A3"), RDF["type"], CRM["R1_Reliability_Assessment"]))
-                                            self._generate_uncertain_value_solution_3(subject, predicate, objekt, weight)
+                                            self._generate_uncertain_statement_model_3(subject, predicate, objekt, weight)
                                         case 4:
-                                            self._generate_uncertain_value_solution_4(subject, predicate, objekt, weight, index)
+                                            self._generate_uncertain_statement_model_4(subject, predicate, objekt, weight, index)
                                         case 5:
-                                            self._generate_uncertain_value_solution_5(subject, predicate, objekt, weight, crm_properties)
+                                            self._generate_uncertain_statement_model_5(subject, predicate, objekt, weight, crm_properties)
                                         case 6:
-                                            self._generate_uncertain_value_solution_6(subject, predicate, objekt)
+                                            self._generate_uncertain_statement_model_6(subject, predicate, objekt)
                                         case 7:
-                                            self._generate_uncertain_value_solution_7(subject, predicate, objekt)
+                                            self._generate_uncertain_statement_model_7(subject, predicate, objekt)
                                         case 8:
-                                            self._generate_uncertain_value_solution_8(subject, predicate, objekt)
+                                            self._generate_uncertain_statement_model_8(subject, predicate, objekt)
                                         case 9:
-                                            self._generate_uncertain_value_solution_9a(subject, predicate, objekt)
+                                            self._generate_uncertain_statement_model_9a(subject, predicate, objekt)
                                         case 10:
-                                            self._generate_uncertain_value_solution_9b(subject, predicate, objekt, weight)
+                                            self._generate_uncertain_statement_model_9b(subject, predicate, objekt, 1-weight)
                                         case _:
                                             self.graph.add((subject, predicate, objekt))
 
@@ -229,7 +229,7 @@ class GraphGenerator:
             else:
                 raise ValueError(f"Could not find prefix in uri \"{uri}\"")
 
-    def _generate_uncertain_value_solution_1(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
+    def _generate_uncertain_statement_model_1(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
         """ 
         Uses model 1 to add an uncertain statement to the rdf graph.
 
@@ -250,7 +250,7 @@ class GraphGenerator:
         self.graph.add((node, RDF["type"], CRM["E13_Attribute_Assignment"]))
         self.graph.add((node, BMO["PX_likelihood"], NM["uncertain_value"]))
 
-    def _generate_uncertain_value_solution_2(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
+    def _generate_uncertain_statement_model_2(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
         """ 
         Uses model 2 to add an uncertain statement to the rdf graph.
         
@@ -268,7 +268,7 @@ class GraphGenerator:
         self.graph.add((node, UN["hasUncertainty"], NM["uncertain_value"]))
         self.graph.add((node, RDF.value, objekt))
 
-    def _generate_uncertain_value_solution_3(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float) -> None:
+    def _generate_uncertain_statement_model_3(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float) -> None:
         """
         Uses model 3 to add an uncertain statement to the rdf graph.
         
@@ -300,7 +300,7 @@ class GraphGenerator:
 
         self.graph.add((subject, predicate, objekt))
 
-    def _generate_uncertain_value_solution_4(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float, object_index: int) -> None:
+    def _generate_uncertain_statement_model_4(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float, object_index: int) -> None:
         """ 
         Uses model 4 to add an uncertain statement to the rdf graph.
         
@@ -339,7 +339,7 @@ class GraphGenerator:
         self.graph.add((c, CRMINF["J4_that"], objekt))
         self.graph.add((c, RDF["type"], CRMINF["I2_Belief"]))
 
-    def _generate_uncertain_value_solution_5(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float, crm_properties: dict) -> None:
+    def _generate_uncertain_statement_model_5(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float, crm_properties: dict) -> None:
         """
         Uses model 5 to add an uncertain statement to the rdf graph.
         
@@ -364,7 +364,7 @@ class GraphGenerator:
         self.graph.add((node, AMT["weight"], Literal(weight, datatype=XSD["double"], normalize=True)))
         self.graph.add((node, CRM[crm_property], objekt))
 
-    def _generate_uncertain_value_solution_6(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
+    def _generate_uncertain_statement_model_6(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
         """
         Uses model 6 to add an uncertain statement to the rdf graph.
         
@@ -385,7 +385,7 @@ class GraphGenerator:
         self.graph.add((node, RDF["predicate"], predicate))
         self.graph.add((node, RDF["type"], EDTFO["UncertainStatement"]))
 
-    def _generate_uncertain_value_solution_7(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
+    def _generate_uncertain_statement_model_7(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
         """
         Uses model 7 to add an uncertain statement to the rdf graph.
         
@@ -404,7 +404,7 @@ class GraphGenerator:
         self.graph.add((node, RDF["type"], EDTFO["ApproximateStatement"]))
         self.graph.add((node, RDF.value, objekt))
 
-    def _generate_uncertain_value_solution_8(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
+    def _generate_uncertain_statement_model_8(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
         """
         Uses model 8 to add an uncertain statement to the rdf graph.
         
@@ -423,7 +423,7 @@ class GraphGenerator:
 
         self.graph.add((node, predicate, objekt))
 
-    def _generate_uncertain_value_solution_9a(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
+    def _generate_uncertain_statement_model_9a(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal) -> None:
         """
         Creates a placeholder statement, which has to be replaced by change_to_model_9a() to create
         the correct uncertain statement.
@@ -441,7 +441,7 @@ class GraphGenerator:
 
         self.graph.add((EDTFO[node.n3()[2:]], RDF["star"], Literal(f"{subject.n3(namespace_manager=self.graph.namespace_manager)}$${predicate.n3(namespace_manager=self.graph.namespace_manager)}$${objekt.n3(namespace_manager=self.graph.namespace_manager)}")))
 
-    def _generate_uncertain_value_solution_9b(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float) -> None:
+    def _generate_uncertain_statement_model_9b(self, subject: URIRef, predicate: URIRef, objekt: URIRef | Literal, weight: float) -> None:
         """
         Creates a placeholder statement, which has to be replaced by change_to_model_9b()
         to create the correct uncertain statement.
@@ -579,7 +579,7 @@ if __name__ == "__main__":
     rdf_data = RDFData(pd.read_csv(afe))
     generator = GraphGenerator(UncertaintyGenerator(rdf_data).add_pseudorand_uncertainty_flags([1], 2, 2))
     generator.load_prefixes(prefixes)
-    generator.generate_solution(xml_format=False, model_id=10)
+    generator.generate_graph(xml_format=False, model_id=10)
 
     test_query = """
                     PREFIX nmo: <http://nomisma.org/ontology#>

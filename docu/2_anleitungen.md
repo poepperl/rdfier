@@ -23,8 +23,8 @@ Durch die Eingabe einer `1` wird die App sofort gestartet, bei `0` werden zum Au
  * **Auswahl des steigenden Parameters**: Welcher Parameter soll schrittweise erhöht werden? Wenn kein Parameter erhöht werden soll hat die Auswahl keine Auswirkung.
  * **Auswahl der bearbeitenden Spalten**: Welche Spalten sollen schrittweise bearbeitet werden? Die Angabe erfolgt durch Spaltennummern getrennt durch Kommata.
  * **Auswahl der Modellierungen**: Welche Modellierungen sollen verglichen werden? Die Angabe erfolgt durch IDs von Modellierungen getrennt durch Kommata. Mehrfachauswahl möglich.
- * **Auswahl der SPARQL-Anfragen**: Welche Queries sollen für den Vergleich genutzt werden? Die Angabe erfolgt durch IDs von Modellierungen getrennt durch Kommata.
- * **Auswahl des Parameter-Bereichs**: In welchem Bereich soll der Parameter getestet werden? Die Angabe erfolgt durch drei Ganzzahlen `start`, `stop` und `step`, die für die Erzeugung einer Python `range(start, stop, step)` genutzt wird. Soll kein Parameter erhöht werden können die Standardwerte genutzt und somit die Eingabe leer gelassen werden.
+ * **Auswahl der SPARQL-Anfragen**: Welche Queries sollen für den Vergleich genutzt werden? Die Angabe erfolgt durch IDs von Queries getrennt durch Kommata.
+ * **Auswahl des Parameter-Bereichs**: In welchem Bereich soll der Parameter getestet werden? Die Angabe erfolgt durch drei Ganzzahlen `start`, `stop` und `step`, die für die Erzeugung einer Python Range `range(start, stop, step)` genutzt wird. Soll kein Parameter erhöht werden können die Standardwerte genutzt und somit die Eingabe leer gelassen werden.
 
 ## Ausführungen der Masterthesis
 Im Rahmen meiner Masterthesis wurden einige Benchmarktests mit UnCo ausgeführt. Im Folgenden wird beschrieben, wie die dort ausgeführten selbst ausgeführt werden können.
@@ -88,3 +88,28 @@ Bei der Ausführung von UnCo wurden folgende Parameter genutzt:
 Da der genutzte Arbeitsspeicher nicht ausgereicht hat, wurden die Ergebnisse der Masterthesis aus drei einzelnen Ausführungen zusammengetragen.
 Dafür wurden die Bereiche (0, 40, 10), (40, 80, 10) und (80, 101, 10) genutzt.
 Nach der Ausführung werden die Ergebnisse in `data/results/plots/alternatives{queryID}.pdf` gespeichert, sowie die genaue Liste der Ergebnisse im Terminal ausgegeben.
+
+### Abschnitt 4.2.4 Vergleich bei künstlich erzeugten Datensätzen
+In diesem Abschnitt wurde ein Benchmarktest auf synthetisch erzeugten Datensätzen basierend auf AFE ausgeführt.
+Bei der Ausführung von UnCo wurden folgende Parameter genutzt:
+ * **Datensatz**: synthetischer AFE-Datensatz
+ * **Steigender Parameter**: Anzahl Unsicherheiten (0)
+ * **Spalten**: Standardwert
+ * **Modellierungen**: Standardwert
+ * **Queries**: Standardwert
+ * **Bereich**: Start: 10000; Stopp: 10001; Schrittgröße: 1
+
+Nach der Ausführung werden die Ergebnisse im Terminal ausgegeben.
+
+## Erweiterung des Benchmarks
+UnCo wurde speziell so angelegt, dass auch neue Modellierungen und Queries hinzugefügt werden können. Dazu müssen folgende Dateien bearbeitet werden:
+
+**Hinzufügen einer Modellierung mit ID X**:
+ * *src/unco/features/graph_generator.py*: Eine neue Methode *_generate_uncertain_statement_model_X* muss erstellt werden, welche äquivalent zu den anderen Methoden die Modellierung beinhaltet. Als Eingabe sind die Ressourcen *subject*, *predicate*, *object*, sowie eine Gewichtung *weight* und der Spaltenindex *index* des Objekts verfügbar.
+ Anschließend muss die Modellierung in der Methode *generate_graph* eingebunden werden. Dazu wird diese äquivalent zu den anderen Modellierungen als neuer *case X:* eingebunden und die benötigten Parameter übergeben.
+ * *src/benchmark/queries/*: Hier werden zu jeder Modellierung die verfügbaren Queries gespeichert. Bei einer neuen Modellierung muss ein neuer Ordner *modelX* hinzugefügt werden, in dem die Dateien *query1.rq* bis *query6.rq* enthalten sind. In diesen Dateien sind die jeweiligen SPARQL-Queries enthalten.
+ * Optional: In *\_\_main\_\_.py* kann die ID X hinzugefügt werden, um beim Standardwert auch die neue Modellierung auszuführen. Dazu muss lediglich `str(X)` in die Liste `all_model_ids` in Zeile 21 eingefügt werden.
+
+**Hinzufügen einer Query mit ID Y**:
+ * *src/benchmark/queries/*: Hier werden zu jeder Modellierung die verfügbaren Queries gespeichert. Bei einer neuen Query muss in jedem enthaltenen Ordner die Datei *queryY.rq* hinzugefügt werden. Dort muss die SPARQL-Query passend zur jeweiligen Modellierung enthalten sein.
+ * Optional: In *\_\_main\_\_.py* kann die ID Y hinzugefügt werden, um beim Standardwert auch die neue Queries auszuführen. Dazu muss lediglich `str(Y)` in die Liste `all_query_ids` in Zeile 22 eingefügt werden.

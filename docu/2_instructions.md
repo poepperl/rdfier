@@ -1,6 +1,6 @@
 # Instructions
 
-This manual describes how to start UnCo and how to run the benchmarktests described in my master thesis.
+This manual describes how to start UnCo and how to run the benchmark tests described in my master thesis.
 
 ## Operating instructions
 
@@ -14,21 +14,21 @@ python .
 After that the python script *\_\_main\_\_.py* will be executed.
 Now it can be selected whether the streamlit application RDFier or a benchmark should be executed.
 At any time the terminal can be closed by entering `Q`.
-When entering parameters, the bracketed value gives an indication of which value will be selected by default if the input is left blank.
+When entering parameters, the value in brackets gives an indication of which value will be selected by default if the input is left blank.
 Entering a `1` will start the app immediately, entering `0` will first prompt for the following parameters to run a benchmark:
 
- * **Path of the Fuseki server**: This is specified by a full path or a relative path starting from the project folder. By default, the program computes with a Fuseki Server version 4.8.0 in the src folder.
+ * **Path of the Fuseki server**: This is specified by a full path or a relative path starting from the project folder. By default, the program computes with a (Fuseki Server)[https://jena.apache.org/download/index.cgi] version 4.8.0 in the src folder.
  * **Path to the input dataset**: Specified by a full or a relative path starting from the project folder.
  * **Path to namespace table**: Specified by a full or relative path starting from the project folder.
- * **Selection of increasing parameter**: Which parameter should be incremented? If no parameter is to be incremented, the selection has no effect.
+ * **Selection of increasing parameter**: Which parameter should be increased? If no parameter is to be increased, the selection has no effect.
  * **Selection of the columns to be edited**: Which columns should be edited step by step? The specification is made by column numbers separated by commas.
- * **Selection of modelings**: Which modelings are to be compared? The specification is made by IDs of modelings separated by commas. Multiple selection possible.
- * **Selection of SPARQL queries**: Which queries should be used for comparison? This is specified by IDs of modeling separated by commas.
- * **Selection of parameter range**: In which range should the parameter be tested? The specification is done by three integers `start`, `stop` and `step`, which is used to generate a Python `range(start, stop, step)`. If no parameter is to be incremented the default values can be used and thus the input can be left empty.
+ * **Selection of models**: Which models are to be compared? The specification is made by model IDs separated by commas. Multiple selection possible.
+ * **Selection of SPARQL queries**: Which queries should be used for comparison? This is specified by query IDs separated by commas.
+ * **Selection of parameter range**: In which range should the parameter be tested? The specification is done by three integers `start`, `stop` and `step`, which is used to generate a python range `range(start, stop, step)`. If no parameter is to be incremented the default values can be used and thus the input can be left empty.
 
 ## Executions of the master thesis
-In the context of my master thesis some benchmark tests with UnCo were executed. In the following it is described how the ones executed there can be executed themselves.
-As data set a table extracted from the AFE database was used. Since this contains mostly unpublished data, the dataset cannot be made available. A comparable data set with the already published data can be found in `data/input/afe_public.csv`.
+In the context of my master thesis some benchmark tests with UnCo were executed. In the following it is described how them can be executed themselves.
+As dataset a table extracted from the AFE database was used. Since this contains mostly unpublished data, the dataset cannot be made available. A comparable dataset with the already published data can be found in `data/input/afe_public.csv`.
 
 ### Section 4.1.7 Measurement methods and performance indicators
 In this section, experiments were conducted using various procedures designed to avoid outliers and noise in measurements.
@@ -40,38 +40,38 @@ The following parameters were used when running UnCo:
  * **Columns**: Default value
  * **Models**: 1, 1, 1, 1
  * **Queries**: 4
- * **Range**: Start: 0; Stop: 301; Step size: 30
+ * **Range**: start: 0; stop: 301; step: 30
 
-After execution, in `data/results/plots/uncertainties4.pdf` is the results of the execution, which is present in the master thesis as Figure 4.15 (a). Graph (b) is created by manually calculating the median.
+After execution, in `data/results/plots/uncertainties4.pdf` is the result of the execution, which is present in the master thesis as figure 4.15 (a). Graph (b) is created by manually calculating the median.
 
 For the generation of figure 4.16 (a), first the constant `self.MEDIAN_LOOPS` has to be set to 5 again. After that UnCo can be started with the same parameters as just described.
 Figure 4.16 (a) shows the resulting graph, but with the same field of view as already shown in Figure 4.15. The graph (b) was calculated manually from the mean value.
 
-Note: Make sure that the constants changed here are set back to the previous value. For even more robust results, higher values can of course be used, whereby especially the choice of 'self.MEAN_LOOPS' has a significant impact on the runtime.
+Note: Make sure that the constants changed here are set back to the previous value. For even more robust results, higher values can of course be used, whereby especially the choice of `self.MEAN_LOOPS` has a significant impact on the runtime.
 
 ### Section 4.2.1 Comparison with respect to AFE
 In this section, a benchmark test was run on the unprocessed version of the AFE dataset.
 The following parameters were used when running UnCo:
  * **Dataset**: AFE dataset
- * **Increasing parameter**: Default value (no effect).
+ * **Increasing parameter**: Default value (no effect)
  * **Columns**: Default value (no effect)
  * **Models**: Default value
  * **Queries**: Default value
  * **Range**: Default values
 
-After execution, the results are output in the terminal.
+After execution, the results are printed in the terminal.
 
 ### Section 4.2.2 Comparison with increasing number of uncertainties
 In this section, a benchmark test was executed with increasing number of uncertainties.
 The following parameters were used when executing UnCo:
- * **Dataset**: AFE dataset with no uncertainties specified.
+ * **Dataset**: AFE dataset with no specified uncertainties
  * **Increasing parameter**: Number of uncertainties (0)
  * **Columns**: Default value
  * **Models**: Default value
  * **Queries**: Default value
- * **Range**: Start: 0; Stop: 10001; Step size: 1000.
+ * **Range**: start: 0; stop: 10001; step: 1000.
 
-Since the used working memory was not sufficient, the results of the master thesis were compiled from three individual executions.
+Since the used main memory was not sufficient, the results of the master thesis were compiled from three individual executions.
 For this, the ranges (0, 5000, 1000), (5000, 8000, 1000) and (8000, 10001, 1000) were used.
 After the execution, the results are saved in `data/results/plots/uncertainties{queryID}.pdf`, as well as the exact list of results is printed in the terminal.
 
@@ -83,8 +83,33 @@ The following parameters were used when running UnCo:
  * **Columns**: Default value
  * **Models**: Default value
  * **Queries**: Default value
- * **Range**: Start: 0; Stop: 101; Step Size: 10.
+ * **Range**: start: 0; stop: 101; step: 10.
 
-Since the used working memory was not sufficient, the results of the master thesis were compiled from three individual executions.
+Since the used main memory was not sufficient, the results of the master thesis were compiled from three individual executions.
 The ranges (0, 40, 10), (40, 80, 10) and (80, 101, 10) were used for this purpose.
 After the execution, the results are saved in `data/results/plots/alternatives{queryID}.pdf`, as well as the exact list of results is printed in the terminal.
+
+### Section 4.2.4 Comparison on synthetic generated Datasets
+In this section, a benchmark test was run on synthetically generated datasets based on AFE.
+The following parameters were used when running UnCo:
+ * **Dataset**: synthetic AFE dataset.
+ * **Increasing parameter**: Number of uncertainties (0)
+ * **Columns**: Default value
+ * **Models**: Default value
+ * **Queries**: Default value
+ * **Range**: start: 10000; stop: 10001; step: 1.
+
+After execution, the results are printed to the terminal.
+
+## Extension of the benchmark
+UnCo has been specially created so that new models and queries can easily be added. For this purpose, the following files must be edited:
+
+**Adding a model with ID X**:
+ * *src/unco/features/graph_generator.py*: A new method *_generate_uncertain_statement_model_X* must be created, which contains the model equivalent to the other methods. The resources *subject*, *predicate*, *object*, as well as a uncertainty weight *weight* and the column index *index* of the object are available as input.
+ Subsequently, the model must be integrated in the method *generate_graph*. To do this, include it equivalent to the other models as a new *case X:* and add the required parameters.
+ * *src/benchmark/queries/*: Here the available queries are stored for each model. With a new model a new folder *modelX* must be added, in which the files *query1.rq* to *query6.rq* are contained. In these files the respective SPARQL queries are contained.
+ * Optional: In *\_\_main\_\_.py* the ID X can be added to execute the new model as default. To do this, just add `str(X)` to the `all_model_ids` list in line 21.
+
+**Adding a query with ID Y**:
+* *src/benchmark/queries/*: Here the available queries are stored for each model. With a new query the file *queryY.rq* must be added in each contained folder. There the SPARQL query must be contained suitably to the respective model.
+ * Optional: In *\_\_main\_\_.py* the ID Y can be added, in order to execute the new queries as default. To do this, just add `str(Y)` to the `all_query_ids` list in line 22.
