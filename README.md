@@ -31,8 +31,6 @@ Project Organization
     |
     └── requirements.txt    <- Required python libraries.
 
---------
-
 Installation and Execution
 --------------------------
 The project was tested on Windows and Linux (Ubuntu). Required installations: python 3.10 or higher and for linux python3.10-venv.
@@ -57,8 +55,6 @@ python3 .
 If you want to run a benchmark, you must first download a [Apache Jena Fuseki](https://jena.apache.org/download/index.cgi) server and install a suitable Java distribution.
 When starting UnCo, the location of the server folder is requested. If no path is given, the program expects a "apache-jena-fuseki-4.8.0" folder in src.
 
---------
-
 Documentation
 -------------
 A documentation of UnCo is available in English ([here](docu/0_en_documentation.md)) and German ([here](docu/0_de_dokumentation.md)).
@@ -67,5 +63,5 @@ Update UnCo Documentation
 -------------------------
 ```shell
 cd docu/unco_docu
-pydoc-markdown -I ../src/unco --render-toc > unco.md 
+pydoc-markdown -I ../src -p unco --render-toc > unco.md
 ```

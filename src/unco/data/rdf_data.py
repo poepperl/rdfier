@@ -25,7 +25,7 @@ class RDFData:
         dataframe : pd.DataFrame
             Dataframe of the data which gets pseudorandom uncertainty.
         """
-        self.data = self.data_optimize(dataframe)
+        self.data = dataframe
         self.triple_plan: dict = {}
         self.types_and_languages: dict[tuple[int, int], list[str]] = {}
         self.uncertainties: dict = {}
@@ -33,8 +33,9 @@ class RDFData:
         self._generate_triple_plan()
         self._load_uncertainties()
         self._generate_type_and_language_plan()
+        self.data = self.data_optimize(dataframe)
 
-    def data_optimize(self, dataframe: pd.DataFrame, object_option=True):
+    def data_optimize(self, dataframe: pd.DataFrame, object_option=False):
         """
         Reduce the size of the input dataframe
 

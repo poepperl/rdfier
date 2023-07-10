@@ -8,23 +8,40 @@ from pathlib import Path
 from time import time
 
 def benchmark():
+    """
+    Runs an UnCo benchmark.
+    """
     increasing_alternatives = None
     modellist = [None]
     querylist = [None]
     x_range: range = None
     path = ""
+    fuseki_path = ""
+    column_list = [None]
 
     all_model_ids = ["1","2","3","4","5","6","7","8","9","10"]
     all_query_ids = ["1","2","3","4","5","6"]
 
-    while not Path(path).is_file() and path[-4:] != ".csv":
+    while not Path(fuseki_path, "fuseki-server.jar").is_file():
         print("|--- Input your parameters:                    ---|")
+        print("|---                                           ---|")
+        print("|--- Select the fuseki server folder.          ---|")
+        fuseki_path = input(">>>> Insert the path (src/apache-jena-fuseki-4.8.0):").strip()
+        if fuseki_path == "Q": quit()
+        if fuseki_path == "":
+            fuseki_path = str(Path(UNCO_PATH,"src/apache-jena-fuseki-4.8.0"))
+        
+        if not Path(fuseki_path, "fuseki-server.jar").is_file():
+            print("!!!! Doesn`t found fueski-server.jar           !!!!")
+
+
+    while not Path(path).is_file() and path[-4:] != ".csv":
         print("|---                                           ---|")
         print("|--- Select the input csv-file.                ---|")
         path = input(">>>> Insert the path (example input):").strip()
         if path == "Q": quit()
         if path == "":
-            path = str(Path(UNCO_PATH,"data/input/example/input_format.csv"))
+            path = str(Path(UNCO_PATH,"data/input/example_input.csv"))
         
         if not Path(path).is_file() and path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
@@ -43,7 +60,7 @@ def benchmark():
         if not Path(path).is_file() and path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
 
-    bench = Benchmark(rdf_data, path)
+    bench = Benchmark(rdf_data, path, )
     del rdf_data
 
     while increasing_alternatives not in ["0", "1", ""]:
@@ -56,7 +73,23 @@ def benchmark():
         if increasing_alternatives == "Q": quit()
         if increasing_alternatives not in ["0", "1", ""]: print("!!!! Wrong input!                              !!!!")
     
-    increasing_alternatives = 0 if increasing_alternatives == "" else int(increasing_alternatives)
+    increasing_alternatives = False if increasing_alternatives == "" else bool(int(increasing_alternatives))
+
+    set_of_columns = {str(i) for i in range(len(bench.graph_generator.rdfdata.data.columns))}
+
+    while not all(cols in set_of_columns for cols in column_list):
+        print("|---                                           ---|")
+        print("|--- Select the columns to be changed each step---|")
+        print("|--- Numbers of column ids seperated by commas ---|")
+        if increasing_alternatives: column_list = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7):").split(",")]
+        else: column_list = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7, 10, 16, 17, 18, 19):").split(",")]
+        if column_list == ["Q"]: quit()
+        if column_list == [""] and increasing_alternatives: column_list = ["2", "3", "4", "7"]
+        elif column_list == [""]: column_list = ["2", "3", "4", "7", "10", "16", "17", "18", "19"]
+
+        if not all(cols in set_of_columns for cols in column_list): print("!!!! Wrong input!                              !!!!")
+    
+    del set_of_columns
     
     while not all(ids in all_model_ids for ids in modellist):
         print("|---                                           ---|")
@@ -113,11 +146,14 @@ def benchmark():
     
     full_time = time()
 
-    print(bench.run_benchmarktest(increasing_alternatives=increasing_alternatives, querylist=querylist, modellist=modellist, x_range=x_range))
+    print(bench.run_benchmarktest(increasing_alternatives=increasing_alternatives, increasing_columns=column_list, querylist=querylist, modellist=modellist, x_range=x_range))
 
     print(f"full runtime: {'%.0f' % (time()-full_time)} seconds")
 
 def main():
+    """
+    Main function of UnCo, to start RDFier or a benchmark.
+    """
     mode = None
     while mode not in ["0", "1", "2"]:
         print("|--- Welcome to UnCo. What do you want to do?  ---|")
@@ -132,6 +168,7 @@ def main():
         streamlit.web.bootstrap.run("src/app/RDFier.py", "", [], [])
     elif mode == "0":
         benchmark()
+        _ = input("Press any key to close the terminal...")
 
 if __name__ == "__main__":
     main()

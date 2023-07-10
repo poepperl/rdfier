@@ -1,7 +1,7 @@
 Eingabeformat
 =============
 Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei, einen RDF-Graph zu bauen. Da komplexere Konzepte in RDF-Graphen nicht ohne Weiteres aus einem beliebigen Format gelesen werden können, wird hier beschrieben wie solche in der Eingabe codiert werden können.
-Das hier verwendete Beispiel ist im Projekt-Ordner unter *data/input/example/input_format.csv* gespeichert, ebenso die verwendete Tabelle der Namensräume unter *data/input/example/namespaces.csv*.
+Das hier verwendete Beispiel ist im Projekt-Ordner unter *data/input/example_input.csv* gespeichert, ebenso die verwendete Tabelle der Namensräume unter *data/input/example/namespaces.csv*.
 
 Grundstruktur
 -------------

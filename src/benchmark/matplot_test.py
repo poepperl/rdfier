@@ -70,8 +70,7 @@ def _plot_results_increasing_alternatives(X : range, results : list[list[list[fl
 
         #plt.ylim([0.275, 0.345])
 
-        if increasing_alternatives: plt.savefig(Path(UNCO_PATH,f"src/benchmark/results/alternatives{query_numb}.pdf"), format="pdf", bbox_inches="tight")
-        else: plt.savefig(Path(UNCO_PATH,f"src/benchmark/results/uncertainties{query_numb}.pdf"), format="pdf", bbox_inches="tight")
+        plt.savefig(Path(UNCO_PATH,f"data/results/plots/matplot_test{query_numb}.pdf"), format="pdf", bbox_inches="tight")
 
         plt.close(fig)
             # plt.show()

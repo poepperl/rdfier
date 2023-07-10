@@ -23,7 +23,7 @@ class FusekiServer:
         Server instance, if the fuseki server is running.
     """
 
-    def __init__(self, fuseki_path: str | Path = Path(UNCO_PATH, "src/fuseki")) -> None:
+    def __init__(self, fuseki_path: str | Path = Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0")) -> None:
         """
         Parameters
         ----------

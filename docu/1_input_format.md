@@ -1,7 +1,7 @@
 INPUT FORMAT
 ============
 The main task of the RDFier is to build an RDF graph from a dataset in the form of a CSV file. Since more complex concepts in RDF graphs cannot be easily read from a CSV table, here we describe how to encode them in the input table.
-The example used here is stored in the project folder under *data/input/example/input_format.csv*, as is the namespaces table used under *data/input/example/namespaces.csv*.
+The example used here is stored in the project folder under *data/input/example_input.csv*, as is the namespaces table used under *data/input/example/namespaces.csv*.
 
 Basic Structure
 ---------------

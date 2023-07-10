@@ -31,7 +31,7 @@ class Benchmark:
         If True, the benchmark uses fuseki to run the queries.
     """
 
-    def __init__(self, rdfdata: RDFData, prefixes_path: str = None) -> None:
+    def __init__(self, rdfdata: RDFData, prefixes_path: str = None, fuseki_path: str | Path = Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0")) -> None:
         """
         Parameters
         ----------
@@ -39,10 +39,12 @@ class Benchmark:
             Object which contains the data of the rdf graph.
         prefixes_path : str
             Path to the prefix-namespace table.
+        fuseki_path: str | Path
+            Path to the fuseki server folder.
         """
         self.prefixes_path = prefixes_path
         self.graph_generator = GraphGenerator(rdfdata)
-        self.fserver = FusekiServer(Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0"))
+        self.fserver = FusekiServer(fuseki_path)
         self.MEDIAN_LOOPS = 5
         self.MEAN_LOOPS = 5
         self.run_on_fuseki = True
@@ -171,7 +173,7 @@ class Benchmark:
 
         return [[mean(models[1:]) for models in sublist] for sublist in results]
 
-    def run_benchmarktest(self, increasing_alternatives: bool = False, querylist: list[int] = [1, 2, 3, 4, 5, 6], modellist: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], x_range: range = range(0, 301, 30)):
+    def run_benchmarktest(self, increasing_alternatives: bool, increasing_columns: list[int], querylist: list[int] = [1, 2, 3, 4, 5, 6], modellist: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], x_range: range = range(0, 301, 30)):
         """
         Method which runs a benchmarktest of unco.
 
@@ -180,6 +182,8 @@ class Benchmark:
         increasing_alternatives: bool
             Sets the mode to increasing alternatives or increasing uncertainties.
             If no parameter should increase, you have to set the range to a single value range.
+        increasing_columns: list[int]
+            Columns which should get increasing number of uncertainties/alternatives.
         querylist: list[int]
             List of the queries that will be tested by the benchmark.
         modellist: list[int]
@@ -191,9 +195,9 @@ class Benchmark:
 
         for count in tqdm(x_range):
             if increasing_alternatives:
-                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=[2, 3, 4, 7, 10, 16, 17, 18, 19], min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
+                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_alternatives(list_of_columns=increasing_columns, min_number_of_alternatives=count, max_number_of_alternatives=count) if count > 0 else self.graph_generator.rdfdata
             else:
-                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags([2, 3, 4, 7], min_uncertainties_per_column=count, max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
+                un_generator = UncertaintyGenerator(self.graph_generator.rdfdata).add_pseudorand_uncertainty_flags(list_of_columns=increasing_columns, min_uncertainties_per_column=count, max_uncertainties_per_column=count) if count > 0 else self.graph_generator.rdfdata
 
             del un_generator
             results.append(self._run_benchmark_unit(querylist, modellist))
@@ -252,10 +256,7 @@ class Benchmark:
 
             plt.legend()
 
-            if increasing_alternatives:
-                plt.savefig(Path(UNCO_PATH, f"src/benchmark/results/alternatives{query_numb}.pdf"), format="pdf", bbox_inches="tight")
-            else:
-                plt.savefig(Path(UNCO_PATH, f"src/benchmark/results/uncertainties{query_numb}.pdf"), format="pdf", bbox_inches="tight")
+            plt.savefig(Path(UNCO_PATH, f"data/results/plots/matplot_test{query_numb}.pdf"), format="pdf", bbox_inches="tight")
 
             plt.close(fig)
 
