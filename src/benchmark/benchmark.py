@@ -206,7 +206,10 @@ class Benchmark:
         if len(x_range) > 2:
             self._plot_results_increasing_params(increasing_alternatives, x_range, results, querylist, modellist)
         else:
+            print("Results:")
             self.pretty_print_results(results[0], querylist, modellist)
+            print("Ranking:")
+            self.pretty_print_results(self.get_ranking(results[0]), querylist, modellist)
 
         return results
 
@@ -260,8 +263,14 @@ class Benchmark:
             else: plt.savefig(Path(UNCO_PATH, f"data/results/plots/uncertainties{query_numb}.pdf"), format="pdf", bbox_inches="tight")
 
             plt.close(fig)
+    
+    def get_ranking(self, results: list) -> list:
+        results = [[(results[q][m] - min([v for v in results[q] if v != 0]) if results[q][m] != 0 else 0) for m in range(len(results[0]))] for q in range(len(results))]
+        maxes = [max([float(results[q][m]) for m in range(len(results[0]))]) for q in range(len(results))]
+        results = [[round(((results[q][m]/maxes[q])*9)+1) for m in range(len(results[0]))] for q in range(len(results))]
+        return results
 
-    def pretty_print_results(self, results: list, querylist: list[int] = [1, 2, 3, 4, 5, 6], modellist: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]):
+    def pretty_print_results(self, results: list, querylist: list[int] = [1, 2, 3, 4, 5, 6], modellist: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ranking: bool = False):
         """
         Creates a prettier print of non-increasing parameter results.
 
@@ -273,6 +282,8 @@ class Benchmark:
             List of the queries which where tested by the benchmark.
         modellist: list[int]
             List of models which where tested by the benchmark.
+        ranking: bool
+            If true, the results are printed as ints.
         """
         print(f"         |", end="")
         for model in modellist:
@@ -287,6 +298,13 @@ class Benchmark:
         for index, query in enumerate(querylist):
             print(f"query {query}: | ", end="")
             for res in results[index]:
-                print("%.3f" % res + " | ", end="")
+                if ranking: print(str(res) + ("     | " if len(str(res))==1 else "    | "), end="")
+                else: print("%.3f" % res + " | ", end="")
             print("\n", end="")
 
+if __name__ == "__main__":
+    bench = Benchmark(RDFData(pd.read_csv(r"D:\Dokumente\Repositories\unco\data\input\example_input.csv")))
+
+    results = [[[0.0756082325358073, 0.07659681638081868, 0.07915266354878743, 0.08450512091318767, 0.07642125643310547, 0.0747679074605306, 0.06948153177897136, 0.06559403737386067, 0.06549493471781413, 0.06521085898081462], [0.02034131685892741, 0.020469864209493, 0.022633592287699383, 0.02609694004058838, 0.04219937324523926, 0.019278208414713543, 0.019598642985026043, 0.01919511953989665, 0.01576848824818929, 0.01620316505432129], [0.06653865178426106, 0.06448276837666829, 0.06781208515167236, 0.06753977139790852, 0.06718218326568604, 0.06081740061442057, 0.06891135374704997, 0.05992607275644938, 0.05660974979400635, 0.05926187833150228], [0.2998781204223633, 0.28731008370717365, 0.31819355487823486, 0.2952081759770711, 0.30543720722198486, 0.3001762231190999, 0.28645165761311847, 0.29993287722269696, 0.2818714777628581, 0.287714163462321], [0.013060490290323893, 0.015637636184692383, 0.02050459384918213, 0.01956442991892497, 0.021547714869181316, 0.016689777374267578, 0.014809727668762207, 0.015057841936747232, 0.011667331059773764, 0.015020489692687988], [0, 0, 0.380265752474467, 0.3569776217142741, 0.37829287846883136, 0, 0, 0, 0, 0.34629873434702557]]]
+
+    bench.pretty_print_results(bench.get_ranking(results[0]), [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], True)

@@ -1,0 +1,6 @@
+,Coin^^uri,nmo:hasFindspot^^uri,nmo:hasMaterial^^uri**Ma,nmo:hasMint^^uri**Mi,nmo:hasDenomination^^uri**De,nmo:hasMintMark,nmo:hasCountermark,nmo:hasWeight**We,nmo:hasMinDiameter**DMi,nmo:hasMaxDiameter**DMa,nmo:hasDie^^blank**Di,Di__nmo:hasAxis,nmo:hasObverse^^blank**Ob,nmo:hasReverse^^blank**Re,Ob__rdfs:comment,Re__rdfs:comment,Ob__nmo:hasWear**WF,Re__nmo:hasWear**WB,Ob__nmo:hasCorrosion**CF,Re__nmo:hasCorrosion**CB,Ob__nmo:hasLegend,Re__nmo:hasLegend
+index,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21
+type,URI,URI,URI,URI,URI,literal,literal,literal,literal,literal,blank node,literal,blank node,blank node,literal,literal,literal,literal,literal,literal,literal,literal
+count,16554,3121,15981,10341,13727,2339,187,8237.0,796.0,602.0,485.0,485.0,635.0,635.0,389,493,287.0,287.0,294.0,295.0,3,1
+unique,16554,326,6,48,33,1096,104,1408,189,100,1,12,1,1,342,423,6,6,6,6,3,1
+uncertain,,,39,128,219,,,13,,,2,,,,,,6,8,1,1,,
