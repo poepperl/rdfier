@@ -121,13 +121,6 @@ class UncertaintyGenerator:
         possible_columns = {c for _, c in self.rdfdata.uncertainties}
         list_of_columns = [c for c in list_of_columns if c in possible_columns]
 
-        count_uncert = {}
-        for _, c in self.rdfdata.uncertainties:
-            if c not in count_uncert:
-                count_uncert[c] = 1
-            else:
-                count_uncert[c] += 1
-
         dict_of_entries = dict()
 
         for column in list_of_columns:
@@ -198,5 +191,5 @@ if __name__ == "__main__":
 
     dd = GraphGenerator(rdf_data)
     dd.load_prefixes(str(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv")))
-    dd.generate_solution(8, xml_format=False)
+    dd.generate_graph(8, xml_format=False)
     g = Illustrator(Path(UNCO_PATH, "data/output/graph.ttl"))

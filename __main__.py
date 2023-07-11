@@ -80,11 +80,9 @@ def benchmark():
         print("|---                                           ---|")
         print("|--- Select the columns to be changed each step---|")
         print("|--- Numbers of column ids seperated by commas ---|")
-        if increasing_alternatives: columnlist = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7):").split(",")]
-        else: columnlist = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7, 10, 16, 17, 18, 19):").split(",")]
+        columnlist = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7, 10, 16, 17, 18, 19):").split(",")]
         if columnlist == ["Q"]: quit()
-        if columnlist == [""] and increasing_alternatives: columnlist = ["2", "3", "4", "7"]
-        elif columnlist == [""]: columnlist = ["2", "3", "4", "7", "10", "16", "17", "18", "19"]
+        if columnlist == [""]: columnlist = ["2", "3", "4", "7", "10", "16", "17", "18", "19"]
 
         if not all(cols in set_of_columns for cols in columnlist): print("!!!! Wrong input!                              !!!!")
     
