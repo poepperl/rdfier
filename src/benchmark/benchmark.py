@@ -60,7 +60,7 @@ class Benchmark:
         """
         if self.prefixes_path:
             self.graph_generator.load_prefixes(self.prefixes_path)
-        self.graph_generator.generate_solution(model_id, xml_format=False)
+        self.graph_generator.generate_graph(model_id, xml_format=False)
 
     def run_query_of_model(self, query_id: int, model_id: int) -> float:
         """ 

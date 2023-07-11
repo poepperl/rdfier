@@ -104,7 +104,7 @@ class FusekiServer:
         """
         requests.post(f"http://localhost:3030/ds/update", headers={"Content-Type": "application/sparql-update"}, data=sparql_query)
 
-    def run_query(self, query: str, save_result : bool = True) -> pd.DataFrame:
+    def run_query(self, query: str, save_result : bool = True) -> pd.DataFrame | None:
         """
         Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
 
@@ -119,14 +119,12 @@ class FusekiServer:
         params = {"query": query}
         response = requests.get('http://localhost:3030/ds/query', params=params, headers=headers)
 
+        result = StringIO(response.text)
+
         if save_result:
-            csvdata = pd.read_csv(StringIO(response.text), encoding='utf-8')
+            csvdata = pd.read_csv(result, encoding='utf-8')
             csvdata.to_csv(str(Path(OUTPUT_FOLDER, "query_results_fuseki.csv")))
             return csvdata
-
-        _ = StringIO(response.text)
-
-        return
 
     def stop_server(self) -> None:
         """

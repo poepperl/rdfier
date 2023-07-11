@@ -515,7 +515,7 @@ class GraphGenerator:
         }
         return crm_dict
 
-    def run_query(self, query: str, save_result: bool = True) -> pd.DataFrame:
+    def run_query(self, query: str, save_result: bool = True) -> pd.DataFrame | None:
         """
         Runs the given query on the generated rdf graph.
         
@@ -528,12 +528,10 @@ class GraphGenerator:
         """
         result = self.graph.query(query)
 
-        dataframe = pd.DataFrame(result.bindings)
-
         if save_result:
+            dataframe = pd.DataFrame(result.bindings)
             dataframe.to_csv(str(Path(UNCO_PATH, "data/output/query_results_fuseki.csv")))
-
-        return dataframe
+            return dataframe
 
     def change_to_model_9a(self) -> None:
         """
