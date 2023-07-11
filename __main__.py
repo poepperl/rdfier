@@ -10,13 +10,13 @@ def benchmark():
     """
     Runs an UnCo benchmark.
     """
+    fuseki_path = ""
+    path = ""
     increasing_alternatives = None
+    columnlist = [None]
     modellist = [None]
     querylist = [None]
     x_range: range = None
-    path = ""
-    fuseki_path = ""
-    column_list = [None]
 
     all_model_ids = ["1","2","3","4","5","6","7","8","9","10"]
     all_query_ids = ["1","2","3","4","5","6"]
@@ -76,20 +76,20 @@ def benchmark():
 
     set_of_columns = {str(i) for i in range(len(bench.graph_generator.rdfdata.data.columns))}
 
-    while not all(cols in set_of_columns for cols in column_list):
+    while not all(cols in set_of_columns for cols in columnlist):
         print("|---                                           ---|")
         print("|--- Select the columns to be changed each step---|")
         print("|--- Numbers of column ids seperated by commas ---|")
-        if increasing_alternatives: column_list = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7):").split(",")]
-        else: column_list = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7, 10, 16, 17, 18, 19):").split(",")]
-        if column_list == ["Q"]: quit()
-        if column_list == [""] and increasing_alternatives: column_list = ["2", "3", "4", "7"]
-        elif column_list == [""]: column_list = ["2", "3", "4", "7", "10", "16", "17", "18", "19"]
+        if increasing_alternatives: columnlist = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7):").split(",")]
+        else: columnlist = [number.strip() for number in input(">>>> Choose the columns (2, 3, 4, 7, 10, 16, 17, 18, 19):").split(",")]
+        if columnlist == ["Q"]: quit()
+        if columnlist == [""] and increasing_alternatives: columnlist = ["2", "3", "4", "7"]
+        elif columnlist == [""]: columnlist = ["2", "3", "4", "7", "10", "16", "17", "18", "19"]
 
-        if not all(cols in set_of_columns for cols in column_list): print("!!!! Wrong input!                              !!!!")
+        if not all(cols in set_of_columns for cols in columnlist): print("!!!! Wrong input!                              !!!!")
     
     del set_of_columns
-    column_list = list(map(int, column_list))
+    columnlist = list(map(int, columnlist))
     
     while not all(ids in all_model_ids for ids in modellist):
         print("|---                                           ---|")
@@ -146,7 +146,7 @@ def benchmark():
     
     full_time = time()
 
-    print(bench.run_benchmarktest(increasing_alternatives=increasing_alternatives, increasing_columns=column_list, querylist=querylist, modellist=modellist, x_range=x_range))
+    print(bench.run_benchmarktest(increasing_alternatives=increasing_alternatives, increasing_columns=columnlist, querylist=querylist, modellist=modellist, x_range=x_range))
 
     print(f"full runtime: {'%.0f' % (time()-full_time)} seconds")
 
@@ -155,14 +155,14 @@ def main():
     Main function of UnCo, to start RDFier or a benchmark.
     """
     mode = None
-    while mode not in ["0", "1", "2"]:
+    while mode not in ["0", "1", "Q"]:
         print("|--- Welcome to UnCo. What do you want to do?  ---|")
         print("|--- 0 - Start a benchmark                     ---|")
         print("|--- 1 - Start RDFier                          ---|")
         print("|--- Q - Quit (you can quit in every step)     ---|")
         mode = input(">>>> Choose the mode (0):")
         if not mode: mode = "0"
-        if mode not in ["0", "1", "2"]: print("!!!! Wrong input!                              !!!!")
+        if mode not in ["0", "1", "Q"]: print("!!!! Wrong input!                              !!!!")
 
     if mode == "1":
         streamlit.web.bootstrap.run("src/app/RDFier.py", "", [], [])

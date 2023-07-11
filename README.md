@@ -25,9 +25,13 @@ Project Organization
     |   ├── unco            <- This is UnCo!
     |   └── setup.py        <- Makes project pip-installable (pip install -e ./src).
     |
-    ├── __main__.py         <- Starts UnCo with "python ."
+    ├── __main__.py         <- Starts UnCo with "python .".
     |
     ├── README.md           <- This document.
+    |
+    ├── installation.bat/sh <- CMD/Shell Script to install UnCo.
+    |
+    ├── start_unco.bat/sh   <- CMD/Shell Script to start UnCo.
     |
     └── requirements.txt    <- Required python libraries.
 

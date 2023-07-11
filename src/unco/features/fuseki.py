@@ -39,14 +39,18 @@ class FusekiServer:
         """
             Method, which creates the server_starter.bat which starts the fuseki server.
         """
-        starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter.bat"))
+        starter_path = str(Path(UNCO_PATH, "src/unco/features/server_starter"))
         if os.name == "nt":
+            starter_path += ".bat"
             with open(starter_path, 'w') as starter:
                 starter.write("echo 'Running fuseki server'\ncd \"" + self.FUSEKI_PATH + "\"\n")
                 starter.write("java -Xmx4G -jar \"fuseki-server.jar\" --update --mem /ds %*")
         elif os.name == "posix":
+            starter_path += ".sh"
             with open(starter_path, 'w') as starter:
                 starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
+            
+            os.system(f"chmod u=rwx,g=r,o=r {starter_path}")
         else:
             print(f"Unknown system{os.name}. Please contact the admin.")
 
@@ -65,6 +69,7 @@ class FusekiServer:
                 raise RuntimeError("Server is already running.")
             else:
                 self.server = subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'cd /home/luca/Dokumente/repositories/unco/src/unco/features; ./server_starter.sh; bash'], stdout=subprocess.PIPE, preexec_fn=os.setsid)
+                time.sleep(2)
         else:
             print(f"Unknown system{os.name}. Please contact the admin. Notice: the benchmark is currently not aviable for Mac users.")
     

@@ -2,9 +2,14 @@
 
 This manual describes how to start UnCo and how to run the benchmark tests described in my master thesis.
 
+## Installation
+To install UnCo you can execute *installation.bat* (for Windows) or *installation.sh* (for Linux). This creates a virtual environment *.venv* in which all required python libraries are installed. Alternatively, the commands in *README.md* can be executed.
+
+Note: If permission errors occur on Linux, it may be helpful to use `chmod u=rwx,g=r,o=r installation.sh` to give the script the necessary permissions. The same should be executed with *start_unco.sh*.
+
 ## Operating instructions
 
-To start UnCo you can execute the file *execution/start_unco* (.bat for windows and .sh for linux), or open a terminal, navigate to the project folder and run the following commands:
+To start UnCo you can execute the file *start_unco* (.bat for windows and .sh for linux), or open a terminal, navigate to the project folder and run the following commands:
 ```shell
 .venv\Scripts\activate      # Windows
 source .venv/bin/activate   # Linux
