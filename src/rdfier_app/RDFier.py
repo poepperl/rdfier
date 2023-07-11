@@ -60,7 +60,7 @@ else:
             st.session_state.rerun = False
             generator = GraphGenerator(st.session_state.rdf_data)
             if uploaded_prefixes: generator.load_prefixes(pd.read_csv(uploaded_prefixes))
-            generator.generate_solution(model_id=solution,xml_format=(xml_format=="XML"))
+            generator.generate_graph(model_id=solution,xml_format=(xml_format=="XML"))
 
         
         path = Path(UNCO_PATH, "data/output/graph" + (".ttl" if xml_format=="Turtle" else ".rdf"))

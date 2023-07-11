@@ -165,7 +165,7 @@ def main():
         if mode not in ["0", "1", "Q"]: print("!!!! Wrong input!                              !!!!")
 
     if mode == "1":
-        streamlit.web.bootstrap.run("src/app/RDFier.py", "", [], [])
+        streamlit.web.bootstrap.run("src/rdfier_app/RDFier.py", "", [], [])
     elif mode == "0":
         benchmark()
         _ = input("Press any key to close the terminal...")
