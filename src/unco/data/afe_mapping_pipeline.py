@@ -380,4 +380,4 @@ if __name__ == "__main__":
 
     # gg.load_prefixes(str(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv")))
 
-    # gg.generate_solution(xml_format=False, model_id=9)
+    # gg.generate_graph(xml_format=False, model_id=9)
