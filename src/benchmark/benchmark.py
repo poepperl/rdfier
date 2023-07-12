@@ -205,11 +205,11 @@ class Benchmark:
 
         if len(x_range) > 2:
             self._plot_results_increasing_params(increasing_alternatives, x_range, results, querylist, modellist)
-        else:
-            print("Results:")
-            self.pretty_print_results(results[0], querylist, modellist)
-            print("Ranking:")
-            self.pretty_print_results(self.get_ranking(results[0]), querylist, modellist, True)
+
+        print("End-Results:")
+        self.pretty_print_results(results[-1], querylist, modellist)
+        print("End-Ranking:")
+        self.pretty_print_results(self.get_ranking(results[-1]), querylist, modellist, True)
 
         return results
 
@@ -264,10 +264,40 @@ class Benchmark:
 
             plt.close(fig)
     
-    def get_ranking(self, results: list) -> list:
-        results = [[(results[q][m] - min([v for v in results[q] if v != 0]) if results[q][m] != 0 else 0) for m in range(len(results[0]))] for q in range(len(results))]
+    def get_ranking(self, results: list[list[float]]) -> list[list[int]]:
+        """
+        Returns the ranking of the current results.
+
+        Parameters
+        ----------
+        results: list[list[float]]
+            Results of the run_benchmarktest method.
+        """
+        results = [[results[q][m] - min([v for v in results[q] if v != 0]) for m in range(len(results[0]))] for q in range(len(results))]
         maxes = [max([float(results[q][m]) for m in range(len(results[0]))]) for q in range(len(results))]
-        results = [[round(((results[q][m]/maxes[q])*9)+1) for m in range(len(results[0]))] for q in range(len(results))]
+        results = [[((results[q][m]/maxes[q]) - 0.1) if results[q][m] >= 0 else 100 for m in range(len(results[0]))] for q in range(len(results))]  # list of percentage values
+
+        for q in range(len(results)):
+            new_query_result = [m for m in results[q]]
+            current_value = min(results[q])
+            current_rang = 1
+            for counter in range(1,len(results[0])+1):
+
+                if (mini := min(results[q])) == 100:
+                    new_query_result[new_query_result.index(mini)] = "X"
+                    results[q].remove(mini)
+                    continue
+
+                if mini > current_value + 0.05:
+                    current_rang = counter
+                    current_value = mini
+
+                new_query_result[new_query_result.index(mini)] = current_rang
+                results[q].remove(mini)
+
+            results[q] = new_query_result
+
+
         return results
 
     def pretty_print_results(self, results: list, querylist: list[int] = [1, 2, 3, 4, 5, 6], modellist: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ranking: bool = False):
