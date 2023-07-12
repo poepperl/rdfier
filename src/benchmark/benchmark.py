@@ -209,7 +209,7 @@ class Benchmark:
             print("Results:")
             self.pretty_print_results(results[0], querylist, modellist)
             print("Ranking:")
-            self.pretty_print_results(self.get_ranking(results[0]), querylist, modellist)
+            self.pretty_print_results(self.get_ranking(results[0]), querylist, modellist, True)
 
         return results
 
