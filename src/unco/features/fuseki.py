@@ -145,16 +145,22 @@ class FusekiServer:
 
 
 if __name__ == "__main__":
+    from unco.data import RDFData, UncertaintyGenerator
+    from unco.features import GraphGenerator
     f = FusekiServer(Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0"))
     f.start_server()
+
+    rdf_data = RDFData(pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/synthetic.csv")))
+    gen = GraphGenerator(rdf_data)
+    gen.load_prefixes(pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv")))
+    # UncertaintyGenerator(gen.rdfdata).add_pseudorand_uncertainty_flags(list_of_columns=[2, 3, 4, 7, 10, 16, 17, 18, 19], min_uncertainties_per_column=10000, max_uncertainties_per_column=10000)
+    gen.generate_graph(9)
     f.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
     querytext = """
-    PREFIX nmo: <http://nomisma.org/ontology#>
-    PREFIX nm: <http://nomisma.org/id/>
 
-    SELECT ?s ?p ?o
+    SELECT ?subject ?predicate ?object
     WHERE {
-        <<?s ?p ?o>> ?b1 ?b2 .
+        ?subject ?predicate ?object .
     }
     """
     # SELECT ?s { ?s nmo:hasMint nm:comama }
@@ -164,5 +170,4 @@ if __name__ == "__main__":
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
     print(f.run_query(querytext))
-    time.sleep(7)
     f.stop_server()

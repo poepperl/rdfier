@@ -82,7 +82,7 @@ class GraphGenerator:
 
         del namespaces
 
-    def generate_graph(self, model_id: int = 8, xml_format: bool = True) -> None:
+    def generate_graph(self, model_id: int = 8, xml_format: bool = False) -> None:
         """ 
             Generates and saves the RDF graph.
 
