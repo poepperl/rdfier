@@ -39,7 +39,7 @@
   * [GraphGenerator](#unco.features.graph_generator.GraphGenerator)
     * [\_\_init\_\_](#unco.features.graph_generator.GraphGenerator.__init__)
     * [load\_prefixes](#unco.features.graph_generator.GraphGenerator.load_prefixes)
-    * [generate\_solution](#unco.features.graph_generator.GraphGenerator.generate_solution)
+    * [generate\_graph](#unco.features.graph_generator.GraphGenerator.generate_graph)
     * [run\_query](#unco.features.graph_generator.GraphGenerator.run_query)
     * [change\_to\_model\_9a](#unco.features.graph_generator.GraphGenerator.change_to_model_9a)
     * [change\_to\_model\_9b](#unco.features.graph_generator.GraphGenerator.change_to_model_9b)
@@ -48,7 +48,6 @@
     * [\_\_init\_\_](#unco.features.illustrator.Illustrator.__init__)
     * [get\_illustration](#unco.features.illustrator.Illustrator.get_illustration)
 * [unco.features](#unco.features)
-* [unco.run](#unco.run)
 
 <a id="unco"></a>
 
@@ -349,14 +348,14 @@ dataframe : pd.DataFrame
 #### data\_optimize
 
 ```python
-def data_optimize(dataframe: pd.DataFrame, object_option=True)
+def data_optimize(dataframe: pd.DataFrame, object_option=False)
 ```
 
 Reduce the size of the input dataframe
 
 Parameters
 ----------
-df: pd.DataFrame
+dataframe: pd.DataFrame
     Input dataframe which should get smaller.
 object_option: bool
     If true, try to convert object to category.
@@ -455,7 +454,8 @@ server: subprocess.Popen
 #### \_\_init\_\_
 
 ```python
-def __init__(fuseki_path: str | Path = Path(UNCO_PATH, "src/fuseki")) -> None
+def __init__(fuseki_path: str | Path = Path(
+    UNCO_PATH, "src/apache-jena-fuseki-4.8.0")) -> None
 ```
 
 Parameters
@@ -503,7 +503,7 @@ Method, which deletes the current graph ds.
 #### run\_query
 
 ```python
-def run_query(query: str, save_result: bool = True) -> pd.DataFrame
+def run_query(query: str, save_result: bool = True) -> pd.DataFrame | None
 ```
 
 Method, which runs a given SPARQL query on the fuseki server and outputs the result in json format.
@@ -578,12 +578,12 @@ Parameters
 path_data: str | DataFrame
     Path to the csv file with header: (prefix, namespace) or DataFrame of the file.
 
-<a id="unco.features.graph_generator.GraphGenerator.generate_solution"></a>
+<a id="unco.features.graph_generator.GraphGenerator.generate_graph"></a>
 
-#### generate\_solution
+#### generate\_graph
 
 ```python
-def generate_solution(model_id: int = 4, xml_format: bool = True) -> None
+def generate_graph(model_id: int = 8, xml_format: bool = False) -> None
 ```
 
 Generates and saves the RDF graph.
@@ -601,7 +601,7 @@ xml_format: bool
 #### run\_query
 
 ```python
-def run_query(query: str, save_result: bool = True) -> pd.DataFrame
+def run_query(query: str, save_result: bool = True) -> pd.DataFrame | None
 ```
 
 Runs the given query on the generated rdf graph.
@@ -683,8 +683,4 @@ path : Path
 <a id="unco.features"></a>
 
 # unco.features
-
-<a id="unco.run"></a>
-
-# unco.run
 

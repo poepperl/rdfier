@@ -66,6 +66,6 @@ A documentation of UnCo is available in English ([here](docu/0_en_documentation.
 Update UnCo Documentation
 -------------------------
 ```shell
-cd docu/unco_docu
+cd docu
 pydoc-markdown -I ../src -p unco --render-toc > unco.md
 ```
