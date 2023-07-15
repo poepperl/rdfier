@@ -45,8 +45,13 @@ else:
 
         graphical_version = col2.checkbox("Show graphical version", value=True)
 
-        solution = col2.selectbox("Select model:", (1,2,3,4,5,6,7,8), on_change=activate_rerun)
-
+        solution = col2.selectbox("Select model:", (1,2,3,4,5,6,7,8,"9a","9b"), on_change=activate_rerun)
+        if solution=="9a":
+            solution = 9
+            graphical_version = False
+        elif solution=="9b":
+            solution = 10
+            graphical_version = False
     # Graph generieren-------------------------------------------------------------------------------
 
     generate = st.button("Generate RDF graph")

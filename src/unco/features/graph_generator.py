@@ -548,7 +548,7 @@ class GraphGenerator:
 
                 line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> rdf:type edtfo:UncertainStatement .".replace("\\\"", "\"")
 
-            print(line)
+            print(line,end="")
 
     def change_to_model_9b(self) -> None:
         """
@@ -565,7 +565,7 @@ class GraphGenerator:
 
                 line = f"<< {splitlist[0]} {splitlist[1]} {splitlist[2]} >> un:hasUncertainty {splitlist[3]} .".replace("\\\"", "\"")
 
-            print(line)
+            print(line,end="")
 
 
 if __name__ == "__main__":
