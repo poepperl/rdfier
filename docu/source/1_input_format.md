@@ -36,7 +36,7 @@ Additional namespaces can be added using a csv table with the same structure or 
 URI's, literals and blank nodes
 -------------------------------
 RDF graphs have resources like URIs, literals, and blank nodes. In order for a cell entry to be interpreted correctly, the type of resource must be specified in addition to the value. The following entries are possible, where the values in curly brackets `{}` must be replaced by the desired values:
- * `<{URI}>^^uri` to specify a full URI, such as: "<http://nomisma.org/id/rome>^^uri".
+ * `<{URI}>^^uri` to specify a full URI, such as: "\<http://nomisma.org/id/rome\>^^uri".
  * `{prefix}:{label}^^uri` to specify a shorten URI, such as: "nm:rome^^uri".
  * `{value}` or rather `{value}^^xsd:string` to specify a literal, such as: "2023".
  * `{name}^^blank` to specify a blank node. The value *name* is only a placeholder and will be ignored by the module.
@@ -44,11 +44,11 @@ RDF graphs have resources like URIs, literals, and blank nodes. In order for a c
 Thus, the "^^" marker is used to indicate the type of resource. Predicates must be of type URI, so the marker in the header has no influence on the type of the predicate. Instead, the marker at this point can be used as a type assignment for all entries in the column without their own type.
 
 **Example**:
-|coins^^uri|nmo:hasMaterial^^uri      |
-|:---      |:---                      |
-|afe:5     |nm:ar                     |
-|afe:13    |kryptonite^^blank         |
-|afe:29    |<http://nomisma.org/id/ae>|
+|coins^^uri|nmo:hasMaterial^^uri        |
+|:---      |:---                        |
+|afe:5     |nm:ar                       |
+|afe:13    |kryptonite^^blank           |
+|afe:29    |\<http://nomisma.org/id/ae\>|
 
 The marker `coin` is in the column header of the first column with the subjects and thus does not define a predicate, it is discarded by the program and has no effect.
 The two `^^uri` markers assign the type uri to all entries in their columns if they do not have their own type. Therefore, entries like `nm:ar` and `<http://nomisma.org/id/ae>` are read as URIs.
@@ -67,11 +67,11 @@ A language can be specified by a two-character ISO identifier. A list of all cou
 Similar to resource types, these markers can be moved to the column header to assign a value to all entries without resource type, datatype, or language.
 
 **Example**:
-|coins^^uri|nmo:hasMaterial^^uri      |nmo:hasWeight^^xsd:decimal|
-|:---      |:---                      |:---                      |
-|afe:5     |nm:ar                     |5.24                      |
-|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |
-|afe:29    |<http://nomisma.org/id/ae>|1.16                      |
+|coins^^uri|nmo:hasMaterial^^uri        |nmo:hasWeight^^xsd:decimal|
+|:---      |:---                        |:---                      |
+|afe:5     |nm:ar                       |5.24                      |
+|afe:13    |kryptonite^^blank           |too heavy to weigh@en     |
+|afe:29    |\<http://nomisma.org/id/ae\>|1.16                      |
 
 
 Multiple Entries
@@ -86,11 +86,11 @@ With the marker `**{id}` at the end of the column name, an ID can be assigned to
 The ID can be any string.
 A subject column with ID can then be referenced with the marker `{id}__` (double underscore) at the beginning of a column name, so that the column contains objects and the predicate to the referenced subject column.
 
-|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |
-|:---      |:---                      |:---                      |:---                       |
-|afe:5     |nm:ar                     |5.24                      |                           |
-|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
-|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |
+|coins^^uri|nmo:hasMaterial^^uri**1     |nmo:hasWeight^^xsd:decimal|1__rdf:value               |
+|:---      |:---                        |:---                      |:---                       |
+|afe:5     |nm:ar                       |5.24                      |                           |
+|afe:13    |kryptonite^^blank           |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|
+|afe:29    |\<http://nomisma.org/id/ae\>|1.16                      |                           |
 
 As a result of this change, the second column is now additionally interpreted as a subject column, and the fourth column contains the objects and predicate belonging to it. This creates two new edges starting from the empty node with the predicate `rdf:value` and The assignment does not affect the original RDF statements.
 Also, a column that references another subject column can be assigned an ID, and so on.
@@ -98,12 +98,12 @@ Also, a column that references another subject column can be assigned an ID, and
 Multiple entries must first be resolved to serve as subjects for statements.
 If we want to add a comment to the resource `nm:billon`, this can be done via another row of the table:
 
-|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |1__rdfs:comment              |
-|:---      |:---                      |:---                      |:---                       |:---                         |
-|afe:5     |nm:ar                     |5.24                      |                           |                             |
-|afe:5     |nm:billon                 |                          |                           |alloy of copper and silver@en|
-|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|                             |
-|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |                             |
+|coins^^uri|nmo:hasMaterial^^uri**1     |nmo:hasWeight^^xsd:decimal|1__rdf:value               |1__rdfs:comment              |
+|:---      |:---                        |:---                      |:---                       |:---                         |
+|afe:5     |nm:ar                       |5.24                      |                           |                             |
+|afe:5     |nm:billon                   |                          |                           |alloy of copper and silver@en|
+|afe:13    |kryptonite^^blank           |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|                             |
+|afe:29    |\<http://nomisma.org/id/ae\>|1.16                      |                           |                             |
 
 In this case, another row has been added where `nm:billon` has its own cell, and thus a concatenated statement can be easily realized.
 In addition, `afe:5` must also be added to the line to create the triple *afe:5 nmo:hasMaterial nm:billon*.
@@ -117,11 +117,11 @@ For this purpose, you can assign an ID to the column of the statement as describ
 It is important to note here that the assignment of uncertainty is done on a cell-by-cell basis, and all multiple entries are then counted as uncertainty with alternatives.
 Let's add uncertainty to our example:
 
-|coins^^uri|nmo:hasMaterial^^uri**1   |nmo:hasWeight^^xsd:decimal|1__rdf:value               |uncertainMaterial^^certainty|
-|:---      |:---                      |:---                      |:---                       |:---                        |
-|afe:5     |nm:ar; nm:billon          |5.24                      |                           |0.8; 0.2                    |
-|afe:13    |kryptonite^^blank         |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|u                           |
-|afe:29    |<http://nomisma.org/id/ae>|1.16                      |                           |                            |
+|coins^^uri|nmo:hasMaterial^^uri**1     |nmo:hasWeight^^xsd:decimal|1__rdf:value               |uncertainMaterial^^certainty|
+|:---      |:---                        |:---                      |:---                       |:---                        |
+|afe:5     |nm:ar; nm:billon            |5.24                      |                           |0.8; 0.2                    |
+|afe:13    |kryptonite^^blank           |too heavy to weigh@en     |kryptonite@en; Kryptonit@de|u                           |
+|afe:29    |\<http://nomisma.org/id/ae\>|1.16                      |                           |                            |
 
 Here, some RDF statements of the form *afe:ID nmo:hasMaterial {object}* were marked as uncertain.
 The entry `u` was used only to describe that it is uncertain that the coin `afe:13` is made of kryptonite.

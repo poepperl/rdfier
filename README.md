@@ -17,8 +17,6 @@ Project Organization
     |
     ├── docu                <- The documentation of UnCo.
     │  
-    ├── execution           <- Execution and installation files.
-    │  
     ├── src
     |   ├── benchmark       <- Scripts and queries needed for benchmarking.
     |   ├── rdfier_app      <- The streamlit application RDFier.
@@ -66,6 +64,5 @@ A documentation of UnCo is available in English ([here](docu/0_en_documentation.
 Update UnCo Documentation
 -------------------------
 ```shell
-cd docu
-pydoc-markdown -I ../src -p unco --render-toc > unco.md
+pydoc-markdown -I src -p unco --render-toc > docu/source/unco.md
 ```

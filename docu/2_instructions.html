@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Instructions</title>
+        <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="instructions">Instructions</h1>
+<p>This manual describes how to start UnCo and how to run the benchmark tests described in my master thesis.</p>
+<h2 id="installation">Installation</h2>
+<p>To install UnCo you can execute <em>installation.bat</em> (for Windows) or <em><a href="http://installation.sh">installation.sh</a></em> (for Linux). This creates a virtual environment <em>.venv</em> in which all required python libraries are installed. Alternatively, the commands in <em><a href="http://README.html">README.md</a></em> can be executed.</p>
+<p>Note: If permission errors occur on Linux, it may be helpful to use <code>chmod u=rwx,g=r,o=r installation.sh</code> to give the script the necessary permissions. The same should be executed with <em>start_unco.sh</em>.</p>
+<h2 id="operating-instructions">Operating instructions</h2>
+<p>To start UnCo you can execute the file <em>start_unco</em> (.bat for windows and .sh for linux), or open a terminal, navigate to the project folder and run the following commands:</p>
+<pre><code class="language-shell">.venv\Scripts\activate      # Windows
+source .venv/bin/activate   # Linux
+python .
+</code></pre>
+<p>After that the python script <em>__main__.py</em> will be executed.
+Now it can be selected whether the streamlit application RDFier or a benchmark should be executed.
+At any time the terminal can be closed by entering <code>Q</code>.
+When entering parameters, the value in brackets gives an indication of which value will be selected by default if the input is left blank.
+Entering a <code>1</code> will start the app immediately, entering <code>0</code> will first prompt for the following parameters to run a benchmark:</p>
+<ul>
+<li><strong>Path of the Fuseki server</strong>: This is specified by a full path or a relative path starting from the project folder. By default, the program computes with a (Fuseki Server)[<a href="https://jena.apache.org/download/index.cgi">https://jena.apache.org/download/index.cgi</a>] version 4.8.0 in the src folder.</li>
+<li><strong>Path to the input dataset</strong>: Specified by a full or a relative path starting from the project folder.</li>
+<li><strong>Path to namespace table</strong>: Specified by a full or relative path starting from the project folder.</li>
+<li><strong>Selection of increasing parameter</strong>: Which parameter should be increased? If no parameter is to be increased, the selection has no effect.</li>
+<li><strong>Selection of the columns to be edited</strong>: Which columns should be edited step by step? The specification is made by column numbers separated by commas.</li>
+<li><strong>Selection of models</strong>: Which models are to be compared? The specification is made by model IDs separated by commas. Multiple selection possible.</li>
+<li><strong>Selection of SPARQL queries</strong>: Which queries should be used for comparison? This is specified by query IDs separated by commas.</li>
+<li><strong>Selection of parameter range</strong>: In which range should the parameter be tested? The specification is done by three integers <code>start</code>, <code>stop</code> and <code>step</code>, which is used to generate a python range <code>range(start, stop, step)</code>. If no parameter is to be incremented the default values can be used and thus the input can be left empty.</li>
+</ul>
+<h2 id="executions-of-the-master-thesis">Executions of the master thesis</h2>
+<p>In the context of my master thesis some benchmark tests with UnCo were executed. In the following it is described how them can be executed themselves.
+As dataset a table extracted from the AFE database was used. Since this contains mostly unpublished data, the dataset cannot be made available. A comparable dataset with the already published data can be found in <code>data/input/afe_public.csv</code>.</p>
+<h3 id="section-417-measurement-methods-and-performance-indicators">Section 4.1.7 Measurement methods and performance indicators</h3>
+<p>In this section, experiments were conducted using various procedures designed to avoid outliers and noise in measurements.
+To generate Figure 4.15 (a), the number of calculated medians and means must first be manually set to 1.
+For this, in <code>src/benchmark/benchmark.py</code> in line 48 and 49 the two constants must be set to 1.
+The following parameters were used when running UnCo:</p>
+<ul>
+<li><strong>Dataset</strong>: AFE dataset</li>
+<li><strong>Increasing parameter</strong>: Number of uncertainties (0)</li>
+<li><strong>Columns</strong>: Default value</li>
+<li><strong>Models</strong>: 1, 1, 1, 1</li>
+<li><strong>Queries</strong>: 4</li>
+<li><strong>Range</strong>: start: 0; stop: 301; step: 30</li>
+</ul>
+<p>After execution, in <code>data/results/plots/uncertainties4.pdf</code> is the result of the execution, which is present in the master thesis as figure 4.15 (a). Graph (b) is created by manually calculating the median.</p>
+<p>For the generation of figure 4.16 (a), first the constant <code>self.MEDIAN_LOOPS</code> has to be set to 5 again. After that UnCo can be started with the same parameters as just described.
+Figure 4.16 (a) shows the resulting graph, but with the same field of view as already shown in Figure 4.15. The graph (b) was calculated manually from the mean value.</p>
+<p>Note: Make sure that the constants changed here are set back to the previous value. For even more robust results, higher values can of course be used, whereby especially the choice of <code>self.MEAN_LOOPS</code> has a significant impact on the runtime.</p>
+<h3 id="section-421-comparison-with-respect-to-afe">Section 4.2.1 Comparison with respect to AFE</h3>
+<p>In this section, a benchmark test was run on the unprocessed version of the AFE dataset.
+The following parameters were used when running UnCo:</p>
+<ul>
+<li><strong>Dataset</strong>: AFE dataset</li>
+<li><strong>Increasing parameter</strong>: Default value (no effect)</li>
+<li><strong>Columns</strong>: Default value (no effect)</li>
+<li><strong>Models</strong>: Default value</li>
+<li><strong>Queries</strong>: Default value</li>
+<li><strong>Range</strong>: Default values</li>
+</ul>
+<p>After execution, the results are printed in the terminal.</p>
+<h3 id="section-422-comparison-with-increasing-number-of-uncertainties">Section 4.2.2 Comparison with increasing number of uncertainties</h3>
+<p>In this section, a benchmark test was executed with increasing number of uncertainties.
+The following parameters were used when executing UnCo:</p>
+<ul>
+<li><strong>Dataset</strong>: AFE dataset with no specified uncertainties</li>
+<li><strong>Increasing parameter</strong>: Number of uncertainties (0)</li>
+<li><strong>Columns</strong>: Default value</li>
+<li><strong>Models</strong>: Default value</li>
+<li><strong>Queries</strong>: Default value</li>
+<li><strong>Range</strong>: start: 0; stop: 10001; step: 1000.</li>
+</ul>
+<p>Since the used main memory was not sufficient, the results of the master thesis were compiled from three individual executions.
+For this, the ranges (0, 5000, 1000), (5000, 8000, 1000) and (8000, 10001, 1000) were used.
+After the execution, the results are saved in <code>data/results/plots/uncertainties{queryID}.pdf</code>, as well as the exact list of results is printed in the terminal.</p>
+<h3 id="section-423-comparison-with-increasing-number-of-alternatives">Section 4.2.3 Comparison with increasing number of alternatives</h3>
+<p>In this section, a benchmark test was executed with increasing number of alternatives.
+The following parameters were used when running UnCo:</p>
+<ul>
+<li><strong>Dataset</strong>: AFE dataset</li>
+<li><strong>Increasing parameter</strong>: Number of alternatives (1)</li>
+<li><strong>Columns</strong>: Default value</li>
+<li><strong>Models</strong>: Default value</li>
+<li><strong>Queries</strong>: Default value</li>
+<li><strong>Range</strong>: start: 0; stop: 101; step: 10.</li>
+</ul>
+<p>Since the used main memory was not sufficient, the results of the master thesis were compiled from three individual executions.
+The ranges (0, 40, 10), (40, 80, 10) and (80, 101, 10) were used for this purpose.
+After the execution, the results are saved in <code>data/results/plots/alternatives{queryID}.pdf</code>, as well as the exact list of results is printed in the terminal.</p>
+<h3 id="section-424-comparison-on-synthetic-generated-datasets">Section 4.2.4 Comparison on synthetic generated Datasets</h3>
+<p>In this section, a benchmark test was run on synthetically generated datasets based on AFE.
+The following parameters were used when running UnCo:</p>
+<ul>
+<li><strong>Dataset</strong>: synthetic AFE dataset.</li>
+<li><strong>Increasing parameter</strong>: Number of uncertainties (0)</li>
+<li><strong>Columns</strong>: Default value</li>
+<li><strong>Models</strong>: Default value</li>
+<li><strong>Queries</strong>: Default value</li>
+<li><strong>Range</strong>: start: 10000; stop: 10001; step: 1.</li>
+</ul>
+<p>After execution, the results are printed to the terminal.</p>
+<h2 id="extension-of-the-benchmark">Extension of the benchmark</h2>
+<p>UnCo has been specially created so that new models and queries can easily be added. For this purpose, the following files must be edited:</p>
+<p><strong>Adding a model with ID X</strong>:</p>
+<ul>
+<li><em>src/unco/features/graph_generator.py</em>: A new method <em>_generate_uncertain_statement_model_X</em> must be created, which contains the model equivalent to the other methods. The resources <em>subject</em>, <em>predicate</em>, <em>object</em>, as well as a uncertainty weight <em>weight</em> and the column index <em>index</em> of the object are available as input.
+Subsequently, the model must be integrated in the method <em>generate_graph</em>. To do this, include it equivalent to the other models as a new <em>case X:</em> and add the required parameters.</li>
+<li><em>src/benchmark/queries/</em>: Here the available queries are stored for each model. With a new model a new folder <em>modelX</em> must be added, in which the files <em>query1.rq</em> to <em>query6.rq</em> are contained. In these files the respective SPARQL queries are contained.</li>
+<li>Optional: In <em>__main__.py</em> the ID X can be added to execute the new model as default. To do this, just add <code>str(X)</code> to the <code>all_model_ids</code> list in line 21.</li>
+</ul>
+<p><strong>Adding a query with ID Y</strong>:</p>
+<ul>
+<li><em>src/benchmark/queries/</em>: Here the available queries are stored for each model. With a new query the file <em>queryY.rq</em> must be added in each contained folder. There the SPARQL query must be contained suitably to the respective model.</li>
+<li>Optional: In <em>__main__.py</em> the ID Y can be added, in order to execute the new queries as default. To do this, just add <code>str(Y)</code> to the <code>all_query_ids</code> list in line 22.</li>
+</ul>
+
+        
+        
+    </body>
+    </html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Anleitungen</title>
+        <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="anleitungen">Anleitungen</h1>
+<p>In dieser Anleitung wird beschrieben, wie UnCo gestartet werden kann und wie die in der Masterthesis beschriebenen Benchmarktests ausgeführt werden können.</p>
+<h2 id="installation">Installation</h2>
+<p>Um UnCo zu installieren kann <em>installation.bat</em> (für Windows) bzw. <em><a href="http://installation.sh">installation.sh</a></em> (für Linux) ausgeführt werden. Dadurch wird eine virtuelle Umgebung <em>.venv</em> erstellt, in der alle benötigten Python Bibliotheken installiert werden. Alternativ können auch die Befehle in der <em><a href="http://README.html">README.md</a></em> ausgeführt werden.</p>
+<p>Hinweis: Sollten bei Linux Berechtigungsfehler entstehen, kann es hilfreich sein mit <code>chmod u=rwx,g=r,o=r installation.sh</code> dem Skript die notwendigen Rechte zu vergeben. Das gleiche sollte mit <em>start_unco.sh</em> ausgeführt werden.</p>
+<h2 id="bedienungsanleitung">Bedienungsanleitung</h2>
+<p>Um UnCo zu starten kann die Ausführungsdatei <em>start_unco</em> (.bat für Windows und .sh für Linux) ausgeführt werden, oder im Terminal in den Projektordner navigiert und folgende Befehle ausgeführt werden:</p>
+<pre><code class="language-shell">.venv\Scripts\activate      # Windows
+source .venv/bin/activate   # Linux
+python .
+</code></pre>
+<p>Danach wird das Python Skript <em>__main__.py</em> ausgeführt.
+Nun kann ausgewählt werden, ob die Streamlit Applikation RDFier oder ein Benchmark ausgeführt werden soll.
+Zu jeder Zeit kann durch Eingabe von <code>Q</code>, das Terminal geschlossen werden.
+Bei der Eingabe von Parametern gibt der eingeklammerte Wert einen Hinweis darauf, welcher Wert standardmäßig ausgewählt wird, wenn die Eingabe leer gelassen wird.
+Durch die Eingabe einer <code>1</code> wird die App sofort gestartet, bei <code>0</code> werden zum Ausführen eines Benchmarks zunächst folgende Parameter abgefragt:</p>
+<ul>
+<li><strong>Pfad des Fuseki Servers</strong>: Die Angabe erfolgt durch einen vollständigen oder einen relativen Pfad ausgehend von dem Projektordner. Standardmäßig rechnet das Programm mit einem Fuseki Server der Version 4.8.0 im Ordner src.</li>
+<li><strong>Pfad zum Eingabe-Datensatz</strong>: Die Angabe erfolgt durch einen vollständigen oder einen relativen Pfad ausgehend von dem Projektordner.</li>
+<li><strong>Pfad zur Namensraum-Tabelle</strong>: Die Angabe erfolgt durch einen vollständigen oder einen relativen Pfad ausgehend von dem Projektordner.</li>
+<li><strong>Auswahl des steigenden Parameters</strong>: Welcher Parameter soll schrittweise erhöht werden? Wenn kein Parameter erhöht werden soll hat die Auswahl keine Auswirkung.</li>
+<li><strong>Auswahl der bearbeitenden Spalten</strong>: Welche Spalten sollen schrittweise bearbeitet werden? Die Angabe erfolgt durch Spaltennummern getrennt durch Kommata.</li>
+<li><strong>Auswahl der Modellierungen</strong>: Welche Modellierungen sollen verglichen werden? Die Angabe erfolgt durch IDs von Modellierungen getrennt durch Kommata. Mehrfachauswahl möglich.</li>
+<li><strong>Auswahl der SPARQL-Anfragen</strong>: Welche Queries sollen für den Vergleich genutzt werden? Die Angabe erfolgt durch IDs von Queries getrennt durch Kommata.</li>
+<li><strong>Auswahl des Parameter-Bereichs</strong>: In welchem Bereich soll der Parameter getestet werden? Die Angabe erfolgt durch drei Ganzzahlen <code>start</code>, <code>stop</code> und <code>step</code>, die für die Erzeugung einer Python Range <code>range(start, stop, step)</code> genutzt wird. Soll kein Parameter erhöht werden können die Standardwerte genutzt und somit die Eingabe leer gelassen werden.</li>
+</ul>
+<h2 id="ausführungen-der-masterthesis">Ausführungen der Masterthesis</h2>
+<p>Im Rahmen meiner Masterthesis wurden einige Benchmarktests mit UnCo ausgeführt. Im Folgenden wird beschrieben, wie die dort ausgeführten selbst ausgeführt werden können.
+Als Datensatz wurde eine aus der AFE Datenbank extrahierte Tabelle genutzt. Da diese zum Großteil nicht veröffentlichte Daten enthält, kann der Datensatz nicht zur Verfügung gestellt werden. Ein vergleichbarer Datensatz mit den bereits veröffentlichten Daten befindet sich in <code>data/input/afe_public.csv</code>.</p>
+<h3 id="abschnitt-417-messverfahren-und-leistungskennzahlen">Abschnitt 4.1.7 Messverfahren und Leistungskennzahlen</h3>
+<p>In diesem Abschnitt wurden Versuche mit verschiedenen Verfahren durchgeführt, welche Ausreißer und Störungen in Messungen vermeiden sollen.
+Zur Erzeugung der Abbildung 4.15 (a) muss zunächst die Anzahl der berechneten Mediane und Mittelwerte manuell auf 1 gesetzt werden.
+Dazu muss in <code>src/benchmark/benchmark.py</code> in Zeile 48 und 49 die beiden Konstanten auf 1 gesetzt werden.
+Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
+<ul>
+<li><strong>Datensatz</strong>: AFE-Datensatz</li>
+<li><strong>Steigender Parameter</strong>: Anzahl Unsicherheiten (0)</li>
+<li><strong>Spalten</strong>: Standardwert</li>
+<li><strong>Modellierungen</strong>: 1, 1, 1, 1, 1</li>
+<li><strong>Queries</strong>: 4</li>
+<li><strong>Bereich</strong>: Start: 0; Stopp: 301; Schrittgröße: 30</li>
+</ul>
+<p>Nach der Ausführung befindet sich in <code>data/results/plots/uncertainties4.pdf</code> die Ergebnisse der Ausführung, welche in der Masterthesis als Abbildung 4.15 (a) vorhanden ist. Grafik (b) ist durch das manuelle Errechnen des Medians entstanden.</p>
+<p>Für die Erzeugung von Abbildung 4.16 (a), muss zunächst die Konstante <code>self.MEDIAN_LOOPS</code> wieder auf 5 gesetzt werden. Danach kann UnCo mit den gleichen Parametern wie eben beschrieben gestartet werden.
+Abbildung 4.16 (a) zeigt die daraus entstandene Grafik, jedoch mit dem gleichen Sichtfeld wie schon in Abbildung 4.15. Die Grafik (b) wurde manuell aus dem Mittelwert errechnet.</p>
+<p>Hinweis: Stellen Sie sicher, dass die hier veränderten Konstanten wieder auf den vorherigen Wert gesetzt werden. Für noch robustere Ergebnisse können natürlich auch höhere Werte genutzt werden, wobei vorallem die Wahl von <code>self.MEAN_LOOPS</code> erhebliche Auswirkungen auf die Laufzeit besitzt.</p>
+<h3 id="abschnitt-421-vergleich-bezüglich-afe">Abschnitt 4.2.1 Vergleich bezüglich AFE</h3>
+<p>In diesem Abschnitt wurde ein Benchmarktest auf die unbearbeitete Version des AFE Datensatzes ausgeführt.
+Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
+<ul>
+<li><strong>Datensatz</strong>: AFE-Datensatz</li>
+<li><strong>Steigender Parameter</strong>: Standardwert (keine Auswirkung)</li>
+<li><strong>Spalten</strong>: Standardwert (keine Auswirkung)</li>
+<li><strong>Modellierungen</strong>: Standardwert</li>
+<li><strong>Queries</strong>: Standardwert</li>
+<li><strong>Bereich</strong>: Standardwerte</li>
+</ul>
+<p>Nach der Ausführung werden die Ergebnisse im Terminal ausgegeben.</p>
+<h3 id="abschnitt-422-vergleich-bei-steigender-anzahl-unsicherheiten">Abschnitt 4.2.2 Vergleich bei steigender Anzahl Unsicherheiten</h3>
+<p>In diesem Abschnitt wurde ein Benchmarktest mit steigender Anzahl Unsicherheiten ausgeführt.
+Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
+<ul>
+<li><strong>Datensatz</strong>: AFE-Datensatz ohne Angaben von Unsicherheiten</li>
+<li><strong>Steigender Parameter</strong>: Anzahl Unsicherheiten (0)</li>
+<li><strong>Spalten</strong>: Standardwert</li>
+<li><strong>Modellierungen</strong>: Standardwert</li>
+<li><strong>Queries</strong>: Standardwert</li>
+<li><strong>Bereich</strong>: Start: 0; Stopp: 10001; Schrittgröße: 1000</li>
+</ul>
+<p>Da der genutzte Arbeitsspeicher nicht ausgereicht hat, wurden die Ergebnisse der Masterthesis aus drei einzelnen Ausführungen zusammengetragen.
+Dafür wurden die Bereiche (0, 5000, 1000), (5000, 8000, 1000) und (8000, 10001, 1000) genutzt.
+Nach der Ausführung werden die Ergebnisse in <code>data/results/plots/uncertainties{queryID}.pdf</code> gespeichert, sowie die genaue Liste der Ergebnisse im Terminal ausgegeben.</p>
+<h3 id="abschnitt-423-vergleich-bei-steigender-anzahl-alternativen">Abschnitt 4.2.3 Vergleich bei steigender Anzahl Alternativen</h3>
+<p>In diesem Abschnitt wurde ein Benchmarktest mit steigender Anzahl Alternativen ausgeführt.
+Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
+<ul>
+<li><strong>Datensatz</strong>: AFE-Datensatz</li>
+<li><strong>Steigender Parameter</strong>: Anzahl Alternativen (1)</li>
+<li><strong>Spalten</strong>: Standardwert</li>
+<li><strong>Modellierungen</strong>: Standardwert</li>
+<li><strong>Queries</strong>: Standardwert</li>
+<li><strong>Bereich</strong>: Start: 0; Stopp: 101; Schrittgröße: 10</li>
+</ul>
+<p>Da der genutzte Arbeitsspeicher nicht ausgereicht hat, wurden die Ergebnisse der Masterthesis aus drei einzelnen Ausführungen zusammengetragen.
+Dafür wurden die Bereiche (0, 40, 10), (40, 80, 10) und (80, 101, 10) genutzt.
+Nach der Ausführung werden die Ergebnisse in <code>data/results/plots/alternatives{queryID}.pdf</code> gespeichert, sowie die genaue Liste der Ergebnisse im Terminal ausgegeben.</p>
+<h3 id="abschnitt-424-vergleich-bei-künstlich-erzeugten-datensätzen">Abschnitt 4.2.4 Vergleich bei künstlich erzeugten Datensätzen</h3>
+<p>In diesem Abschnitt wurde ein Benchmarktest auf synthetisch erzeugten Datensätzen basierend auf AFE ausgeführt.
+Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
+<ul>
+<li><strong>Datensatz</strong>: synthetischer AFE-Datensatz</li>
+<li><strong>Steigender Parameter</strong>: Anzahl Unsicherheiten (0)</li>
+<li><strong>Spalten</strong>: Standardwert</li>
+<li><strong>Modellierungen</strong>: Standardwert</li>
+<li><strong>Queries</strong>: Standardwert</li>
+<li><strong>Bereich</strong>: Start: 10000; Stopp: 10001; Schrittgröße: 1</li>
+</ul>
+<p>Nach der Ausführung werden die Ergebnisse im Terminal ausgegeben.</p>
+<h2 id="erweiterung-des-benchmarks">Erweiterung des Benchmarks</h2>
+<p>UnCo wurde speziell so angelegt, dass auch neue Modellierungen und Queries hinzugefügt werden können. Dazu müssen folgende Dateien bearbeitet werden:</p>
+<p><strong>Hinzufügen einer Modellierung mit ID X</strong>:</p>
+<ul>
+<li><em>src/unco/features/graph_generator.py</em>: Eine neue Methode <em>_generate_uncertain_statement_model_X</em> muss erstellt werden, welche äquivalent zu den anderen Methoden die Modellierung beinhaltet. Als Eingabe sind die Ressourcen <em>subject</em>, <em>predicate</em>, <em>object</em>, sowie eine Gewichtung <em>weight</em> und der Spaltenindex <em>index</em> des Objekts verfügbar.
+Anschließend muss die Modellierung in der Methode <em>generate_graph</em> eingebunden werden. Dazu wird diese äquivalent zu den anderen Modellierungen als neuer <em>case X:</em> eingebunden und die benötigten Parameter übergeben.</li>
+<li><em>src/benchmark/queries/</em>: Hier werden zu jeder Modellierung die verfügbaren Queries gespeichert. Bei einer neuen Modellierung muss ein neuer Ordner <em>modelX</em> hinzugefügt werden, in dem die Dateien <em>query1.rq</em> bis <em>query6.rq</em> enthalten sind. In diesen Dateien sind die jeweiligen SPARQL-Queries enthalten.</li>
+<li>Optional: In <em>__main__.py</em> kann die ID X hinzugefügt werden, um beim Standardwert auch die neue Modellierung auszuführen. Dazu muss lediglich <code>str(X)</code> in die Liste <code>all_model_ids</code> in Zeile 21 eingefügt werden.</li>
+</ul>
+<p><strong>Hinzufügen einer Query mit ID Y</strong>:</p>
+<ul>
+<li><em>src/benchmark/queries/</em>: Hier werden zu jeder Modellierung die verfügbaren Queries gespeichert. Bei einer neuen Query muss in jedem enthaltenen Ordner die Datei <em>queryY.rq</em> hinzugefügt werden. Dort muss die SPARQL-Query passend zur jeweiligen Modellierung enthalten sein.</li>
+<li>Optional: In <em>__main__.py</em> kann die ID Y hinzugefügt werden, um beim Standardwert auch die neue Queries auszuführen. Dazu muss lediglich <code>str(Y)</code> in die Liste <code>all_query_ids</code> in Zeile 22 eingefügt werden.</li>
+</ul>
+
+        
+        
+    </body>
+    </html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="documentation">Documentation</h1>
+<p>This documentation can be used to get an insight into the input format and the operation of UnCo.
+In addition, instructions are included on how to run the benchmark tests performed in the master thesis and how the benchmark can be extended with own models and SPARQL queries.
+These can be customized so that the benchmark can be repeated with other data sets or other parameters.</p>
+<h2 id="sections">Sections:</h2>
+<ul>
+<li><a href="1_input_format.html">Input Format</a></li>
+<li><a href="2_instructions.html">Instructions</a></li>
+<li><a href="unco.html">Automatic generated documentation of UnCo</a></li>
+</ul>
+<h2 id="project-organization">Project Organization</h2>
+<pre><code>├── data
+|   ├── input           &lt;- Example input files.
+|   ├── output          &lt;- Output files.
+|   ├── results         &lt;- Results of the master thesis benchmarks.
+│   └── thesis_graphs   &lt;- Graphs and Code which is shown in the thesis.
+|
+├── docu                &lt;- This documentation of UnCo.
+│  
+├── src
+|   ├── benchmark       &lt;- Scripts and queries needed for benchmarking.
+|   ├── rdfier_app      &lt;- The streamlit application RDFier.
+|   ├── unco            &lt;- This is UnCo!
+|   └── setup.py        &lt;- Makes project pip-installable (pip install -e ./src).
+|
+├── __main__.py         &lt;- Starts UnCo with &quot;python .&quot;.
+|
+├── README.md           &lt;- Readme file to getting started.
+|
+├── installation.bat/sh &lt;- CMD/Shell Script to install UnCo.
+|
+├── start_unco.bat/sh   &lt;- CMD/Shell Script to start UnCo.
+|
+└── requirements.txt    &lt;- Required python libraries.
+</code></pre>
+
+        
+        
+    </body>
+    </html>
