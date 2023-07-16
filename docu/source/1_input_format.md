@@ -5,7 +5,7 @@ The example used here is stored in the project folder under *data/input/example_
 
 Basic Structure
 ---------------
-The basic structure of the input is as follows:
+Usually, in tabular data, the first column contains IDs of the subject and the remaining columns are for assigning attributes and relations. Therefore, the basic structure of the input is also based on this:
 <img src="images/basic_structure.JPG" alt="basic_structure" width="1000"/>
 
 Thus, usually the first column denotes subjects, and the subsequent columns denote objects, with the respective predicate in the column header. The edges (subject, predicate1, object1), (subject, predicate2, object2), and (subject, predicate3, object3) are created from the diagram.

@@ -5,7 +5,7 @@ Das hier verwendete Beispiel ist im Projekt-Ordner unter *data/input/example_inp
 
 Grundstruktur
 -------------
-Die Grundstruktur der Eingabe ist folgende:
+Üblicherweise befinden sich in tabellarischen Daten in der ersten Spalte IDs des Subjekts und die restlichen Spalten sind für die Zuweisung von Attributen und Relationen. Daher richtet sich auch die Grundstruktur der Eingabe danach:
 <img src="images/basic_structure.JPG" alt="basic_structure" width="1000"/>
 
 Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltennamen. Aus dem Schaubild enstehen somit die RDF-Aussagen (subject, predicate1, object1), (subject, predicate2, object2) und (subject, predicate3, object3).

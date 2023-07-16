@@ -44,7 +44,7 @@
 <p>Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei, einen RDF-Graph zu bauen. Da komplexere Konzepte in RDF-Graphen nicht ohne Weiteres aus einem beliebigen Format gelesen werden können, wird hier beschrieben wie solche in der Eingabe codiert werden können.
 Das hier verwendete Beispiel ist im Projekt-Ordner unter <em>data/input/example_input.csv</em> gespeichert, ebenso die verwendete Tabelle der Namensräume unter <em>data/input/example/namespaces.csv</em>.</p>
 <h2 id="grundstruktur">Grundstruktur</h2>
-<p>Die Grundstruktur der Eingabe ist folgende:
+<p>Üblicherweise befinden sich in tabellarischen Daten in der ersten Spalte IDs des Subjekts und die restlichen Spalten sind für die Zuweisung von Attributen und Relationen. Daher richtet sich auch die Grundstruktur der Eingabe danach:
 <img src="file:///d:\Dokumente\Repositories\unco\docu\source\images\basic_structure.JPG" alt="basic_structure" width="1000"/></p>
 <p>Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltennamen. Aus dem Schaubild enstehen somit die RDF-Aussagen (subject, predicate1, object1), (subject, predicate2, object2) und (subject, predicate3, object3).</p>
 <p>Häufig verwendete Namensräume stehen dabei direkt zu Verfügung. Dazu gehören:</p>
