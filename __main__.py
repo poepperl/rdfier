@@ -40,7 +40,7 @@ def benchmark():
         path = input(">>>> Insert the path (example input):").strip()
         if path == "Q": quit()
         if path == "":
-            path = str(Path(UNCO_PATH,"data/input/example_input.csv"))
+            path = str(Path(UNCO_PATH,"data/example_input.csv"))
         
         if not Path(path).is_file() and path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
@@ -54,7 +54,7 @@ def benchmark():
         path = input(">>>> Insert a input path (example namespaces):").strip()
         if path == "Q": quit()
         if path == "":
-            path = str(Path(UNCO_PATH,"data/input/example/namespaces.csv"))
+            path = str(Path(UNCO_PATH,"data/input/namespaces.csv"))
         
         if not Path(path).is_file() and path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
@@ -84,7 +84,7 @@ def benchmark():
         if columnlist == ["Q"]: quit()
         if columnlist == [""]: columnlist = ["2", "3", "4", "7", "10", "16", "17", "18", "19"]
 
-        if not all(cols in set_of_columns for cols in columnlist): print("!!!! Wrong input!                              !!!!")
+        if not all(cols in set_of_columns for cols in columnlist): print("!!!! Wrong column indices!                     !!!!")
     
     del set_of_columns
     columnlist = list(map(int, columnlist))
