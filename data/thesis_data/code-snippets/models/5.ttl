@@ -1,0 +1,11 @@
+@prefix amt: <http://academic-meta-tool.xyz/vocab#> .
+@prefix bsp: <http://beispiel.com/> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix nm: <http://nomisma.org/id/> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+bsp:coin_0 nmo:hasMint nm:rome .
+
+bsp:coin_1 nmo:hasMint [ amt:weight 0.9 ;
+            crm:P189.2_uncertain_place nm:rome ] .

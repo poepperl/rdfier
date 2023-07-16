@@ -1,0 +1,9 @@
+@prefix bsp: <http://beispiel.com/> .
+@prefix edtfo: <http://periodo.github.io/edtf-ontology/edtfo.ttl#> .
+@prefix nm: <http://nomisma.org/id/> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+bsp:coin_0 nmo:hasMint nm:rome .
+
+<< bsp:coin_1 nmo:hasMint nm:rome >> rdf:type edtfo:UncertainStatement .
