@@ -41,7 +41,7 @@ else:
     with st.container():
         col1, col2 = st.columns(2)
 
-        xml_format = col1.radio("RDF Format", ("Turtle", "XML"), on_change=activate_rerun)
+        turtle_format = col1.radio("RDF Format", ("Turtle", "XML"), on_change=activate_rerun)
 
         graphical_version = col2.checkbox("Show graphical version", value=True)
 
@@ -49,9 +49,11 @@ else:
         if solution=="9a":
             solution = 9
             graphical_version = False
+            turtle_format = "Turtle"
         elif solution=="9b":
             solution = 10
             graphical_version = False
+            turtle_format = "Turtle"
     # Graph generieren-------------------------------------------------------------------------------
 
     generate = st.button("Generate RDF graph")
@@ -65,15 +67,15 @@ else:
             st.session_state.rerun = False
             generator = GraphGenerator(st.session_state.rdf_data)
             if uploaded_prefixes: generator.load_prefixes(pd.read_csv(uploaded_prefixes))
-            generator.generate_graph(model_id=solution,xml_format=(xml_format=="XML"))
+            generator.generate_graph(model_id=solution,xml_format=(turtle_format=="XML"))
 
         
-        path = Path(UNCO_PATH, "data/output/graph" + (".ttl" if xml_format=="Turtle" else ".rdf"))
+        path = Path(UNCO_PATH, "data/output/graph" + (".ttl" if turtle_format=="Turtle" else ".rdf"))
 
         if graphical_version:
             codcol, graphcol = st.columns(2)
 
-            codcol.code(path.read_text(),language="turtle" if xml_format=="Turtle" else "xml")
+            codcol.code(path.read_text(),language="turtle" if turtle_format=="Turtle" else "xml")
 
             grapher = Illustrator(path)
             
@@ -81,4 +83,7 @@ else:
 
             graphcol.image(image, output_format="PNG", use_column_width="auto")
         else:
-            st.code(path.read_text(),language="turtle" if xml_format=="Turtle" else "xml")
+            st.code(path.read_text(),language="turtle" if turtle_format=="Turtle" else "xml")
+
+        if solution==9 or solution==10:
+            st.warning("For RDF*, only the graphs in Turtle format can be output so far!", icon="⚠️")
