@@ -34,21 +34,21 @@ def benchmark():
             print("!!!! Doesn`t found fueski-server.jar           !!!!")
 
 
-    while not Path(path).is_file() and path[-4:] != ".csv":
+    while not Path(path).is_file() or path[-4:] != ".csv":
         print("|---                                           ---|")
         print("|--- Select the input csv-file.                ---|")
         path = input(">>>> Insert the path (example input):").strip()
         if path == "Q": quit()
         if path == "":
-            path = str(Path(UNCO_PATH,"data/example_input.csv"))
+            path = str(Path(UNCO_PATH,"data/input/example_input.csv"))
         
-        if not Path(path).is_file() and path[-4:] != ".csv":
+        if not Path(path).is_file() or path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
 
     rdf_data = RDFData(pd.read_csv(path))
     path = ""
 
-    while not Path(path).is_file() and path[-4:] != ".csv":
+    while not Path(path).is_file() or path[-4:] != ".csv":
         print("|---                                           ---|")
         print("|--- Select the namespaces csv-file.           ---|")
         path = input(">>>> Insert a input path (example namespaces):").strip()
@@ -56,7 +56,7 @@ def benchmark():
         if path == "":
             path = str(Path(UNCO_PATH,"data/input/namespaces.csv"))
         
-        if not Path(path).is_file() and path[-4:] != ".csv":
+        if not Path(path).is_file() or path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
 
     bench = Benchmark(rdf_data, path, )

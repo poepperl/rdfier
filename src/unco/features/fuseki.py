@@ -8,8 +8,6 @@ from io import StringIO
 from pathlib import Path
 from unco import UNCO_PATH
 
-OUTPUT_FOLDER = Path(UNCO_PATH, "data/output")
-
 
 class FusekiServer:
     """
@@ -43,12 +41,12 @@ class FusekiServer:
         if os.name == "nt":
             starter_path += ".bat"
             with open(starter_path, 'w') as starter:
-                starter.write("echo 'Running fuseki server'\ncd \"" + self.FUSEKI_PATH + "\"\n")
+                starter.write(f"echo 'Running fuseki server'\n{self.FUSEKI_PATH[:2]}\ncd \"" + self.FUSEKI_PATH + "\"\n")
                 starter.write("java -Xmx4G -jar \"fuseki-server.jar\" --update --mem /ds %*")
         elif os.name == "posix":
             starter_path += ".sh"
             with open(starter_path, 'w') as starter:
-                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
+                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \n{self.FUSEKI_PATH[:2]}\ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
             
             os.system(f"chmod u=rwx,g=r,o=r {starter_path}")
         else:
@@ -123,7 +121,7 @@ class FusekiServer:
 
         if save_result:
             csvdata = pd.read_csv(result, encoding='utf-8')
-            csvdata.to_csv(str(Path(OUTPUT_FOLDER, "query_results_fuseki.csv")))
+            csvdata.to_csv(str(Path(UNCO_PATH, "data/output/query_results_fuseki.csv")))
             return csvdata
 
     def stop_server(self) -> None:
