@@ -273,7 +273,7 @@ class Benchmark:
         results: list[list[float]]
             Results of the run_benchmarktest method.
         """
-        percentage_range = 0.05
+        tolerance = 0.05
 
         results = [[results[q][m] - min([v for v in results[q] if v != 0]) for m in range(len(results[0]))] for q in range(len(results))]
         maxes = [max([float(results[q][m]) for m in range(len(results[0]))]) for q in range(len(results))]
@@ -290,7 +290,7 @@ class Benchmark:
                     results[q].remove(mini)
                     continue
 
-                if mini > current_value + percentage_range:
+                if mini > current_value + tolerance:
                     current_rang = counter
                     current_value = mini
 
