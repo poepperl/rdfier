@@ -40,7 +40,7 @@ def benchmark():
         path = input(">>>> Insert the path (example input):").strip()
         if path == "Q": quit()
         if path == "":
-            path = str(Path(UNCO_PATH,"data/input/example_input.csv"))
+            path = str(Path(UNCO_PATH,"data/thesis_data/afe/afe_public.csv"))
         
         if not Path(path).is_file() or path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
@@ -54,7 +54,7 @@ def benchmark():
         path = input(">>>> Insert a input path (example namespaces):").strip()
         if path == "Q": quit()
         if path == "":
-            path = str(Path(UNCO_PATH,"data/input/namespaces.csv"))
+            path = str(Path(UNCO_PATH,"data/thesis_data/namespaces.csv"))
         
         if not Path(path).is_file() or path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
