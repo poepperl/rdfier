@@ -12,8 +12,8 @@ Project Organization
     ├── data
     |   ├── input           <- Example input files.
     |   ├── output          <- Output files.
-    |   ├── results         <- Results of the master thesis benchmarks.
-    │   └── thesis_graphs   <- Graphs and Code which is shown in the thesis.
+    |   ├── results         <- Results and plots of the master thesis benchmark.
+    │   └── thesis_graphs   <- Graphs and Code which is shown in the thesis as figures.
     |
     ├── docu                <- The documentation of UnCo.
     │  

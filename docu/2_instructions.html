@@ -43,6 +43,7 @@
         <h1 id="instructions">Instructions</h1>
 <p>This manual describes how to start UnCo and how to run the benchmark tests described in my master thesis.</p>
 <h2 id="installation">Installation</h2>
+<p>Python 3.10 or higher is required to use the program. The benchmark is executed using an Apache Jena Fuseki server, which is already included in the electronic appendix of the master thesis. Fuseki requires a suitable Java installation (Java 11.0.19 was used to run the benchmark of the thesis).</p>
 <p>To install UnCo you can execute <em>installation.bat</em> (for Windows) or <em><a href="http://installation.sh">installation.sh</a></em> (for Linux). This creates a virtual environment <em>.venv</em> in which all required python libraries are installed. Alternatively, the commands in <em><a href="http://README.html">README.md</a></em> can be executed.</p>
 <p>Note: If permission errors occur on Linux, it may be helpful to use <code>chmod u=rwx,g=r,o=r installation.sh</code> to give the script the necessary permissions. The same should be executed with <em>start_unco.sh</em>.</p>
 <h2 id="operating-instructions">Operating instructions</h2>
@@ -69,9 +70,9 @@ Entering a <code>1</code> will start the app immediately, entering <code>0</code
 <h2 id="executions-of-the-master-thesis">Executions of the master thesis</h2>
 <p>In the context of my master thesis some benchmark tests with UnCo were executed. In the following it is described how them can be executed themselves.
 As dataset a table extracted from the AFE database was used. Since this contains mostly unpublished data, the dataset cannot be made available. A comparable dataset with the already published data can be found in <code>data/input/afe_public.csv</code>.</p>
-<h3 id="section-417-measurement-methods-and-performance-indicators">Section 4.1.7 Measurement methods and performance indicators</h3>
+<h3 id="section-417-measurement-methods-and-metric">Section 4.1.7 Measurement methods and metric</h3>
 <p>In this section, experiments were conducted using various procedures designed to avoid outliers and noise in measurements.
-To generate Figure 4.15 (a), the number of calculated medians and means must first be manually set to 1.
+To generate Figure 4.17 (a), the number of calculated medians and means must first be manually set to 1.
 For this, in <code>src/benchmark/benchmark.py</code> in line 48 and 49 the two constants must be set to 1.
 The following parameters were used when running UnCo:</p>
 <ul>
@@ -82,10 +83,13 @@ The following parameters were used when running UnCo:</p>
 <li><strong>Queries</strong>: 4</li>
 <li><strong>Range</strong>: start: 0; stop: 301; step: 30</li>
 </ul>
-<p>After execution, in <code>data/results/plots/uncertainties4.pdf</code> is the result of the execution, which is present in the master thesis as figure 4.15 (a). Graph (b) is created by manually calculating the median.</p>
-<p>For the generation of figure 4.16 (a), first the constant <code>self.MEDIAN_LOOPS</code> has to be set to 5 again. After that UnCo can be started with the same parameters as just described.
-Figure 4.16 (a) shows the resulting graph, but with the same field of view as already shown in Figure 4.15. The graph (b) was calculated manually from the mean value.</p>
+<p>After execution, in <code>data/results/plots/uncertainties4.pdf</code> is the result of the execution, which is present in the master thesis as figure 4.17 (a). Graph (b) is created by manually calculating the median.</p>
+<p>For the generation of figure 4.18 (a), first the constant <code>self.MEDIAN_LOOPS</code> has to be set to 5 again. After that UnCo can be started with the same parameters as just described.
+Figure 4.18 (a) shows the resulting graph, but with the same field of view as already shown in Figure 4.17. The graph (b) was calculated manually from the mean value.</p>
 <p>Note: Make sure that the constants changed here are set back to the previous value. For even more robust results, higher values can of course be used, whereby especially the choice of <code>self.MEAN_LOOPS</code> has a significant impact on the runtime.</p>
+<p>Besides the simple output of the runtimes, UnCo also generates the rankings described there.
+To set the tolerance range of same ranks, in <code>src/benchmark/benchmark.py</code> line 276 the value of <code>tolerance</code> must be edited.
+By default, this is set to 0.05, i.e. 5%.</p>
 <h3 id="section-421-comparison-with-respect-to-afe">Section 4.2.1 Comparison with respect to AFE</h3>
 <p>In this section, a benchmark test was run on the unprocessed version of the AFE dataset.
 The following parameters were used when running UnCo:</p>
@@ -128,6 +132,7 @@ The ranges (0, 40, 10), (40, 80, 10) and (80, 101, 10) were used for this purpos
 After the execution, the results are saved in <code>data/results/plots/alternatives{queryID}.pdf</code>, as well as the exact list of results is printed in the terminal.</p>
 <h3 id="section-424-comparison-on-synthetic-generated-datasets">Section 4.2.4 Comparison on synthetic generated Datasets</h3>
 <p>In this section, a benchmark test was run on synthetically generated datasets based on AFE.
+A synthetically generated dataset of the published part of AFE is located in <code>data/thesis_data/afe/synthetic.csv</code>.
 The following parameters were used when running UnCo:</p>
 <ul>
 <li><strong>Dataset</strong>: synthetic AFE dataset.</li>

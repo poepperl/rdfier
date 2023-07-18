@@ -43,8 +43,9 @@
         <h1 id="anleitungen">Anleitungen</h1>
 <p>In dieser Anleitung wird beschrieben, wie UnCo gestartet werden kann und wie die in der Masterthesis beschriebenen Benchmarktests ausgeführt werden können.</p>
 <h2 id="installation">Installation</h2>
-<p>Um UnCo zu installieren kann <em>installation.bat</em> (für Windows) bzw. <em><a href="http://installation.sh">installation.sh</a></em> (für Linux) ausgeführt werden. Dadurch wird eine virtuelle Umgebung <em>.venv</em> erstellt, in der alle benötigten Python Bibliotheken installiert werden. Alternativ können auch die Befehle in der <em><a href="http://README.html">README.md</a></em> ausgeführt werden.</p>
-<p>Hinweis: Sollten bei Linux Berechtigungsfehler entstehen, kann es hilfreich sein mit <code>chmod u=rwx,g=r,o=r installation.sh</code> dem Skript die notwendigen Rechte zu vergeben. Das gleiche sollte mit <em>start_unco.sh</em> ausgeführt werden.</p>
+<p>Für die Nutzung des Programms wird Python 3.10 oder höher benötigt. Der Benchmark wird mit Hilfe eines Apache Jena Fuseki Servers ausgeführt, welcher im elektronischen Anhang der Masterthesis bereits enthalten ist. Fuseki benötigt eine dazu passende Java Installation (für die Durchführung des Benchmarks wurde Java 11.0.19 verwendet).</p>
+<p>Um UnCo zu installieren kann <em>installation.bat</em> (für Windows) bzw. <em><a href="http://installation.sh">installation.sh</a></em> (für Linux) ausgeführt werden. Dadurch wird eine virtuelle Umgebung <em>.venv</em> erstellt, in der alle benötigten Python Bibliotheken installiert werden. Alternativ können auch die Befehle der <em><a href="http://README.html">README.md</a></em> ausgeführt werden.</p>
+<p>Hinweis: Sollten bei Linux Berechtigungsfehler entstehen, kann es hilfreich sein mit <code>chmod u=rwx,g=r,o=r installation.sh</code> der Ausführungsdatei die notwendigen Rechte zu vergeben. Das Gleiche sollte mit <em>start_unco.sh</em> ausgeführt werden.</p>
 <h2 id="bedienungsanleitung">Bedienungsanleitung</h2>
 <p>Um UnCo zu starten kann die Ausführungsdatei <em>start_unco</em> (.bat für Windows und .sh für Linux) ausgeführt werden, oder im Terminal in den Projektordner navigiert und folgende Befehle ausgeführt werden:</p>
 <pre><code class="language-shell">.venv\Scripts\activate      # Windows
@@ -69,9 +70,9 @@ Durch die Eingabe einer <code>1</code> wird die App sofort gestartet, bei <code>
 <h2 id="ausführungen-der-masterthesis">Ausführungen der Masterthesis</h2>
 <p>Im Rahmen meiner Masterthesis wurden einige Benchmarktests mit UnCo ausgeführt. Im Folgenden wird beschrieben, wie die dort ausgeführten selbst ausgeführt werden können.
 Als Datensatz wurde eine aus der AFE Datenbank extrahierte Tabelle genutzt. Da diese zum Großteil nicht veröffentlichte Daten enthält, kann der Datensatz nicht zur Verfügung gestellt werden. Ein vergleichbarer Datensatz mit den bereits veröffentlichten Daten befindet sich in <code>data/input/afe_public.csv</code>.</p>
-<h3 id="abschnitt-417-messverfahren-und-leistungskennzahlen">Abschnitt 4.1.7 Messverfahren und Leistungskennzahlen</h3>
+<h3 id="abschnitt-417-messverfahren-und-metrik">Abschnitt 4.1.7 Messverfahren und Metrik</h3>
 <p>In diesem Abschnitt wurden Versuche mit verschiedenen Verfahren durchgeführt, welche Ausreißer und Störungen in Messungen vermeiden sollen.
-Zur Erzeugung der Abbildung 4.15 (a) muss zunächst die Anzahl der berechneten Mediane und Mittelwerte manuell auf 1 gesetzt werden.
+Zur Erzeugung der Abbildung 4.17 (a) muss zunächst die Anzahl der berechneten Mediane und Mittelwerte manuell auf 1 gesetzt werden.
 Dazu muss in <code>src/benchmark/benchmark.py</code> in Zeile 48 und 49 die beiden Konstanten auf 1 gesetzt werden.
 Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
 <ul>
@@ -82,10 +83,13 @@ Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
 <li><strong>Queries</strong>: 4</li>
 <li><strong>Bereich</strong>: Start: 0; Stopp: 301; Schrittgröße: 30</li>
 </ul>
-<p>Nach der Ausführung befindet sich in <code>data/results/plots/uncertainties4.pdf</code> die Ergebnisse der Ausführung, welche in der Masterthesis als Abbildung 4.15 (a) vorhanden ist. Grafik (b) ist durch das manuelle Errechnen des Medians entstanden.</p>
-<p>Für die Erzeugung von Abbildung 4.16 (a), muss zunächst die Konstante <code>self.MEDIAN_LOOPS</code> wieder auf 5 gesetzt werden. Danach kann UnCo mit den gleichen Parametern wie eben beschrieben gestartet werden.
-Abbildung 4.16 (a) zeigt die daraus entstandene Grafik, jedoch mit dem gleichen Sichtfeld wie schon in Abbildung 4.15. Die Grafik (b) wurde manuell aus dem Mittelwert errechnet.</p>
+<p>Nach der Ausführung befindet sich in <code>data/results/plots/uncertainties4.pdf</code> die Ergebnisse der Ausführung, welche in der Masterthesis als Abbildung 4.17 (a) vorhanden ist. Grafik (b) ist durch das manuelle Errechnen des Medians entstanden.</p>
+<p>Für die Erzeugung von Abbildung 4.18 (a), muss zunächst die Konstante <code>self.MEDIAN_LOOPS</code> wieder auf 5 gesetzt werden. Danach kann UnCo mit den gleichen Parametern wie eben beschrieben gestartet werden.
+Abbildung 4.18 (a) zeigt die daraus entstandene Grafik, jedoch mit dem gleichen Sichtfeld wie schon in Abbildung 4.17. Die Grafik (b) wurde manuell aus dem Mittelwert errechnet.</p>
 <p>Hinweis: Stellen Sie sicher, dass die hier veränderten Konstanten wieder auf den vorherigen Wert gesetzt werden. Für noch robustere Ergebnisse können natürlich auch höhere Werte genutzt werden, wobei vorallem die Wahl von <code>self.MEAN_LOOPS</code> erhebliche Auswirkungen auf die Laufzeit besitzt.</p>
+<p>Neben der einfachen Ausgabe der Laufzeiten, generiert UnCo auch die dort beschriebenen Ranglisten.
+Um den Toleranzbereich der gleichen Ränge festzulegen, muss in <code>src/benchmark/benchmark.py</code> Zeile 276 der Wert von <code>tolerance</code> bearbeitet werden.
+Dieser liegt Standardmäßig auf 0.05 also 5%.</p>
 <h3 id="abschnitt-421-vergleich-bezüglich-afe">Abschnitt 4.2.1 Vergleich bezüglich AFE</h3>
 <p>In diesem Abschnitt wurde ein Benchmarktest auf die unbearbeitete Version des AFE Datensatzes ausgeführt.
 Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
@@ -128,6 +132,7 @@ Dafür wurden die Bereiche (0, 40, 10), (40, 80, 10) und (80, 101, 10) genutzt.
 Nach der Ausführung werden die Ergebnisse in <code>data/results/plots/alternatives{queryID}.pdf</code> gespeichert, sowie die genaue Liste der Ergebnisse im Terminal ausgegeben.</p>
 <h3 id="abschnitt-424-vergleich-bei-künstlich-erzeugten-datensätzen">Abschnitt 4.2.4 Vergleich bei künstlich erzeugten Datensätzen</h3>
 <p>In diesem Abschnitt wurde ein Benchmarktest auf synthetisch erzeugten Datensätzen basierend auf AFE ausgeführt.
+Ein synthetisch erzeugter Datensatz des veröffentlichten Teil von AFE befindet sich in <code>data/thesis_data/afe/synthetic.csv</code>.
 Bei der Ausführung von UnCo wurden folgende Parameter genutzt:</p>
 <ul>
 <li><strong>Datensatz</strong>: synthetischer AFE-Datensatz</li>

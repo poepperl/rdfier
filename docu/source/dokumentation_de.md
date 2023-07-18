@@ -17,8 +17,8 @@ Project Aufbau
     ├── data
     |   ├── input           <- Beispiel Eingabedaten.
     |   ├── output          <- Speicherort der Ausgabe.
-    |   ├── results         <- Benchmarkergebnisse der Masterthesis.
-    │   └── thesis_graphs   <- Graphen und Code aus der Masterthesis.
+    |   ├── results         <- Benchmarkergebnisse und Grafiken der Masterthesis.
+    │   └── thesis_graphs   <- Graphen und Code der Abbildungen aus der Masterthesis.
     |
     ├── docu                <- Diese Dokumentation.
     │  

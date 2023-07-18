@@ -57,6 +57,10 @@ Abbildung 4.18 (a) zeigt die daraus entstandene Grafik, jedoch mit dem gleichen 
 
 Hinweis: Stellen Sie sicher, dass die hier veränderten Konstanten wieder auf den vorherigen Wert gesetzt werden. Für noch robustere Ergebnisse können natürlich auch höhere Werte genutzt werden, wobei vorallem die Wahl von `self.MEAN_LOOPS` erhebliche Auswirkungen auf die Laufzeit besitzt.
 
+Neben der einfachen Ausgabe der Laufzeiten, generiert UnCo auch die dort beschriebenen Ranglisten.
+Um den Toleranzbereich der gleichen Ränge festzulegen, muss in `src/benchmark/benchmark.py` Zeile 276 der Wert von `tolerance` bearbeitet werden.
+Dieser liegt Standardmäßig auf 0.05 also 5%.
+
 ### Abschnitt 4.2.1 Vergleich bezüglich AFE
 In diesem Abschnitt wurde ein Benchmarktest auf die unbearbeitete Version des AFE Datensatzes ausgeführt.
 Bei der Ausführung von UnCo wurden folgende Parameter genutzt:
@@ -99,6 +103,7 @@ Nach der Ausführung werden die Ergebnisse in `data/results/plots/alternatives{q
 
 ### Abschnitt 4.2.4 Vergleich bei künstlich erzeugten Datensätzen
 In diesem Abschnitt wurde ein Benchmarktest auf synthetisch erzeugten Datensätzen basierend auf AFE ausgeführt.
+Ein synthetisch erzeugter Datensatz des veröffentlichten Teil von AFE befindet sich in `data/thesis_data/afe/synthetic.csv`.
 Bei der Ausführung von UnCo wurden folgende Parameter genutzt:
  * **Datensatz**: synthetischer AFE-Datensatz
  * **Steigender Parameter**: Anzahl Unsicherheiten (0)

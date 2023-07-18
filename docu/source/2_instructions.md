@@ -57,6 +57,10 @@ Figure 4.18 (a) shows the resulting graph, but with the same field of view as al
 
 Note: Make sure that the constants changed here are set back to the previous value. For even more robust results, higher values can of course be used, whereby especially the choice of `self.MEAN_LOOPS` has a significant impact on the runtime.
 
+Besides the simple output of the runtimes, UnCo also generates the rankings described there.
+To set the tolerance range of same ranks, in `src/benchmark/benchmark.py` line 276 the value of `tolerance` must be edited.
+By default, this is set to 0.05, i.e. 5%.
+
 ### Section 4.2.1 Comparison with respect to AFE
 In this section, a benchmark test was run on the unprocessed version of the AFE dataset.
 The following parameters were used when running UnCo:
@@ -99,6 +103,7 @@ After the execution, the results are saved in `data/results/plots/alternatives{q
 
 ### Section 4.2.4 Comparison on synthetic generated Datasets
 In this section, a benchmark test was run on synthetically generated datasets based on AFE.
+A synthetically generated dataset of the published part of AFE is located in `data/thesis_data/afe/synthetic.csv`.
 The following parameters were used when running UnCo:
  * **Dataset**: synthetic AFE dataset.
  * **Increasing parameter**: Number of uncertainties (0)
