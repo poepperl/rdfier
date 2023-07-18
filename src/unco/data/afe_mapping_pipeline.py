@@ -310,6 +310,7 @@ def create_synthetic_afe(dataframe: pd.DataFrame, size: int) -> None:
             Number of rows of the new dataframe
     """
     column_dict = {}
+    dataframe = dataframe.dropna(axis="columns", how="all")
 
     for col_index, column in enumerate(dataframe.columns):
         set_of_column_entries = set()
@@ -365,7 +366,7 @@ def run_pipeline_on_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
 if __name__ == "__main__":
     from unco import UNCO_PATH
 
-    df = pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/afe.csv"))
+    df = pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/afe_public.csv"))
 
     df = run_pipeline_on_dataframe(df)
 
