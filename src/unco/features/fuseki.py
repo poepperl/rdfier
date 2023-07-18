@@ -46,7 +46,7 @@ class FusekiServer:
         elif os.name == "posix":
             starter_path += ".sh"
             with open(starter_path, 'w') as starter:
-                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \n{self.FUSEKI_PATH[:2]}\ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
+                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
             
             os.system(f"chmod u=rwx,g=r,o=r {starter_path}")
         else:
@@ -66,7 +66,7 @@ class FusekiServer:
             if self.server:
                 raise RuntimeError("Server is already running.")
             else:
-                self.server = subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'cd /home/luca/Dokumente/repositories/unco/src/unco/features; ./server_starter.sh; bash'], stdout=subprocess.PIPE, preexec_fn=os.setsid)
+                self.server = subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', f'cd {str(Path(UNCO_PATH, "src/unco/features"))}; ./server_starter.sh; bash'], stdout=subprocess.PIPE, preexec_fn=os.setsid)
                 time.sleep(2)
         else:
             print(f"Unknown system{os.name}. Please contact the admin. Notice: the benchmark is currently not aviable for Mac users.")
@@ -148,9 +148,9 @@ if __name__ == "__main__":
     f = FusekiServer(Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0"))
     f.start_server()
 
-    rdf_data = RDFData(pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/synthetic.csv")))
+    rdf_data = RDFData(pd.read_csv(Path(UNCO_PATH, "data/thesis_data/afe/afe_public.csv")))
     gen = GraphGenerator(rdf_data)
-    gen.load_prefixes(pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv")))
+    gen.load_prefixes(pd.read_csv(Path(UNCO_PATH, "data/thesis_data/namespaces.csv")))
     # UncertaintyGenerator(gen.rdfdata).add_pseudorand_uncertainty_flags(list_of_columns=[2, 3, 4, 7, 10, 16, 17, 18, 19], min_uncertainties_per_column=10000, max_uncertainties_per_column=10000)
     gen.generate_graph(9)
     f.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
@@ -168,4 +168,5 @@ if __name__ == "__main__":
     # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
     
     print(f.run_query(querytext))
+    time.sleep(3)
     f.stop_server()

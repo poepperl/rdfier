@@ -37,7 +37,7 @@ def benchmark():
     while not Path(path).is_file() or path[-4:] != ".csv":
         print("|---                                           ---|")
         print("|--- Select the input csv-file.                ---|")
-        path = input(">>>> Insert the path (example input):").strip()
+        path = input(">>>> Insert the path (afe public):").strip()
         if path == "Q": quit()
         if path == "":
             path = str(Path(UNCO_PATH,"data/thesis_data/afe/afe_public.csv"))
