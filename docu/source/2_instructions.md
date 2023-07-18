@@ -3,6 +3,9 @@
 This manual describes how to start UnCo and how to run the benchmark tests described in my master thesis.
 
 ## Installation
+
+Python 3.10 or higher is required to use the program. The benchmark is executed using an Apache Jena Fuseki server, which is already included in the electronic appendix of the master thesis. Fuseki requires a suitable Java installation (Java 11.0.19 was used to run the benchmark of the thesis).
+
 To install UnCo you can execute *installation.bat* (for Windows) or *installation.sh* (for Linux). This creates a virtual environment *.venv* in which all required python libraries are installed. Alternatively, the commands in *README.md* can be executed.
 
 Note: If permission errors occur on Linux, it may be helpful to use `chmod u=rwx,g=r,o=r installation.sh` to give the script the necessary permissions. The same should be executed with *start_unco.sh*.
@@ -35,9 +38,9 @@ Entering a `1` will start the app immediately, entering `0` will first prompt fo
 In the context of my master thesis some benchmark tests with UnCo were executed. In the following it is described how them can be executed themselves.
 As dataset a table extracted from the AFE database was used. Since this contains mostly unpublished data, the dataset cannot be made available. A comparable dataset with the already published data can be found in `data/input/afe_public.csv`.
 
-### Section 4.1.7 Measurement methods and performance indicators
+### Section 4.1.7 Measurement methods and metric
 In this section, experiments were conducted using various procedures designed to avoid outliers and noise in measurements.
-To generate Figure 4.15 (a), the number of calculated medians and means must first be manually set to 1.
+To generate Figure 4.17 (a), the number of calculated medians and means must first be manually set to 1.
 For this, in `src/benchmark/benchmark.py` in line 48 and 49 the two constants must be set to 1.
 The following parameters were used when running UnCo:
  * **Dataset**: AFE dataset
@@ -47,10 +50,10 @@ The following parameters were used when running UnCo:
  * **Queries**: 4
  * **Range**: start: 0; stop: 301; step: 30
 
-After execution, in `data/results/plots/uncertainties4.pdf` is the result of the execution, which is present in the master thesis as figure 4.15 (a). Graph (b) is created by manually calculating the median.
+After execution, in `data/results/plots/uncertainties4.pdf` is the result of the execution, which is present in the master thesis as figure 4.17 (a). Graph (b) is created by manually calculating the median.
 
-For the generation of figure 4.16 (a), first the constant `self.MEDIAN_LOOPS` has to be set to 5 again. After that UnCo can be started with the same parameters as just described.
-Figure 4.16 (a) shows the resulting graph, but with the same field of view as already shown in Figure 4.15. The graph (b) was calculated manually from the mean value.
+For the generation of figure 4.18 (a), first the constant `self.MEDIAN_LOOPS` has to be set to 5 again. After that UnCo can be started with the same parameters as just described.
+Figure 4.18 (a) shows the resulting graph, but with the same field of view as already shown in Figure 4.17. The graph (b) was calculated manually from the mean value.
 
 Note: Make sure that the constants changed here are set back to the previous value. For even more robust results, higher values can of course be used, whereby especially the choice of `self.MEAN_LOOPS` has a significant impact on the runtime.
 

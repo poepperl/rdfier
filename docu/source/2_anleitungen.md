@@ -4,9 +4,11 @@ In dieser Anleitung wird beschrieben, wie UnCo gestartet werden kann und wie die
 
 ## Installation
 
-Um UnCo zu installieren kann *installation.bat* (für Windows) bzw. *installation.sh* (für Linux) ausgeführt werden. Dadurch wird eine virtuelle Umgebung *.venv* erstellt, in der alle benötigten Python Bibliotheken installiert werden. Alternativ können auch die Befehle in der *README.md* ausgeführt werden.
+Für die Nutzung des Programms wird Python 3.10 oder höher benötigt. Der Benchmark wird mit Hilfe eines Apache Jena Fuseki Servers ausgeführt, welcher im elektronischen Anhang der Masterthesis bereits enthalten ist. Fuseki benötigt eine dazu passende Java Installation (für die Durchführung des Benchmarks wurde Java 11.0.19 verwendet).
 
-Hinweis: Sollten bei Linux Berechtigungsfehler entstehen, kann es hilfreich sein mit `chmod u=rwx,g=r,o=r installation.sh` dem Skript die notwendigen Rechte zu vergeben. Das gleiche sollte mit *start_unco.sh* ausgeführt werden.
+Um UnCo zu installieren kann *installation.bat* (für Windows) bzw. *installation.sh* (für Linux) ausgeführt werden. Dadurch wird eine virtuelle Umgebung *.venv* erstellt, in der alle benötigten Python Bibliotheken installiert werden. Alternativ können auch die Befehle der *README.md* ausgeführt werden.
+
+Hinweis: Sollten bei Linux Berechtigungsfehler entstehen, kann es hilfreich sein mit `chmod u=rwx,g=r,o=r installation.sh` der Ausführungsdatei die notwendigen Rechte zu vergeben. Das Gleiche sollte mit *start_unco.sh* ausgeführt werden.
 
 ## Bedienungsanleitung
 
@@ -36,9 +38,9 @@ Durch die Eingabe einer `1` wird die App sofort gestartet, bei `0` werden zum Au
 Im Rahmen meiner Masterthesis wurden einige Benchmarktests mit UnCo ausgeführt. Im Folgenden wird beschrieben, wie die dort ausgeführten selbst ausgeführt werden können.
 Als Datensatz wurde eine aus der AFE Datenbank extrahierte Tabelle genutzt. Da diese zum Großteil nicht veröffentlichte Daten enthält, kann der Datensatz nicht zur Verfügung gestellt werden. Ein vergleichbarer Datensatz mit den bereits veröffentlichten Daten befindet sich in `data/input/afe_public.csv`.
 
-### Abschnitt 4.1.7 Messverfahren und Leistungskennzahlen
+### Abschnitt 4.1.7 Messverfahren und Metrik
 In diesem Abschnitt wurden Versuche mit verschiedenen Verfahren durchgeführt, welche Ausreißer und Störungen in Messungen vermeiden sollen.
-Zur Erzeugung der Abbildung 4.15 (a) muss zunächst die Anzahl der berechneten Mediane und Mittelwerte manuell auf 1 gesetzt werden.
+Zur Erzeugung der Abbildung 4.17 (a) muss zunächst die Anzahl der berechneten Mediane und Mittelwerte manuell auf 1 gesetzt werden.
 Dazu muss in `src/benchmark/benchmark.py` in Zeile 48 und 49 die beiden Konstanten auf 1 gesetzt werden.
 Bei der Ausführung von UnCo wurden folgende Parameter genutzt:
  * **Datensatz**: AFE-Datensatz
@@ -48,10 +50,10 @@ Bei der Ausführung von UnCo wurden folgende Parameter genutzt:
  * **Queries**: 4
  * **Bereich**: Start: 0; Stopp: 301; Schrittgröße: 30
 
-Nach der Ausführung befindet sich in `data/results/plots/uncertainties4.pdf` die Ergebnisse der Ausführung, welche in der Masterthesis als Abbildung 4.15 (a) vorhanden ist. Grafik (b) ist durch das manuelle Errechnen des Medians entstanden.
+Nach der Ausführung befindet sich in `data/results/plots/uncertainties4.pdf` die Ergebnisse der Ausführung, welche in der Masterthesis als Abbildung 4.17 (a) vorhanden ist. Grafik (b) ist durch das manuelle Errechnen des Medians entstanden.
 
-Für die Erzeugung von Abbildung 4.16 (a), muss zunächst die Konstante `self.MEDIAN_LOOPS` wieder auf 5 gesetzt werden. Danach kann UnCo mit den gleichen Parametern wie eben beschrieben gestartet werden.
-Abbildung 4.16 (a) zeigt die daraus entstandene Grafik, jedoch mit dem gleichen Sichtfeld wie schon in Abbildung 4.15. Die Grafik (b) wurde manuell aus dem Mittelwert errechnet.
+Für die Erzeugung von Abbildung 4.18 (a), muss zunächst die Konstante `self.MEDIAN_LOOPS` wieder auf 5 gesetzt werden. Danach kann UnCo mit den gleichen Parametern wie eben beschrieben gestartet werden.
+Abbildung 4.18 (a) zeigt die daraus entstandene Grafik, jedoch mit dem gleichen Sichtfeld wie schon in Abbildung 4.17. Die Grafik (b) wurde manuell aus dem Mittelwert errechnet.
 
 Hinweis: Stellen Sie sicher, dass die hier veränderten Konstanten wieder auf den vorherigen Wert gesetzt werden. Für noch robustere Ergebnisse können natürlich auch höhere Werte genutzt werden, wobei vorallem die Wahl von `self.MEAN_LOOPS` erhebliche Auswirkungen auf die Laufzeit besitzt.
 
