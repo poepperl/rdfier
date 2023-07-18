@@ -46,6 +46,8 @@
 <p>Python 3.10 or higher is required to use the program. The benchmark is executed using an Apache Jena Fuseki server, which is already included in the electronic appendix of the master thesis. Fuseki requires a suitable Java installation (Java 11.0.19 was used to run the benchmark of the thesis).</p>
 <p>To install UnCo you can execute <em>installation.bat</em> (for Windows) or <em><a href="http://installation.sh">installation.sh</a></em> (for Linux). This creates a virtual environment <em>.venv</em> in which all required python libraries are installed. Alternatively, the commands in <em><a href="http://README.html">README.md</a></em> can be executed.</p>
 <p>Note: If permission errors occur on Linux, it may be helpful to use <code>chmod u=rwx,g=r,o=r installation.sh</code> to give the script the necessary permissions. The same should be executed with <em>start_unco.sh</em>.</p>
+<p>For the execution of a benchmark on a linux machine, the program must not be executed from a <em>gnome-terminal</em>, because this is used for the Fuseki server in the terminal.
+Therefore, to run UnCo, the LXTerminal or an IDE like VSCode or Pycharm is recommended.</p>
 <h2 id="operating-instructions">Operating instructions</h2>
 <p>To start UnCo you can execute the file <em>start_unco</em> (.bat for windows and .sh for linux), or open a terminal, navigate to the project folder and run the following commands:</p>
 <pre><code class="language-shell">.venv\Scripts\activate      # Windows

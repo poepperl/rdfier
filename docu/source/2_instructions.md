@@ -10,6 +10,9 @@ To install UnCo you can execute *installation.bat* (for Windows) or *installatio
 
 Note: If permission errors occur on Linux, it may be helpful to use `chmod u=rwx,g=r,o=r installation.sh` to give the script the necessary permissions. The same should be executed with *start_unco.sh*.
 
+For the execution of a benchmark on a linux machine, the program must not be executed from a *gnome-terminal*, because this is used for the Fuseki server in the terminal.
+Therefore, to run UnCo, the LXTerminal or an IDE like VSCode or Pycharm is recommended.
+
 ## Operating instructions
 
 To start UnCo you can execute the file *start_unco* (.bat for windows and .sh for linux), or open a terminal, navigate to the project folder and run the following commands:
