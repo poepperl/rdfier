@@ -43,7 +43,7 @@ else:
 
         turtle_format = col1.radio("RDF Format", ("Turtle", "XML"), on_change=activate_rerun)
 
-        graphical_version = col2.checkbox("Show graphical version", value=True)
+        graphical_version = col2.checkbox("Show graph figure", value=True)
 
         solution = col2.selectbox("Select model:", (1,2,3,4,5,6,7,8,"9a","9b"), on_change=activate_rerun)
         if solution=="9a":
@@ -71,6 +71,10 @@ else:
 
         
         path = Path(UNCO_PATH, "data/output/graph" + (".ttl" if turtle_format=="Turtle" else ".rdf"))
+
+        if generator.rdfdata.data.shape[0] > 30:
+            graphical_version = False
+            st.warning("RDF Graph is to large to generate figure. Only inputs with <30 rows are currently showable.", icon="⚠️")
 
         if graphical_version:
             codcol, graphcol = st.columns(2)
