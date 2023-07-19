@@ -1,6 +1,7 @@
 import pandas as pd
 from pathlib import Path
 from random import random, choices
+from unco import UNCO_PATH
 
 
 def replace_unreadable_chars(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -362,23 +363,3 @@ def run_pipeline_on_dataframe(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     return dataframe
 
-
-if __name__ == "__main__":
-    from unco import UNCO_PATH
-
-    df = pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/afe_public.csv"))
-
-    df = run_pipeline_on_dataframe(df)
-
-    print(df)
-
-    # from unco.data.rdf_data import RDFData
-    # from unco.features.graph_generator import GraphGenerator
-
-    # rdf_data = RDFData(df)
-
-    # gg = GraphGenerator(rdf_data)
-
-    # gg.load_prefixes(str(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv")))
-
-    # gg.generate_graph(xml_format=False, model_id=9)

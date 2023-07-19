@@ -567,25 +567,3 @@ class GraphGenerator:
 
             print(line,end="")
 
-
-if __name__ == "__main__":
-    afe = open(str(Path(UNCO_PATH, "data/testdata/afe/afemapping_changed_10rows.csv")), encoding='utf-8')
-    prefixes = str(Path(UNCO_PATH, "data/testdata/afe/namespaces.csv"))
-
-    from unco.data.uncertainty_generator import UncertaintyGenerator
-
-    rdf_data = RDFData(pd.read_csv(afe))
-    generator = GraphGenerator(UncertaintyGenerator(rdf_data).add_pseudorand_uncertainty_flags([1], 2, 2))
-    generator.load_prefixes(prefixes)
-    generator.generate_graph(xml_format=False, model_id=10)
-
-    test_query = """
-                    PREFIX nmo: <http://nomisma.org/ontology#>
-
-                    SELECT ?su ?p ?o
-                    WHERE {
-                        ?su ?p ?o
-                    }
-                    """
-
-    print(generator.run_query(test_query))

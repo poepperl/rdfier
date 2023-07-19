@@ -140,33 +140,3 @@ class FusekiServer:
             self.server = None
         else:
             print(f"Unknown system{os.name}. Please contact the admin.")
-
-
-if __name__ == "__main__":
-    from unco.data import RDFData, UncertaintyGenerator
-    from unco.features import GraphGenerator
-    f = FusekiServer(Path(UNCO_PATH, "src/apache-jena-fuseki-4.8.0"))
-    f.start_server()
-
-    rdf_data = RDFData(pd.read_csv(Path(UNCO_PATH, "data/thesis_data/afe/afe_public.csv")))
-    gen = GraphGenerator(rdf_data)
-    gen.load_prefixes(pd.read_csv(Path(UNCO_PATH, "data/thesis_data/namespaces.csv")))
-    # UncertaintyGenerator(gen.rdfdata).add_pseudorand_uncertainty_flags(list_of_columns=[2, 3, 4, 7, 10, 16, 17, 18, 19], min_uncertainties_per_column=10000, max_uncertainties_per_column=10000)
-    gen.generate_graph(9)
-    f.upload_data(str(Path(UNCO_PATH,"data/output/graph.ttl")))
-    querytext = """
-
-    SELECT ?subject ?predicate ?object
-    WHERE {
-        ?subject ?predicate ?object .
-    }
-    """
-    # SELECT ?s { ?s nmo:hasMint nm:comama }
-
-    # SELECT ?s { <<?s nmo:hasMint nm:comama>> un:hasUncertainty nm:uncertain_value }
-
-    # SELECT ?s { BIND (<<?s nmo:hasMint nm:comama>> AS ?tripel) ?tripel un:hasUncertainty nm:uncertain_value }
-    
-    print(f.run_query(querytext))
-    time.sleep(3)
-    f.stop_server()

@@ -35,7 +35,7 @@ Project Organization
 
 Installation and Execution
 --------------------------
-The project was tested on Windows and Linux (Ubuntu). Required installations: python 3.10 or higher and for linux python3.10-venv.
+The project was tested on Windows and Linux (Ubuntu). Required installations: python 3.10 or higher and for linux python3.10-venv and a terminal besides gnome to run the following commands.
 To install and execute UnCo, you can execute the files in the execution folder, or enter the following commands in the console (should be navigated in the project folder):
 
 **Windows**:

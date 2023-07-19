@@ -305,10 +305,3 @@ class RDFData:
             return "^^xsd:boolean"
         else:
             return ""
-
-
-if __name__ == "__main__":
-    from unco import UNCO_PATH
-    from pathlib import Path
-
-    p = RDFData(pd.read_csv(Path(UNCO_PATH, "data/testdata/afe/afe_ready.csv")))

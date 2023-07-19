@@ -49,7 +49,3 @@ class Illustrator:
         if response.status_code == 200:
             with open(filename, 'wb') as f:
                 shutil.copyfileobj(response.raw, f)
-
-
-if __name__ == "__main__":
-    g = Illustrator(Path(r"D:\Dokumente\Repositories\unco\data\output\graph.rdf"))
