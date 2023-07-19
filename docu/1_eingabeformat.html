@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="eingabeformat">Eingabeformat</h1>
+<p>Die Hauptaufgabe des RDFiers ist es, aus einem Datenset in Form einer csv-Datei, einen RDF-Graph zu bauen. Da komplexere Konzepte in RDF-Graphen nicht ohne Weiteres aus einem beliebigen Format gelesen werden können, wird hier beschrieben wie solche in der Eingabe codiert werden können.
+Das hier verwendete Beispiel ist im Projekt-Ordner unter <em>data/input/example_input.csv</em> gespeichert, ebenso die verwendete Tabelle der Namensräume unter <em>data/input/example/namespaces.csv</em>.</p>
+<h2 id="grundstruktur">Grundstruktur</h2>
+<p>Üblicherweise befinden sich in tabellarischen Daten in der ersten Spalte IDs des Subjekts und die restlichen Spalten sind für die Zuweisung von Attributen und Relationen. Daher richtet sich auch die Grundstruktur der Eingabe danach:
+<img src="file:///d:\Dokumente\Repositories\unco\docu\source\images\basic_structure.JPG" alt="basic_structure" width="1000"/></p>
+<p>Somit bezeichnet üblicherweise die erste Spalte Subjekte und die darauf folgenden Spalten Objekte mit dem jeweiligen Prädikat im Spaltennamen. Aus dem Schaubild enstehen somit die RDF-Aussagen (subject, predicate1, object1), (subject, predicate2, object2) und (subject, predicate3, object3).</p>
+<p>Häufig verwendete Namensräume stehen dabei direkt zu Verfügung. Dazu gehören:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">prefix</th>
+<th style="text-align:left">namespace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">amt</td>
+<td style="text-align:left"><a href="http://academic-meta-tool.xyz/vocab#">http://academic-meta-tool.xyz/vocab#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">bmo</td>
+<td style="text-align:left"><a href="http://collection.britishmuseum.org/id/ontology/">http://collection.britishmuseum.org/id/ontology/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">crm</td>
+<td style="text-align:left"><a href="http://www.cidoc-crm.org/cidoc-crm/">http://www.cidoc-crm.org/cidoc-crm/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">crminf</td>
+<td style="text-align:left"><a href="http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#">http://www.cidoc-crm.org/crminf/sites/default/files/CRMinf_v0.7_.rdfs#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">dcterms</td>
+<td style="text-align:left"><a href="http://purl.org/dc/terms/">http://purl.org/dc/terms/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">dcmitype</td>
+<td style="text-align:left"><a href="http://purl.org/dc/dcmitype/">http://purl.org/dc/dcmitype/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">edtfo</td>
+<td style="text-align:left"><a href="http://periodo.github.io/edtf-ontology/edtfo.ttl#">http://periodo.github.io/edtf-ontology/edtfo.ttl#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">foaf</td>
+<td style="text-align:left"><a href="http://xmlns.com/foaf/0.1/">http://xmlns.com/foaf/0.1/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">geo</td>
+<td style="text-align:left"><a href="http://www.w3.org/2003/01/geo/wgs84_pos#">http://www.w3.org/2003/01/geo/wgs84_pos#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">nm</td>
+<td style="text-align:left"><a href="http://nomisma.org/id/">http://nomisma.org/id/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">nmo</td>
+<td style="text-align:left"><a href="http://nomisma.org/ontology#">http://nomisma.org/ontology#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">org</td>
+<td style="text-align:left"><a href="http://www.w3.org/ns/org#">http://www.w3.org/ns/org#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">rdf</td>
+<td style="text-align:left"><a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#">http://www.w3.org/1999/02/22-rdf-syntax-ns#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">rdfs</td>
+<td style="text-align:left"><a href="http://www.w3.org/2000/01/rdf-schema#">http://www.w3.org/2000/01/rdf-schema#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">skos</td>
+<td style="text-align:left"><a href="http://www.w3.org/2004/02/skos/core#">http://www.w3.org/2004/02/skos/core#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">un</td>
+<td style="text-align:left"><a href="http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#">http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#</a></td>
+</tr>
+<tr>
+<td style="text-align:left">xsd</td>
+<td style="text-align:left"><a href="http://www.w3.org/2001/XMLSchema#">http://www.w3.org/2001/XMLSchema#</a></td>
+</tr>
+</tbody>
+</table>
+<p>Weitere Namensräume lassen sich mit einer csv-Tabelle mit den gleichen Spalten hinzufügen oder die oben definierten überschreiben.</p>
+<h2 id="uris-literale-und-leere-knoten">URI's, Literale und leere Knoten</h2>
+<p>RDF-Graphen besitzen Ressourcen in Form von URI's, Literalen und leeren Knoten. Damit ein Zelleneintrag richtig interpretiert wird, muss zusätzlich zu dem Wert auch der Typ der Ressource angegeben werden. Die folgenden Einträge sind möglich, wobei die Werte in geschwungenen Klammern <code>{}</code> durch die erwünschten Werte ersetzt werden müssen.</p>
+<ul>
+<li><code>&lt;{URI}&gt;^^uri</code> zum Angeben einer vollständigen URI, wie z.B.: &quot;&lt;<a href="http://nomisma.org/id/rome">http://nomisma.org/id/rome</a>&gt;^^uri&quot;.</li>
+<li><code>{prefix}:{label}^^uri</code> zum Angeben einer abgekürzten URI, wie z.B.: &quot;nm:rome^^uri&quot;.</li>
+<li><code>{value}</code> bzw. <code>{value}^^xsd:string</code> zum Angeben eines Literals, wie z.B. &quot;2023&quot;.</li>
+<li><code>{name}^^blank</code> zum Angeben eines leeren Knotens. Der Wert von <em>name</em> hat dabei keine Bedeutung und wird intern verworfen.</li>
+</ul>
+<p>Somit wird der Marker &quot;^^&quot; dazu verwendet den Typ der Ressource anzugeben. Prädikate müssen vom Typ URI sein, weshalb der Marker im Spaltennamen keinen Einfluss auf den Typ des Prädikats hat. Stattdessen kann der Marker an dieser Stelle als Typzuweisung für alle Einträge der Spalte ohne eigenen Typ genutzt werden.</p>
+<p><strong>Beispiel</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">coins^^uri</th>
+<th style="text-align:left">nmo:hasMaterial^^uri</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">afe:5</td>
+<td style="text-align:left">nm:ar</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:13</td>
+<td style="text-align:left">kryptonite^^blank</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:29</td>
+<td style="text-align:left">&lt;<a href="http://nomisma.org/id/ae">http://nomisma.org/id/ae</a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<p>Das Stichwort <code>coin</code> ist im Spaltennamen der ersten Spalte der Subjekte und definiert somit kein Prädikat, es wird vom Programm verworfen und hat keine Auswirkungen.
+Die beiden <code>^^uri</code> Marker weisen allen Einträgen in ihren Spalten den Typ URI zu, wenn diese keinen eigenen Typ haben. Daher werden die Einträge <code>nm:ar</code> und <code>&lt;http://nomisma.org/id/ae&gt;</code> als URI gelesen.
+Da es für Kryptonit keine URI im Namensraum <em>nm</em> gibt, wird diese durch einen leeren Knoten realisiert, indem <code>^^blank</code> als Marker genutzt wird. Der Eintrag <code>kryptonite</code> hat dabei keinen Einfluss und wird vom Programm verworfen.</p>
+<h2 id="datentypen-und-sprachen">Datentypen und Sprachen</h2>
+<p>Zu Literalen lassen sich in RDF-Graphen Datentypen und Sprachen zuordnen. Daher braucht es eine Möglichkeit diese in der Eingabe zu kennzeichnen.
+Hier kann die gleiche Syntax genutzt werden wie im Turtle-Format:</p>
+<ul>
+<li><code>literal^^{URI_of_datatype}</code> zum Angeben eines Datentyps.</li>
+<li><code>literal@{country ISO code}</code> zum Angeben einer Sprache.</li>
+</ul>
+<p>Da nur Literale Datentypen und Sprachen besitzen können, wird keine zusätzliche Typ Markierung benötigt. Somit werden Einträge der Form <em>value^^URI</em> immer als Literal mit Datentyp interpretiert. Die URI kann dabei wie oben bereits beschrieben durch eine vollständige URI <code>&lt;{URI}&gt;</code> oder eine abgekürzte URI <code>{prefix}:{label}</code> angegeben werden.
+Eine Sprache lässt sich durch eine zweistellige ISO Kennzeichnung angeben. Eine Liste mit allen Länder Codes lässt sich <a href="https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes">hier</a> finden.
+Ähnlich zu den Ressourcen Typen, lassen sich auch diese Marker in den Spaltenkopf verschieben, um allen Einträgen ohne Ressourcentyp, Datentyp und Sprachen einen Wert zuzuordnen.</p>
+<p><strong>Beispiel</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">coins^^uri</th>
+<th style="text-align:left">nmo:hasMaterial^^uri</th>
+<th style="text-align:left">nmo:hasWeight^^xsd:decimal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">afe:5</td>
+<td style="text-align:left">nm:ar</td>
+<td style="text-align:left">5.24</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:13</td>
+<td style="text-align:left">kryptonite^^blank</td>
+<td style="text-align:left">too heavy to weigh@en</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:29</td>
+<td style="text-align:left">&lt;<a href="http://nomisma.org/id/ae">http://nomisma.org/id/ae</a>&gt;</td>
+<td style="text-align:left">1.16</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mehrfacheinträge">Mehrfacheinträge</h2>
+<p>Häufig besitzen RDF-Aussagen das gleiche Subjekt-Prädikat-Paar. Für die Eingabe bedeutet das, dass sich beide Aussagen auf die selbe Zelle der CSV beziehen können.
+Aus diesem Grund lassen sich in die Zellen mit Objekten auch Mehrfacheinträge getrennt durch ein Semikolon <code>;</code> erstellen. So lässt sich leicht für das obige Beispiel der Text in einer zweiten Sprache angeben: <code>too heavy to weigh@en; zu schwer zum wiegen@de</code>.</p>
+<h2 id="verkettete-aussagen">Verkettete Aussagen</h2>
+<p>Um auch Aussagen darstellen zu können wie &quot;A ist mit B befreundet und B hat den Namen Luca&quot;, lässt sich die oben gezeigte Grundstruktur verändern.
+Durch den Marker <code>**{id}</code> am Ende des Spaltennamens lässt sich einer Spalte eine ID zuordnen und somit als Subjekt-Spalte markieren.
+Die ID darf dabei eine beliebige Zeichekette sein.
+Auf eine Subjekt-Spalte mit ID kann dann mit dem Marker <code>{id}__</code> (doppelter Unterstrich) am Anfang eines Spaltennamens referenziert werden, sodass die Spalte Objekte und das Prädikat zur referenzierten Subjekt-Spalte enthält. Für unser Beispiel sieht das wie Folgt aus:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">coins^^uri</th>
+<th style="text-align:left">nmo:hasMaterial^^uri**1</th>
+<th style="text-align:left">nmo:hasWeight^^xsd:decimal</th>
+<th style="text-align:left">1__rdf:value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">afe:5</td>
+<td style="text-align:left">nm:ar; nm:billon</td>
+<td style="text-align:left">5.24</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">afe:13</td>
+<td style="text-align:left">kryptonite^^blank</td>
+<td style="text-align:left">too heavy to weigh@en</td>
+<td style="text-align:left">kryptonite@en; Kryptonit@de</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:29</td>
+<td style="text-align:left">&lt;<a href="http://nomisma.org/id/ae">http://nomisma.org/id/ae</a>&gt;</td>
+<td style="text-align:left">1.16</td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>Durch diese Veränderung wird die zweite Spalte nun zusätzlich als Subjekt-Spalte interpretiert und die vierte Spalte enthält die dazu gehörenden Objekte und das Prädikat. Dadurch entstehen zwei neue Kanten vom leeren Knoten ausgehend mit dem Prädikat <code>rdf:value</code> und den beiden Objekten <code>kryptonite</code> und <code>Kryptonit</code>.
+Durch die Zuweisung bleiben die ursprünglichen RDF-Aussagen unbetroffen.
+Auch lässt sich eine Spalte, die auf eine andere Subjekt-Spalte referenziert wiederrum eine ID zuweisen, usw.</p>
+<p>Mehrfacheinträge müssen zunächst aufgelößt werden, um als Subjekte für Aussagen zu dienen.
+Möchten wir der Ressource <code>nm:billon</code> ein Kommentar hinzufügen, kann das über eine weitere Zeile der Tabelle erfolgen:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">coins^^uri</th>
+<th style="text-align:left">nmo:hasMaterial^^uri**1</th>
+<th style="text-align:left">nmo:hasWeight^^xsd:decimal</th>
+<th style="text-align:left">1__rdf:value</th>
+<th style="text-align:left">1__rdfs:comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">afe:5</td>
+<td style="text-align:left">nm:ar</td>
+<td style="text-align:left">5.24</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">afe:5</td>
+<td style="text-align:left">nm:billon</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">alloy of copper and silver@en</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:13</td>
+<td style="text-align:left">kryptonite^^blank</td>
+<td style="text-align:left">too heavy to weigh@en</td>
+<td style="text-align:left">kryptonite@en; Kryptonit@de</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">afe:29</td>
+<td style="text-align:left">&lt;<a href="http://nomisma.org/id/ae">http://nomisma.org/id/ae</a>&gt;</td>
+<td style="text-align:left">1.16</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>In diesem Fall wurde eine weitere Zeile hinzugefügt, in der <code>nm:billon</code> eine eigene Zelle besitzt und somit eine verkettete Aussage leicht realisiert werden kann.
+Zusätzlich muss <code>afe:5</code> ebenso in die Zeile eingefügt werden, damit das Tripel <em>afe:5 nmo:hasMaterial nm:billon</em> erstellt wird.
+Das Gewicht von <code>afe:5</code> muss hingegen nicht erneut gesetzt werden.</p>
+<h2 id="unsichere-aussagen">Unsichere Aussagen</h2>
+<p>Auch die Angabe von unsicheren Aussagen, lassen sich in der Eingabe vermerken.
+Dazu wird der Spalte der Aussage wie oben beschrieben eine ID zugewiesen, auf die verwiesen werden kann und mit dem Marker <code>^^certainty</code> am Ende des Spaltennamens kann den Aussagen eine Unsicherheit zugewiesen werden.
+Wichtig ist hierbei, dass die Zuweisung der Unsicherheit zellenweise erfolgt und alle Mehrfacheinträge dann als Unsicherheit mit Alternativen gewertet werden.
+Fügen wir unserem Beispiel Unsicherheiten hinzu:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">coins^^uri</th>
+<th style="text-align:left">nmo:hasMaterial^^uri**1</th>
+<th style="text-align:left">nmo:hasWeight^^xsd:decimal</th>
+<th style="text-align:left">1__rdf:value</th>
+<th style="text-align:left">uncertainMaterial^^certainty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">afe:5</td>
+<td style="text-align:left">nm:ar; nm:billon</td>
+<td style="text-align:left">5.24</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">0.8; 0.2</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:13</td>
+<td style="text-align:left">kryptonite^^blank</td>
+<td style="text-align:left">too heavy to weigh@en</td>
+<td style="text-align:left">kryptonite@en; Kryptonit@de</td>
+<td style="text-align:left">u</td>
+</tr>
+<tr>
+<td style="text-align:left">afe:29</td>
+<td style="text-align:left">&lt;<a href="http://nomisma.org/id/ae">http://nomisma.org/id/ae</a>&gt;</td>
+<td style="text-align:left">1.16</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>Hier wurden manchen RDF-Aussagen der Form <em>afe:ID nmo:hasMaterial {object}</em> als unsicher markiert.
+Mit dem Eintrag <code>u</code> wurde lediglich beschrieben, dass es unsicher ist, dass die Münze <code>afe:13</code> aus Kryptonit besteht.
+Da für den Eintrag <code>nm:ar; nm:billon</code> eine Unsicherheit eingetragen wurde, werden die beiden Werte als Alternativen betrachtet.
+Die Einträge <code>0.8; 0.2</code> sind gewichtete Unsicherheiten. Somit ist die Aussage <em>afe:13 nmo:hasMaterial nm:ar</em> unsicher mit der Gewichtung <code>0.8</code> und die Aussage <em>afe:13 nmo:hasMaterial nm:billon</em> unsicher mit der Gewichtung <code>0.2</code>.</p>
+<p>Für die Angabe der Unsicherheit gelten Folgende Einschränkungen:</p>
+<ul>
+<li>Einfache Einträge können mit <code>u</code> als unsicher vermerkt werden. Stattdessen kann auch eine einzelne Gewichtung angegeben werden. Die Gewichtung 0 bedeutet in diesem Zusammenhang <em>vollkommen unsicher</em> und die Gewichtung &quot;1&quot; ist gleichbedeutend zu <em>sicher</em>.</li>
+<li>Mehrfacheinträge lassen sich durch <code>a</code> (für <em>alternatives</em>) als unsicher mit Alternativen kennzeichnen. Stattdessen kann auch eine Gewichtung angegeben werden, wobei zu jeder Alternative eine Gewichtung erhalten muss.</li>
+</ul>
+
+        
+        
+    </body>
+    </html>

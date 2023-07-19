@@ -1,0 +1,10 @@
+@prefix bsp: <http://beispiel.com/> .
+@prefix nm: <http://nomisma.org/id/> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+@prefix un: <http://www.w3.org/2005/Incubator/urw3/XGR-urw3-20080331/Uncertainty.owl#> .
+
+bsp:coin_0 nmo:hasMint nm:rome .
+
+bsp:coin_1 un:hasUncertainty [ nmo:hasMaterial nm:au ;
+            nmo:hasMint nm:athens,
+                nm:rome ] .

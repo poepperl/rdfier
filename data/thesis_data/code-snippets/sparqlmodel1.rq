@@ -1,0 +1,6 @@
+PREFIX nmo: <http://nomisma.org/ontology#>
+
+SELECT ?subject, ?object
+WHERE {
+    ?subject nmo:hasMint ?object .
+}

@@ -1,0 +1,15 @@
+@prefix bmo: <http://collection.britishmuseum.org/id/ontology/> .
+@prefix bsp: <http://beispiel.com/> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix nm: <http://nomisma.org/id/> .
+@prefix nmo: <http://nomisma.org/ontology#> .
+
+bsp:coin_0 nmo:hasMint nm:rome .
+
+bsp:coin_1 nmo:hasMint nm:rome .
+
+[] a crm:E13_Attribute_Assignment ;
+    bmo:PX_Property nmo:hasMint ;
+    bmo:PX_likelihood nm:uncertain_value ;
+    crm:P140_assigned_attribute_to bsp:coin_1 ;
+    crm:P141_assigned nm:rome .

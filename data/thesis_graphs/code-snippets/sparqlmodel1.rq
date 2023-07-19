@@ -1,4 +1,0 @@
-SELECT ?subject, ?object
-WHERE {
-    ?subject nmo:hasMint ?object .
-}

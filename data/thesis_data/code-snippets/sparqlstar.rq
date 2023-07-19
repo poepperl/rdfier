@@ -1,0 +1,6 @@
+PREFIX bsp: <http://beispiel.com/> 
+
+SELECT ?object
+WHERE {
+    << ?subject bsp:hatErscheinungsjahr ?object >> bsp:stehtIn <http://de.wikipedia.org/wiki/Harry_Potter_und_der_Stein_der_Weisen> .
+}

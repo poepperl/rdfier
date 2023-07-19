@@ -3,22 +3,13 @@
 
 # -------- All packages are on the latest version as of 28.06.2023
 
-# doku libs
-#wheel
-#autodoc
-#Sphinx
-#sphinx-autobuild
-#sphinx-rtd-theme
-#rstcheck
-
-# external requirements
-tqdm==4.65.0        # progress bars
-pandas==2.0.2       # data manipulation
-rdflib==6.3.2       # rdf-graphs
-requests==2.31.0    # communication between python and fuseki server
-pathlib==1.0.1      # path management
-psutil==5.9.5       # close fuseki console
-matplotlib==3.7.1   # benchmark plots
-
-# UI
-streamlit == 1.24.0 # Application
+matplotlib==3.7.1      # benchmark plots
+numpy==1.25.0          # optimizing data
+pandas==2.0.2          # dataframe for storing data
+pathlib==1.0.1         # path management
+psutil==5.9.5          # to close fuseki console
+pydoc-markdown==4.8.2  # build documentation
+requests==2.31.0       # communication between python and fuseki server
+rdflib==6.3.2          # creats rdf-graphs
+streamlit==1.24.0      # application
+tqdm==4.65.0           # progress bars

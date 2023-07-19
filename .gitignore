@@ -10,16 +10,12 @@ __pycache__/
 *.egg
 /.venv
 
-# Sphinx documentation
-docs/build
-docs/source/unco/
-
 # VS Code
 .vscode/
 
 # Data
 data/output/*
-tests/testdata/*
+data/testdata/
 
 # Fuseki
 src/unco/features/server_starter.bat
