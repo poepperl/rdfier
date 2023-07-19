@@ -59,7 +59,7 @@ def benchmark():
         if not Path(path).is_file() or path[-4:] != ".csv":
             print("!!!! There is no csv-file on this path!        !!!!")
 
-    bench = Benchmark(rdf_data, path, )
+    bench = Benchmark(rdf_data, path, fuseki_path)
     del rdf_data
 
     while increasing_alternatives not in ["0", "1", ""]:
