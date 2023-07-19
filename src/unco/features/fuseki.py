@@ -46,7 +46,7 @@ class FusekiServer:
         elif os.name == "posix":
             starter_path += ".sh"
             with open(starter_path, 'w') as starter:
-                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \n./fuseki-server --update --mem /ds &')
+                starter.write(f'FUSEKI_HOME="{self.FUSEKI_PATH}" \nPORT="3030" \ncd "{self.FUSEKI_PATH}" \njava -jar fuseki-server.jar')
             
             os.system(f"chmod u=rwx,g=r,o=r {starter_path}")
         else:
