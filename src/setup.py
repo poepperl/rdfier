@@ -5,13 +5,13 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name='unco',
+    name='rdfier',
     packages=find_packages(),
-    package_dir={"unco": "unco"},
+    package_dir={"rdfier": "scripts"},
     version='1.0.0',
-    description='The Uncertainty Comparator compares diffrent models of uncertainties in rdf graphs.',
+    description='The RDFier takes data in CSV files and builds the appropriate rdf graph.',
     author='Luca Poepperl',
     author_email = "luca.poepperl@gmail.com",
-    url = "https://github.com/UncertaintyC/unco",
+    url = "https://github.com/poepperl/rdfier",
     long_description=read('../README.md'),
 )

@@ -1,8 +1,0 @@
-PREFIX nm: <http://nomisma.org/id/>
-PREFIX nmo: <http://nomisma.org/ontology#>
-
-SELECT ?object
-WHERE {
-    ?subject nmo:hasMint nm:rome;
-        nmo:hasMaterial ?object.
-}

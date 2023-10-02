@@ -1,3 +1,0 @@
-@prefix bsp: <http://beispiel.com/> .
-
-<< bsp:buch1 bsp:hatErscheinungsjahr "1997" >> bsp:stehtIn <http://de.wikipedia.org/wiki/Harry_Potter_und_der_Stein_der_Weisen> .

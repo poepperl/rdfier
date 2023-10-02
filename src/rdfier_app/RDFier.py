@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from PIL import Image
-from unco import UNCO_PATH
-from unco.data.rdf_data import RDFData
-from unco.features.illustrator import Illustrator
-from unco.features.graph_generator import GraphGenerator
+from scripts import RDFIER_PATH
+from scripts.data.rdf_data import RDFData
+from scripts.features.illustrator import Illustrator
+from scripts.features.graph_generator import GraphGenerator
 
 st.set_page_config(
     page_title="RDFier",
@@ -70,7 +70,7 @@ else:
             generator.generate_graph(model_id=solution,xml_format=(turtle_format=="XML"))
 
         
-        path = Path(UNCO_PATH, "data/output/graph" + (".ttl" if turtle_format=="Turtle" else ".rdf"))
+        path = Path(RDFIER_PATH, "data/output/graph" + (".ttl" if turtle_format=="Turtle" else ".rdf"))
 
         if generator.rdfdata.data.shape[0] > 30:
             graphical_version = False
@@ -83,7 +83,7 @@ else:
 
             grapher = Illustrator(path)
             
-            image = Image.open(str(Path(UNCO_PATH, "data/output/downloaded_graph.png")))
+            image = Image.open(str(Path(RDFIER_PATH, "data/output/downloaded_graph.png")))
 
             graphcol.image(image, output_format="PNG", use_column_width="auto")
         else:

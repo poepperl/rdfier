@@ -1,6 +1,6 @@
 # Uncertainty Models
 
-Below are listed all 9 modelings that UnCo contains. A more detailed description of the modelings can be seen in the master thesis.
+Below are listed all 9 modelings that the RDFier contains. A more detailed description of the modelings can be seen in the master thesis.
 
 ## Model 1:
 ![model1](images/1.png)

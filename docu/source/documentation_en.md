@@ -1,41 +1,34 @@
 Documentation
 =============
-This documentation can be used to get an insight into the input format and the operation of UnCo.
-In addition, instructions are included on how to run the benchmark tests performed in the master thesis and how the benchmark can be extended with own models and SPARQL queries.
-These can be customized so that the benchmark can be repeated with other data sets or other parameters.
+This documentation can be used to get an insight into the input format and the operation of RDFier.
 
 Sections:
 ------
  * [Input Format](1_input_format.md)
- * [Instructions](2_instructions.md)
  * [Uncertainty Models](3_models.md)
- * [Automatic generated documentation of UnCo](unco.md)
+ * [Automatic generated documentation of RDFier](rdfier.md)
 
 Project Organization
 --------------------
 
     ├── data
-    |   ├── input           <- Example input files.
-    |   ├── output          <- Output files.
-    |   ├── results         <- Results and plots of the master thesis benchmark.
-    │   └── thesis_graphs   <- Graphs and code which is shown in the thesis as figures.
-    |
-    ├── docu                <- This documentation of UnCo.
+    │   ├── input           <- Example input files.
+    │   └── output          <- Output files.
+    │
+    ├── docu                <- This documentation of RDFier.
     │  
     ├── src
-    |   ├── benchmark       <- Scripts and queries needed for benchmarking.
-    |   ├── rdfier_app      <- The streamlit application RDFier.
-    |   ├── unco            <- This is UnCo!
-    |   └── setup.py        <- Makes project pip-installable (pip install -e ./src).
-    |
-    ├── __main__.py         <- Starts UnCo with "python .".
-    |
+    │   ├── rdfier_app      <- The streamlit application RDFier.
+    │   ├── scripts         <- This is RDFier!
+    │   └── setup.py        <- Makes project pip-installable (pip install -e ./src).
+    │
+    │
     ├── README.md           <- Readme file to getting started.
-    |
-    ├── installation.bat/sh <- CMD/Shell Script to install UnCo.
-    |
-    ├── start_unco.bat/sh   <- CMD/Shell Script to start UnCo.
-    |
+    │
+    ├── installation.bat/sh <- CMD/Shell Script to install RDFier.
+    │
+    ├── start_rdfier.bat/sh <- CMD/Shell Script to start RDFier.
+    │
     └── requirements.txt    <- Required python libraries.
 
 

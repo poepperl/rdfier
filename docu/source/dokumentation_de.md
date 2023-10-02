@@ -1,41 +1,34 @@
 Dokumentation
 =============
-Diese Dokumentation kann dazu genutzt werden, um einen Einblick in das Eingabeformat und die Arbeitsweise von UnCo zu erhalten.
-Zudem ist eine Anleitung enthalten, wie die in der Masterthesis ausgeführten Benchmarktests selbst ausgeführt werden können und wie der Benchmark mit eigenen Modellierungen und SPARQL-Anfragen erweitert werden kann.
+Diese Dokumentation kann dazu genutzt werden, um einen Einblick in das Eingabeformat und die Arbeitsweise von RDFier zu erhalten.
 Diese lassen sich zudem individuell anpassen, sodass der Benchmark mit anderen Datensätzen oder anderen Parametern wiederholt werden kann.
 
 Abschnitte:
 -----------
  * [Eingabeformat](1_eingabeformat.md)
- * [Anleitungen](2_anleitungen.md)
  * [Modellierungen von Unsicherheiten](3_modellierungen.md)
- * [Automatisch generierte Dokumentation von UnCo](unco.md)
+ * [Automatisch generierte Dokumentation von RDFier](rdfier.md)
 
-Project Aufbau
+Projekt Aufbau
 --------------
 
     ├── data
-    |   ├── input           <- Beispiel Eingabedaten.
-    |   ├── output          <- Speicherort der Ausgabe.
-    |   ├── results         <- Benchmarkergebnisse und Grafiken der Masterthesis.
-    │   └── thesis_graphs   <- Graphen und Code der Abbildungen aus der Masterthesis.
-    |
+    │   ├── input           <- Beispiel Eingabedaten.
+    │   └── output          <- Speicherort der Ausgabe.
+    │
     ├── docu                <- Diese Dokumentation.
     │  
     ├── src
-    |   ├── benchmark       <- Klassen und Queries, die für den Benchmark genutzt wurden.
-    |   ├── rdfier_app      <- Die streamlit Anwendung RDFier.
-    |   ├── unco            <- Das ist UnCo!
-    |   └── setup.py        <- Macht Projekt pip-installierbar (pip install -e ./src).
-    |
-    ├── __main__.py         <- Startet UnCo mit "python .".
-    |
+    │   ├── rdfier_app      <- Die streamlit Anwendung RDFier.
+    │   ├── scripts         <- Die Logik von RDFier!
+    │   └── setup.py        <- Macht Projekt pip-installierbar (pip install -e ./src).
+    │
     ├── README.md           <- Liesmich Datei als Kurzbeschreibung.
-    |
-    ├── installation.bat/sh <- CMD/Shell Skript zum installieren von UnCo.
-    |
-    ├── start_unco.bat/sh   <- CMD/Shell Skript zum starten von UnCo.
-    |
+    │
+    ├── installation.bat/sh <- CMD/Shell Skript zum installieren von RDFier.
+    │
+    ├── start_rdfier.bat/sh   <- CMD/Shell Skript zum starten von RDFier.
+    │
     └── requirements.txt    <- Benötigte Python Bibliotheken.
 
 

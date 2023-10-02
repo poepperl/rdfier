@@ -1,13 +1,11 @@
 from pathlib import Path
 from PIL import Image
-from unco import UNCO_PATH
+from scripts import RDFIER_PATH
 import streamlit as st
 
 st.set_page_config(
     page_title="Input Format",
     layout="wide")
-
-# st.markdown(Path(UNCO_PATH,"docu/1_input_format.md").read_text(), unsafe_allow_html=True)
 
 st.markdown("""
 INPUT FORMAT
@@ -20,7 +18,7 @@ Basic Structure
 The basic structure of the input is as follows:
 """)
 
-st.image(Image.open(Path(UNCO_PATH,"docu/source/images/basic_structure.JPG")))
+st.image(Image.open(Path(RDFIER_PATH,"docu/source/images/basic_structure.JPG")))
 
 st.markdown("""
 Thus, usually the first column denotes subjects, and the subsequent columns denote objects, with the respective predicate in the column header. The edges (subject, predicate1, object1), (subject, predicate2, object2), and (subject, predicate3, object3) are created from the diagram.

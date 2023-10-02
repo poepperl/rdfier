@@ -1,6 +1,6 @@
 # Modellierungen von Unsicherheiten
 
-Im Folgenden sind alle 9 Modellierungen aufgelistet, die UnCo enthält. Eine genauere Beschreibung der Modellierungen ist in der Masterthesis zu sehen.
+Im Folgenden sind alle 9 Modellierungen aufgelistet, die der RDFier enthält. Eine genauere Beschreibung der Modellierungen ist in der Masterthesis zu sehen.
 
 ## Modellierung 1:
 ![model1](images/1.png)
