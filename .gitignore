@@ -6,7 +6,6 @@ __pycache__/
 
 # Distribution / packaging
 *.egg-info/
-*.lock
 *.egg
 /.venv
 

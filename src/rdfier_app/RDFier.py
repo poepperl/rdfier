@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from PIL import Image
-from scripts import RDFIER_PATH
-from scripts.data.rdf_data import RDFData
-from scripts.features.illustrator import Illustrator
-from scripts.features.graph_generator import GraphGenerator
+from rdfier import RDFIER_PATH
+from rdfier.data.rdf_data import RDFData
+from rdfier.features.illustrator import Illustrator
+from rdfier.features.graph_generator import GraphGenerator
 
 st.set_page_config(
     page_title="RDFier",

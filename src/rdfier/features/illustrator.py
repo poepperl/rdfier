@@ -1,5 +1,5 @@
 from pathlib import Path
-from scripts import RDFIER_PATH
+from rdfier import RDFIER_PATH
 import shutil
 import requests
 

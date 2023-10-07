@@ -1,6 +1,6 @@
 from pathlib import Path
 from PIL import Image
-from scripts import RDFIER_PATH
+from rdfier import RDFIER_PATH
 import streamlit as st
 
 st.set_page_config(

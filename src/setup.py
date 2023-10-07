@@ -7,7 +7,7 @@ def read(fname):
 setup(
     name='rdfier',
     packages=find_packages(),
-    package_dir={"rdfier": "scripts"},
+    package_dir={"rdfier": "rdfier"},
     version='1.0.0',
     description='The RDFier takes data in CSV files and builds the appropriate rdf graph.',
     author='Luca Poepperl',
