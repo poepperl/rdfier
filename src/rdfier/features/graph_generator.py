@@ -2,8 +2,8 @@ import pandas as pd
 from fileinput import input
 from random import random
 from pathlib import Path
-from rdfier import RDFIER_PATH
-from rdfier.data.rdf_data import RDFData
+from src.rdfier import RDFIER_PATH
+from src.rdfier.data.rdf_data import RDFData
 from rdflib import Graph, Namespace, BNode, Literal, URIRef, IdentifiedNode
 
 

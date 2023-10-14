@@ -22,27 +22,27 @@ Project Organization
     │
     ├── README.md           <- Readme file to getting started.
     │
-    ├── installation.bat/sh <- CMD/Shell Script to install RDFier.
-    │
-    ├── start_rdfier.bat/sh   <- CMD/Shell Script to start RDFier.
-    │
-    └── requirements.txt    <- Required python libraries.
+    └── pyproject.toml      <- Required python libraries.
 
 Installation and Execution
 --------------------------
 
 **Windows**:
 ```shell
-python -m venv .venv
+pip install poetry
+poetry config virtualenvs.path "{project-dir}/.venv"
+poetry lock
 .venv\Scripts\activate
-pip install -r requirements.txt
+poetry install
 ```
 
 **Linux**:
 ```shell
-python3 -m venv .venv
+pip3 install poetry
+poetry config virtualenvs.path "{project-dir}/.venv"
+poetry lock
 source .venv/bin/activate
-pip3 install -r requirements.txt
+poetry install
 ```
 
 Documentation

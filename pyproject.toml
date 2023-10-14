@@ -1,18 +1,26 @@
 [tool.poetry]
 name = "rdfier"
-version = "1.0.0"
+version = "0.1.0"
 description = "Application to turn csv data into a rdf graph"
 authors = ["poepperl <luca.poepperl@gmail.com>"]
 readme = "README.md"
+license="Apache-2.0"
 packages = [
     { include = "src/rdfier" },
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-streamlit = "^1.27.2"
+python = ">=3.10,<3.12"
+pandas = "^2.1.1"
+numpy = "^1.26.0"
+matplotlib = "^3.8.0"
+pathlib = "^1.0.1"
+psutil = "^5.9.5"
+pydoc-markdown = "^4.8.2"
+requests = "^2.31.0"
 rdflib = "^7.0.0"
-
+streamlit = "^1.27.2"
+tqdm = "^4.66.1"
 
 [build-system]
 requires = ["poetry-core"]
