@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 from pathlib import Path
+
+import streamlit as st
 from PIL import Image
 from rdfier import RDFIER_PATH
-import streamlit as st
 
-st.set_page_config(
-    page_title="Input Format",
-    layout="wide")
+st.set_page_config(page_title="Input Format", layout="wide")
 
-st.markdown("""
+st.markdown(
+    """
 INPUT FORMAT
 ============
 The main task of the RDFier is to build an RDF graph from a dataset in the form of a CSV file. Since more complex concepts in RDF graphs cannot be easily read from a CSV table, here we describe how to encode them in the input table.
@@ -16,11 +18,13 @@ The example used here is stored in the project folder under *data/input/example_
 Basic Structure
 ---------------
 The basic structure of the input is as follows:
-""")
+"""
+)
 
-st.image(Image.open(Path(RDFIER_PATH,"docu/source/images/basic_structure.JPG")))
+st.image(Image.open(Path(RDFIER_PATH, "docu/source/images/basic_structure.JPG")))
 
-st.markdown("""
+st.markdown(
+    """
 Thus, usually the first column denotes subjects, and the subsequent columns denote objects, with the respective predicate in the column header. The edges (subject, predicate1, object1), (subject, predicate2, object2), and (subject, predicate3, object3) are created from the diagram.
 
 Frequently used namespaces are directly available. These include:
@@ -144,4 +148,5 @@ The entries `0.8; 0.2` are weighted uncertainties. Thus the statement *afe\:13 n
 The following restrictions apply to the specification of uncertainty:
  * Single entries may be noted as uncertain with `u`. Instead, a single weight can also be specified. In this context, weighting 0 means *totally uncertain* and weighting "1" is equivalent to *certain*.
  * Multiple entries can be indicated by `a` (for *alternatives*) as uncertain with alternatives. Instead, a weighting can also be specified, in which case a weighting must be assigned to each alternative.
-""")
+"""
+)

@@ -1,7 +1,11 @@
-from pathlib import Path
-from src.rdfier import RDFIER_PATH
+from __future__ import annotations
+
 import shutil
+from pathlib import Path
+
 import requests
+
+from src.rdfier import RDFIER_PATH
 
 
 class Illustrator:
@@ -27,7 +31,7 @@ class Illustrator:
     def get_illustration(self, path: str | Path):
         """
         Method, which downloads the graphical version of the given rdf graph. Output will be saved in "data/output/downloaded_graph.png".
-        
+
         Attributes
         ----------
         path : Path
@@ -41,11 +45,15 @@ class Illustrator:
         if path[-3:] == "rdf" or path[-3:] == "xml" or path[-3:] == "txt":
             params["from"] = "xml"
         elif path[-3:] != "ttl":
-            raise ValueError("Unknown Datatyp. Please use \".rdf\" or \".ttl\" files as input.")
-        
-        response = requests.post('https://www.ldf.fi/service/rdf-grapher', params=params, stream=True)
+            raise ValueError(
+                'Unknown Datatyp. Please use ".rdf" or ".ttl" files as input.'
+            )
+
+        response = requests.post(
+            "https://www.ldf.fi/service/rdf-grapher", params=params, stream=True
+        )
 
         filename = str(Path(RDFIER_PATH, "data/output/downloaded_graph.png"))
         if response.status_code == 200:
-            with open(filename, 'wb') as f:
+            with open(filename, "wb") as f:
                 shutil.copyfileobj(response.raw, f)

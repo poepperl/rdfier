@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 from datetime import datetime
 from pathlib import Path
+
 
 def get_datetime_postfix() -> str:
     """
@@ -16,5 +19,6 @@ def get_datetime_postfix() -> str:
         .replace(":", "")
         .split(".")[0]
     )
+
 
 RDFIER_PATH = Path(__file__).parent.parent.parent

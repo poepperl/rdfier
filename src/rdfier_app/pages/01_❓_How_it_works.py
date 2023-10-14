@@ -1,13 +1,13 @@
+from __future__ import annotations
+
 import streamlit as st
 
-st.set_page_config(
-    page_title="How it works",
-    layout="wide")
+st.set_page_config(page_title="How it works", layout="wide")
 
-st.title('About RDFier')
+st.title("About RDFier")
 
 st.write(
-    f"""
+    """
     This module was developed as part of Luca Pöpperl's master's thesis in order to investigate different models for uncertainty
     in RDF graphs and to perform benchmark tests with them.
     This web application provides a simple way to convert CSV data into RDF graphs using a mapping syntax,
