@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rdfier"
-version = "0.1.0"
+version = "0.2.0"
 description = "Application to turn csv data into a rdf graph"
 authors = ["poepperl <luca.poepperl@gmail.com>"]
 readme = "README.md"
@@ -11,14 +11,11 @@ packages = [{ include = "rdfier", from = "src/" }]
 python = ">=3.10,<3.12"
 pandas = "^2.1.1"
 numpy = "^1.26.0"
-matplotlib = "^3.8.0"
 pathlib = "^1.0.1"
-psutil = "^5.9.5"
 pydoc-markdown = "^4.8.2"
 requests = "^2.31.0"
 rdflib = "^7.0.0"
 streamlit = "^1.27.2"
-tqdm = "^4.66.1"
 pre-commit = "^3.5.0"
 
 [build-system]
