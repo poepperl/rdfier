@@ -5,7 +5,7 @@ from pathlib import Path
 
 import requests
 
-from src.rdfier import RDFIER_PATH
+from rdfier import RDFIER_PATH
 
 
 class Illustrator:

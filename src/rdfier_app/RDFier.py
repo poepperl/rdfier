@@ -6,10 +6,10 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 
-from src.rdfier import RDFIER_PATH
-from src.rdfier.data.rdf_data import RDFData
-from src.rdfier.features.graph_generator import GraphGenerator
-from src.rdfier.features.illustrator import Illustrator
+from rdfier import RDFIER_PATH
+from rdfier.data.rdf_data import RDFData
+from rdfier.features.graph_generator import GraphGenerator
+from rdfier.features.illustrator import Illustrator
 
 st.set_page_config(page_title="RDFier", layout="wide")
 

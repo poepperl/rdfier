@@ -5,9 +5,7 @@ description = "Application to turn csv data into a rdf graph"
 authors = ["poepperl <luca.poepperl@gmail.com>"]
 readme = "README.md"
 license="Apache-2.0"
-packages = [
-    { include = "src/rdfier" },
-]
+packages = [{ include = "rdfier", from = "src/" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"

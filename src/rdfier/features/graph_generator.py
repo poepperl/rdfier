@@ -12,8 +12,8 @@ from rdflib import Literal
 from rdflib import Namespace
 from rdflib import URIRef
 
-from src.rdfier import RDFIER_PATH
-from src.rdfier.data.rdf_data import RDFData
+from rdfier import RDFIER_PATH
+from rdfier.data.rdf_data import RDFData
 
 
 # Standard Namespaces------------------------------------------------------------------------
