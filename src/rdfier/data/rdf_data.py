@@ -242,12 +242,12 @@ class RDFData:
                     )
                     return dict()
             except:
-                pass
+                return dict()
         elif len(sub_splitlist) == len(unc_splitlist):
             try:
                 unc_splitlist = [float(elem) for elem in unc_splitlist]
             except:
-                pass
+                return dict()
             if all(isinstance(n, float) for n in unc_splitlist):
                 if sum(unc_splitlist) == 1:
                     return {"mode": "a", "weights": unc_splitlist}

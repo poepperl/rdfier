@@ -1,32 +1,25 @@
+# Source: https://pre-commit.com/
+# Inspiration: https://towardsdatascience.com/pre-commit-hooks-you-must-know-ff247f5feb7e
+# Apply to all files without commiting:
+#   pre-commit run --all-files
+# Update this file:
+#   pre-commit autoupdate
 repos:
--   repo: https://github.com/psf/black
-    rev: 23.9.1
+  - repo: https://github.com/PyCQA/bandit  # https://github.com/PyCQA/bandit
+    rev: '1.7.5' # Updated 14.10.2022
     hooks:
-    - id: black
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+      - id: bandit
+        args: [--skip, "B101", --recursive, clumper]
+  - repo: https://github.com/pycqa/flake8
+    rev: '6.1.0'  # Updated 14.10.2022
     hooks:
-    -   id: check-toml
-    -   id: detect-private-key
--   repo: https://github.com/asottile/reorder_python_imports
-    rev: v3.12.0
+      - id: flake8
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0  # Updated 14.10.2022
     hooks:
-    -   id: reorder-python-imports
-        args: [--py37-plus, --add-import, 'from __future__ import annotations']
--   repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v2.0.4
+      - id: isort
+        name: isort (python)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.6.1
     hooks:
-    -   id: autopep8
--   repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
-    hooks:
-    -   id: flake8
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.0
-    hooks:
-    -   id: mypy
-        additional_dependencies: [types-all]
--   repo: https://github.com/kynan/nbstripout
-    rev: 0.6.1
-    hooks:
-      - id: nbstripout
+      - id: mypy

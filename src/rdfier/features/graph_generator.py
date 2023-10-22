@@ -5,16 +5,10 @@ from pathlib import Path
 from random import random
 
 import pandas as pd
-from rdflib import BNode
-from rdflib import Graph
-from rdflib import IdentifiedNode
-from rdflib import Literal
-from rdflib import Namespace
-from rdflib import URIRef
+from rdflib import BNode, Graph, IdentifiedNode, Literal, Namespace, URIRef
 
 from rdfier import RDFIER_PATH
 from rdfier.data.rdf_data import RDFData
-
 
 # Standard Namespaces------------------------------------------------------------------------
 CRM = Namespace("http://www.cidoc-crm.org/cidoc-crm/")
@@ -714,6 +708,8 @@ class GraphGenerator:
                 str(Path(RDFIER_PATH, "data/output/query_results_fuseki.csv"))
             )
             return dataframe
+        else:
+            return
 
     def change_to_model_9a(self) -> None:
         """
