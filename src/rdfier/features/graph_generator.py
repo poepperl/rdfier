@@ -196,65 +196,64 @@ class GraphGenerator:
                                             ]["weights"][index]
                                         else:
                                             weight = float("%.2f" % random())
-                                    match model_id:
-                                        case 1:
-                                            self._generate_uncertain_statement_model_1(
-                                                subject, predicate, objekt
+                                    if model_id == 1:
+                                        self._generate_uncertain_statement_model_1(
+                                            subject, predicate, objekt
+                                        )
+                                    elif model_id == 2:
+                                        self._generate_uncertain_statement_model_2(
+                                            subject, predicate, objekt
+                                        )
+                                    elif model_id == 3:
+                                        self.graph.add(
+                                            (
+                                                BNode("A3"),
+                                                RDF["type"],
+                                                CRM["R1_Reliability_Assessment"],
                                             )
-                                        case 2:
-                                            self._generate_uncertain_statement_model_2(
-                                                subject, predicate, objekt
-                                            )
-                                        case 3:
-                                            self.graph.add(
-                                                (
-                                                    BNode("A3"),
-                                                    RDF["type"],
-                                                    CRM["R1_Reliability_Assessment"],
-                                                )
-                                            )
-                                            self._generate_uncertain_statement_model_3(
-                                                subject, predicate, objekt, weight
-                                            )
-                                        case 4:
-                                            self._generate_uncertain_statement_model_4(
-                                                subject,
-                                                predicate,
-                                                objekt,
-                                                weight,
-                                                index,
-                                            )
-                                        case 5:
-                                            self._generate_uncertain_statement_model_5(
-                                                subject,
-                                                predicate,
-                                                objekt,
-                                                weight,
-                                                crm_properties,
-                                            )
-                                        case 6:
-                                            self._generate_uncertain_statement_model_6(
-                                                subject, predicate, objekt
-                                            )
-                                        case 7:
-                                            self._generate_uncertain_statement_model_7(
-                                                subject, predicate, objekt
-                                            )
-                                        case 8:
-                                            self._generate_uncertain_statement_model_8(
-                                                subject, predicate, objekt
-                                            )
-                                        case 9:
-                                            self._generate_uncertain_statement_model_9a(
-                                                subject, predicate, objekt
-                                            )
-                                        case 10:
-                                            self._generate_uncertain_statement_model_9b(
-                                                subject, predicate, objekt, 1 - weight
-                                            )
-                                        case _:
-                                            self.graph.add(
-                                                (subject, predicate, objekt))
+                                        )
+                                        self._generate_uncertain_statement_model_3(
+                                            subject, predicate, objekt, weight
+                                        )
+                                    elif model_id == 4:
+                                        self._generate_uncertain_statement_model_4(
+                                            subject,
+                                            predicate,
+                                            objekt,
+                                            weight,
+                                            index,
+                                        )
+                                    elif model_id == 5:
+                                        self._generate_uncertain_statement_model_5(
+                                            subject,
+                                            predicate,
+                                            objekt,
+                                            weight,
+                                            crm_properties,
+                                        )
+                                    elif model_id == 6:
+                                        self._generate_uncertain_statement_model_6(
+                                            subject, predicate, objekt
+                                        )
+                                    elif model_id == 7:
+                                        self._generate_uncertain_statement_model_7(
+                                            subject, predicate, objekt
+                                        )
+                                    elif model_id == 8:
+                                        self._generate_uncertain_statement_model_8(
+                                            subject, predicate, objekt
+                                        )
+                                    elif model_id == 9:
+                                        self._generate_uncertain_statement_model_9a(
+                                            subject, predicate, objekt
+                                        )
+                                    elif model_id == 10:
+                                        self._generate_uncertain_statement_model_9b(
+                                            subject, predicate, objekt, 1 - weight
+                                        )
+                                    else:
+                                        self.graph.add(
+                                            (subject, predicate, objekt))
 
                                 else:
                                     self.graph.add(
