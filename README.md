@@ -5,6 +5,8 @@ Description
 -----------
 This project contains tools for importing datasets with uncertainties, transforming them into rdf graphs and executing SPARQL queries.
 
+You want to test the module? -> https://rdfier.streamlit.app/
+
 Project Organization
 --------------------
 
