@@ -260,7 +260,7 @@ class GraphGenerator:
                                         (subject, predicate, objekt))
 
         # Save sparql-prefix txt:
-        with open(Path(self.OUTPUT_FOLDER, "graph_prefixes.txt"), "w") as file:
+        with open(Path(self.OUTPUT_FOLDER, "graph_prefixes.txt"), "w", encoding="utf-8") as file:
             file.write(
                 "".join(
                     "PREFIX " + prefix + ": <" +
@@ -271,10 +271,10 @@ class GraphGenerator:
 
         # Save RDF Graph:
         if xml_format:
-            with open(Path(self.OUTPUT_FOLDER, "graph.rdf"), "w") as file:
+            with open(Path(self.OUTPUT_FOLDER, "graph.rdf"), "w", encoding="utf-8") as file:
                 file.write(self.graph.serialize(format="pretty-xml"))
         else:
-            with open(Path(self.OUTPUT_FOLDER, "graph.ttl"), "w") as file:
+            with open(Path(self.OUTPUT_FOLDER, "graph.ttl"), "w", encoding="utf-8") as file:
                 file.write(self.graph.serialize(format="turtle"))
 
             if model_id == 9:

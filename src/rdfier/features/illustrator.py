@@ -55,5 +55,5 @@ class Illustrator:
 
         filename = str(Path(RDFIER_PATH, "data/output/downloaded_graph.png"))
         if response.status_code == 200:
-            with open(filename, "wb") as f:
+            with open(filename, "wb", encoding="utf-8") as f:
                 shutil.copyfileobj(response.raw, f)
