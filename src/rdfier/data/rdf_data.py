@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from warnings import warn
 
+import contextlib
 import numpy as np
 import pandas as pd
 
@@ -57,16 +58,7 @@ class RDFData:
                 col_min = dataframe[col].min()
                 col_max = dataframe[col].max()
                 # if all are non-negative, change to uint
-                if col_min >= 0:
-                    if col_max < np.iinfo(np.uint8).max:
-                        dataframe[col] = dataframe[col].astype(np.uint8)
-                    elif col_max < np.iinfo(np.uint16).max:
-                        dataframe[col] = dataframe[col].astype(np.uint16)
-                    elif col_max < np.iinfo(np.uint32).max:
-                        dataframe[col] = dataframe[col].astype(np.uint32)
-                    else:
-                        dataframe[col] = dataframe[col]
-                else:
+                if col_min < 0:
                     # if it has negative values, downcast based on the min and max
                     if (
                         col_max < np.iinfo(np.int8).max
@@ -85,6 +77,14 @@ class RDFData:
                         dataframe[col] = dataframe[col].astype(np.int32)
                     else:
                         dataframe[col] = dataframe[col]
+                elif col_max < np.iinfo(np.uint8).max:
+                    dataframe[col] = dataframe[col].astype(np.uint8)
+                elif col_max < np.iinfo(np.uint16).max:
+                    dataframe[col] = dataframe[col].astype(np.uint16)
+                elif col_max < np.iinfo(np.uint32).max:
+                    dataframe[col] = dataframe[col].astype(np.uint32)
+                else:
+                    dataframe[col] = dataframe[col]
 
             # process the float columns
             elif dataframe[col].dtype == "float":
@@ -99,10 +99,8 @@ class RDFData:
                 else:
                     dataframe[col] = dataframe[col]
 
-            if object_option:
-                if dataframe[col].dtype == "object":
-                    if len(dataframe[col].value_counts()) < 0.5 * dataframe.shape[0]:
-                        dataframe[col] = dataframe[col].astype("category")
+            if object_option and dataframe[col].dtype == "object" and len(dataframe[col].value_counts()) < 0.5 * dataframe.shape[0]:
+                dataframe[col] = dataframe[col].astype("category")
 
         return dataframe
 
@@ -189,11 +187,10 @@ class RDFData:
                     unc_column = next(iter(plan["certainties"]))
                     for row_index in range(len(self.data)):
                         if pd.notna(self.data.iat[row_index, unc_column]):
-                            uncertainties = self._get_uncertainty_dict(
+                            if uncertainties := self._get_uncertainty_dict(
                                 str(self.data.iat[row_index, sub_column]),
                                 str(self.data.iat[row_index, unc_column]),
-                            )
-                            if uncertainties:
+                            ):
                                 self.uncertainties[
                                     (row_index, sub_column)
                                 ] = uncertainties
@@ -220,7 +217,7 @@ class RDFData:
         unc_splitlist = uncertainty.split(";")
 
         if uncertainty == "c":
-            return dict()
+            return {}
         elif uncertainty == "ou" and len(sub_splitlist) == 1:
             return {"mode": "ou"}
         elif uncertainty == "a" and len(sub_splitlist) > 1:
@@ -235,19 +232,19 @@ class RDFData:
                 if 0 <= numb < 1:
                     return {"mode": "ou", "weights": [numb]}
                 elif numb == 1:
-                    return dict()
+                    return {}
                 elif not pd.isna(numb):
                     warn(
                         f'\033[93mUncertainty "{uncertainty}" out of bounds. No uncertainty will be transmit.\033[0m'
                     )
-                    return dict()
-            except:
-                return dict()
+                    return {}
+            except Exception:
+                return {}
         elif len(sub_splitlist) == len(unc_splitlist):
             try:
                 unc_splitlist = [float(elem) for elem in unc_splitlist]
-            except:
-                return dict()
+            except Exception:
+                return {}
             if all(isinstance(n, float) for n in unc_splitlist):
                 if sum(unc_splitlist) == 1:
                     return {"mode": "a", "weights": unc_splitlist}
@@ -256,19 +253,13 @@ class RDFData:
             warn(
                 f'\033[93mUnknown distribution "{uncertainty}". No uncertainties will be transmit.\033[0m'
             )
-            return dict()
-        elif len(sub_splitlist) != len(unc_splitlist):
-            warn(
-                f'\033[93mEntry "{subjects}" hasn\'t the correct number of uncertainties "{uncertainty}".'
-                f" No uncertainties will be transmit.\033[0m"
-            )
-            return dict()
+            return {}
         else:
             warn(
                 f'\033[93mEntry "{subjects}" hasn\'t identiefiable uncertainties "{uncertainty}". '
                 f"No uncertainties will be transmit.\033[0m"
             )
-            return dict()
+            return {}
 
     def _generate_type_and_language_plan(self) -> None:
         """
@@ -350,19 +341,12 @@ class RDFData:
         string : str
             Value for which no datatype or language was specified.
         """
-        try:
+        with contextlib.suppress(Exception):
             _ = int(string)
             return "^^xsd:long"
-        except:
-            pass
 
-        try:
+        with contextlib.suppress(Exception):
             _ = float(string)
             return "^^xsd:decimal"
-        except:
-            pass
 
-        if string.lower() == "true" or string.lower() == "false":
-            return "^^xsd:boolean"
-        else:
-            return ""
+        return "^^xsd:boolean" if string.lower() in {"true", "false"} else ""

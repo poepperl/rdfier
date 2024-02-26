@@ -123,7 +123,7 @@ else:
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
-        if solution == 9 or solution == 10:
+        if solution in [9,10]:
             st.warning(
                 "For RDF*, only the graphs in Turtle format can be output so far!",
                 icon="⚠️",

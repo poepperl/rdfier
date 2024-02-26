@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rdfier"
-version = "0.4.0"
+version = "1.0.1"
 description = "Application to turn csv data into a rdf graph"
 authors = ["poepperl <luca.poepperl@gmail.com>"]
 readme = "README.md"
