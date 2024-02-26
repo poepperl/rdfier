@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import contextlib
 from warnings import warn
 
-import contextlib
 import numpy as np
 import pandas as pd
 

@@ -5,7 +5,6 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 from PIL import Image
-
 from rdfier import RDFIER_PATH
 from rdfier.data.rdf_data import RDFData
 from rdfier.features.graph_generator import GraphGenerator

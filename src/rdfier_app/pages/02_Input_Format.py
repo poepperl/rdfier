@@ -4,7 +4,6 @@ from pathlib import Path
 
 import streamlit as st
 from PIL import Image
-
 from rdfier import RDFIER_PATH
 
 st.set_page_config(page_title="Input Format", layout="wide")
@@ -25,7 +24,7 @@ The basic structure of the input is as follows:
 st.image(Image.open(Path(RDFIER_PATH, "docu/source/images/basic_structure.JPG")))
 
 st.markdown(
-    """
+    r"""
 Thus, usually the first column denotes subjects, and the subsequent columns denote objects, with the respective predicate in the column header. The edges (subject, predicate1, object1), (subject, predicate2, object2), and (subject, predicate3, object3) are created from the diagram.
 
 Frequently used namespaces are directly available. These include:

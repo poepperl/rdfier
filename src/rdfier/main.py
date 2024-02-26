@@ -1,7 +1,10 @@
-from rdfier import RDFIER_PATH
 import sys
 from pathlib import Path
+
 from streamlit.web import cli as stcli
+
+from rdfier import RDFIER_PATH
+
 
 def main():
     print("Start RDFier...")

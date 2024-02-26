@@ -5,21 +5,18 @@
 # Update this file:
 #   pre-commit autoupdate
 repos:
-  - repo: https://github.com/PyCQA/bandit  # https://github.com/PyCQA/bandit
-    rev: '1.7.5' # Updated 14.10.2022
+  - repo: https://github.com/PyCQA/bandit
+    rev: '1.7.7' # Updated 01.02.2024
     hooks:
       - id: bandit
-        args: [--skip, "B101", --recursive, clumper]
-  - repo: https://github.com/pycqa/flake8
-    rev: '6.1.0'  # Updated 14.10.2022
-    hooks:
-      - id: flake8
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0  # Updated 14.10.2022
-    hooks:
-      - id: isort
-        name: isort (python)
+        args: [ --skip, "B101", --recursive, clumper ]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.1
+    rev: 'v1.8.0' # Updated 01.02.2024
     hooks:
       - id: mypy
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.15 # Updated 01.02.2024
+    hooks:
+      - id: ruff
+        args: [ --fix ]
+      - id: ruff-format
