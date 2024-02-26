@@ -90,8 +90,7 @@ else:
 
         path = Path(
             RDFIER_PATH,
-            "data/output/graph" +
-            (".ttl" if turtle_format == "Turtle" else ".rdf"),
+            "data/output/graph" + (".ttl" if turtle_format == "Turtle" else ".rdf"),
         )
 
         if generator.rdfdata.data.shape[0] > 30:
@@ -122,7 +121,7 @@ else:
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
-        if solution in [9,10]:
+        if solution in [9, 10]:
             st.warning(
                 "For RDF*, only the graphs in Turtle format can be output so far!",
                 icon="⚠️",

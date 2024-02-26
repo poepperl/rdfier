@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import contextlib
-from warnings import warn
+import logging
 
 import numpy as np
 import pandas as pd
@@ -99,7 +99,11 @@ class RDFData:
                 else:
                     dataframe[col] = dataframe[col]
 
-            if object_option and dataframe[col].dtype == "object" and len(dataframe[col].value_counts()) < 0.5 * dataframe.shape[0]:
+            if (
+                object_option
+                and dataframe[col].dtype == "object"
+                and len(dataframe[col].value_counts()) < 0.5 * dataframe.shape[0]
+            ):
                 dataframe[col] = dataframe[col].astype("category")
 
         return dataframe
@@ -152,8 +156,7 @@ class RDFData:
                 elif object_id in self.triple_plan:
                     self.triple_plan[object_id]["objects"].add(index)
                 else:
-                    self.triple_plan[object_id] = {
-                        "objects": {index}, "subject": set()}
+                    self.triple_plan[object_id] = {"objects": {index}, "subject": set()}
 
             elif len(splitlist) > 2:
                 raise SyntaxError(
@@ -167,12 +170,10 @@ class RDFData:
                 self.triple_plan[first_col_has_ref[1]]["objects"].update(
                     first_col_objects
                 )
-                self.triple_plan["**"] = self.triple_plan.pop(
-                    first_col_has_ref[1])
+                self.triple_plan["**"] = self.triple_plan.pop(first_col_has_ref[1])
 
             else:
-                self.triple_plan["**"] = {"objects":
-                                          first_col_objects, "subject": {0}}
+                self.triple_plan["**"] = {"objects": first_col_objects, "subject": {0}}
 
             self.data.rename({column: new_column_name}, axis=1, inplace=True)
 
@@ -233,31 +234,31 @@ class RDFData:
                     return {"mode": "ou", "weights": [numb]}
                 elif numb == 1:
                     return {}
-                elif not pd.isna(numb):
-                    warn(
-                        f'\033[93mUncertainty "{uncertainty}" out of bounds. No uncertainty will be transmit.\033[0m'
+                else:
+                    logging.warning(
+                        f'Uncertainty "{uncertainty}" out of bounds. No uncertainty will be transmit.'
                     )
                     return {}
             except Exception:
                 return {}
         elif len(sub_splitlist) == len(unc_splitlist):
             try:
-                unc_splitlist = [float(elem) for elem in unc_splitlist]
+                uncertainty_values = [float(elem) for elem in unc_splitlist]
             except Exception:
                 return {}
-            if all(isinstance(n, float) for n in unc_splitlist):
-                if sum(unc_splitlist) == 1:
-                    return {"mode": "a", "weights": unc_splitlist}
-                elif 0 <= sum(unc_splitlist) < 1:
-                    return {"mode": "au", "weights": unc_splitlist}
-            warn(
-                f'\033[93mUnknown distribution "{uncertainty}". No uncertainties will be transmit.\033[0m'
+            if all(isinstance(n, float) for n in uncertainty_values):
+                if sum(uncertainty_values) == 1:
+                    return {"mode": "a", "weights": uncertainty_values}
+                elif 0 <= sum(uncertainty_values) < 1:
+                    return {"mode": "au", "weights": uncertainty_values}
+            logging.warning(
+                f'Unknown distribution "{uncertainty}". No uncertainties will be transmit.'
             )
             return {}
         else:
-            warn(
-                f'\033[93mEntry "{subjects}" hasn\'t identiefiable uncertainties "{uncertainty}". '
-                f"No uncertainties will be transmit.\033[0m"
+            logging.warning(
+                f'Entry "{subjects}" hasn\'t identiefiable uncertainties "{uncertainty}". '
+                f"No uncertainties will be transmit."
             )
             return {}
 
@@ -267,8 +268,7 @@ class RDFData:
         """
         # Column type or language:
         for col_index, column in enumerate(self.data):
-            column_type_language, column_name = self._get_datatype_language(
-                str(column))
+            column_type_language, column_name = self._get_datatype_language(str(column))
 
             # Entry type or language:
             for cell_index, cell in enumerate(self.data.iloc[:, col_index]):
@@ -326,8 +326,8 @@ class RDFData:
                     entry[: -len(language_splitlist[-1]) - 1],
                 )
             else:
-                warn(
-                    f'\033[93mEntry "{language_splitlist[-1]}" is not a right language acronym.\033[0m'
+                logging.warning(
+                    f'Entry "{language_splitlist[-1]}" is not a right language acronym.'
                 )
 
         return "", entry

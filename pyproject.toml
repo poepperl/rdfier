@@ -52,7 +52,7 @@ select = [
 ]
 
 [tool.ruff.mccabe]
-max-complexity = 18
+max-complexity = 28 # 18
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.

@@ -3,7 +3,7 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-import requests
+import requests  # type: ignore
 
 from rdfier import RDFIER_PATH
 
@@ -42,7 +42,7 @@ class Illustrator:
         params = {"rdf": data}
         path = str(path)
 
-        if path[-3:] == "rdf" or path[-3:] == "xml" or path[-3:] == "txt":
+        if path[-3:] in {"rdf", "txt", "xml"}:
             params["from"] = "xml"
         elif path[-3:] != "ttl":
             raise ValueError(
@@ -50,10 +50,13 @@ class Illustrator:
             )
 
         response = requests.post(
-            "https://www.ldf.fi/service/rdf-grapher", params=params, stream=True
+            "https://www.ldf.fi/service/rdf-grapher",
+            params=params,
+            stream=True,
+            timeout=30,
         )
 
-        filename = str(Path(RDFIER_PATH, "data/output/downloaded_graph.png"))
         if response.status_code == 200:
+            filename = str(Path(RDFIER_PATH, "data/output/downloaded_graph.png"))
             with open(filename, "wb", encoding="utf-8") as f:
                 shutil.copyfileobj(response.raw, f)

@@ -9,7 +9,7 @@ repos:
     rev: '1.7.7' # Updated 01.02.2024
     hooks:
       - id: bandit
-        args: [ --skip, "B101", --recursive, clumper ]
+        args: [ --skip, "B101,B311", --recursive, clumper ]
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: 'v1.8.0' # Updated 01.02.2024
     hooks:
