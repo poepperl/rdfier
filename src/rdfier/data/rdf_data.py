@@ -290,9 +290,18 @@ class RDFData:
                         (cell_index, col_index)
                     ] = cell_types_languages
 
-                    self.data.iat[cell_index, col_index] = "; ".join(
-                        splitlist
-                    )  # Rename cell
+                    new_value = "; ".join(splitlist)  # Rename cell
+                    replaced = False
+                    with contextlib.suppress(Exception):
+                        self.data.iat[cell_index, col_index] = int(new_value)
+                        replaced = True
+
+                    with contextlib.suppress(Exception):
+                        self.data.iat[cell_index, col_index] = float(new_value)
+                        replaced = True
+
+                    if replaced:
+                        self.data.iat[cell_index, col_index] = new_value
 
             if column_name != str(column):
                 # Rename column
