@@ -5,6 +5,7 @@ from pathlib import Path
 from random import random
 
 import pandas as pd
+import streamlit as st
 from rdflib import BNode, Graph, IdentifiedNode, Literal, Namespace, URIRef
 
 from rdfier import RDFIER_PATH
@@ -130,6 +131,10 @@ class GraphGenerator:
         for prefix, nspaces in self.prefixes.items():
             self.graph.bind(prefix, nspaces)
 
+        current_progress = 0.0
+        progress_bar = st.progress(current_progress, "Graph wird erstellt...")
+        step_size = (1 / len(self.rdfdata.triple_plan)) / len(self.rdfdata.data)
+
         for plan in self.rdfdata.triple_plan.values():
             if not plan["objects"]:
                 continue
@@ -137,6 +142,10 @@ class GraphGenerator:
             object_colindices = plan["objects"].copy()
 
             for row_index in range(len(self.rdfdata.data)):
+                current_progress += step_size
+                progress_bar.progress(
+                    current_progress if current_progress <= 1 else 1.0
+                )
                 if pd.notnull(self.rdfdata.data.iat[row_index, subject_colindex]):
                     subject = self._get_node(
                         str(self.rdfdata.data.iat[row_index, subject_colindex]),
@@ -265,6 +274,8 @@ class GraphGenerator:
                     for prefix in self.prefixes
                 )
             )
+
+        progress_bar.empty()
 
         # Save RDF Graph:
         if xml_format:
