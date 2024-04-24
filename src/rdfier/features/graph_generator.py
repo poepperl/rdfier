@@ -5,6 +5,7 @@ from pathlib import Path
 from random import random
 
 import pandas as pd
+import streamlit as st
 from rdflib import BNode, Graph, IdentifiedNode, Literal, Namespace, URIRef
 
 from rdfier import RDFIER_PATH
@@ -130,6 +131,10 @@ class GraphGenerator:
         for prefix, nspaces in self.prefixes.items():
             self.graph.bind(prefix, nspaces)
 
+        current_progress = 0.0
+        progress_bar = st.progress(current_progress, "Graph wird erstellt...")
+        step_size = (1 / len(self.rdfdata.triple_plan)) / len(self.rdfdata.data)
+
         for plan in self.rdfdata.triple_plan.values():
             if not plan["objects"]:
                 continue
@@ -137,10 +142,13 @@ class GraphGenerator:
             object_colindices = plan["objects"].copy()
 
             for row_index in range(len(self.rdfdata.data)):
+                current_progress += step_size
+                progress_bar.progress(
+                    current_progress if current_progress <= 1 else 1.0
+                )
                 if pd.notnull(self.rdfdata.data.iat[row_index, subject_colindex]):
                     subject = self._get_node(
-                        str(self.rdfdata.data.iat[row_index,
-                            subject_colindex]),
+                        str(self.rdfdata.data.iat[row_index, subject_colindex]),
                         self.rdfdata.types_and_languages[(row_index, subject_colindex)][
                             0
                         ],
@@ -152,8 +160,7 @@ class GraphGenerator:
                         if (
                             pd.notnull(entry) and str(entry) != ""
                         ):  # Check if value isn't NaN
-                            pred_name = str(
-                                self.rdfdata.data.columns[column_index])
+                            pred_name = str(self.rdfdata.data.columns[column_index])
                             predicate = self._get_node(pred_name, "^^uri")
 
                             obj_names = str(entry).split(";")
@@ -173,7 +180,7 @@ class GraphGenerator:
                                     row_index,
                                     column_index,
                                 ) in self.rdfdata.uncertainties:
-                                    if model_id in [3, 4, 5, 10]:
+                                    if model_id in {3, 4, 5, 10}:
                                         if (
                                             "weights"
                                             in self.rdfdata.uncertainties[
@@ -252,29 +259,34 @@ class GraphGenerator:
                                             subject, predicate, objekt, 1 - weight
                                         )
                                     else:
-                                        self.graph.add(
-                                            (subject, predicate, objekt))
+                                        self.graph.add((subject, predicate, objekt))
 
                                 else:
-                                    self.graph.add(
-                                        (subject, predicate, objekt))
+                                    self.graph.add((subject, predicate, objekt))
 
         # Save sparql-prefix txt:
-        with open(Path(self.OUTPUT_FOLDER, "graph_prefixes.txt"), "w", encoding="utf-8") as file:
+        with open(
+            Path(self.OUTPUT_FOLDER, "graph_prefixes.txt"), "w", encoding="utf-8"
+        ) as file:
             file.write(
                 "".join(
-                    "PREFIX " + prefix + ": <" +
-                    self.prefixes[prefix] + ">" + "\n"
+                    "PREFIX " + prefix + ": <" + self.prefixes[prefix] + ">" + "\n"
                     for prefix in self.prefixes
                 )
             )
 
+        progress_bar.empty()
+
         # Save RDF Graph:
         if xml_format:
-            with open(Path(self.OUTPUT_FOLDER, "graph.rdf"), "w", encoding="utf-8") as file:
+            with open(
+                Path(self.OUTPUT_FOLDER, "graph.rdf"), "w", encoding="utf-8"
+            ) as file:
                 file.write(self.graph.serialize(format="pretty-xml"))
         else:
-            with open(Path(self.OUTPUT_FOLDER, "graph.ttl"), "w", encoding="utf-8") as file:
+            with open(
+                Path(self.OUTPUT_FOLDER, "graph.ttl"), "w", encoding="utf-8"
+            ) as file:
                 file.write(self.graph.serialize(format="turtle"))
 
             if model_id == 9:
@@ -328,7 +340,7 @@ class GraphGenerator:
             splitlist = uri.split(":")
             if len(splitlist) >= 2:
                 if splitlist[0] in self.prefixes:
-                    return self.prefixes[splitlist[0]][uri[len(splitlist[0]) + 1:]]
+                    return self.prefixes[splitlist[0]][uri[len(splitlist[0]) + 1 :]]
                 else:
                     raise ValueError(
                         f'Unknown prefix {splitlist[0]} in uri "{uri}". To add prefixes for namespaces use the method "load_prefixes".'
@@ -465,8 +477,7 @@ class GraphGenerator:
             level = "very likely"
 
         self.graph.add(
-            (c, CRMINF["I4_Proposition_Set"],
-             Literal(f"Proposetion_{object_index}"))
+            (c, CRMINF["I4_Proposition_Set"], Literal(f"Proposetion_{object_index}"))
         )
         self.graph.add((c, CRMINF["J5_holds_to_be"], Literal(level)))
         self.graph.add((c, CRMINF["J4_that"], objekt))
@@ -707,8 +718,8 @@ class GraphGenerator:
                 str(Path(RDFIER_PATH, "data/output/query_results_fuseki.csv"))
             )
             return dataframe
-        else:
-            return
+
+        return pd.DataFrame()
 
     def change_to_model_9a(self) -> None:
         """

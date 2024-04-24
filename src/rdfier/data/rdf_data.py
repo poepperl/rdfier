@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from warnings import warn
+import contextlib
+import logging
 
 import numpy as np
 import pandas as pd
@@ -57,16 +58,7 @@ class RDFData:
                 col_min = dataframe[col].min()
                 col_max = dataframe[col].max()
                 # if all are non-negative, change to uint
-                if col_min >= 0:
-                    if col_max < np.iinfo(np.uint8).max:
-                        dataframe[col] = dataframe[col].astype(np.uint8)
-                    elif col_max < np.iinfo(np.uint16).max:
-                        dataframe[col] = dataframe[col].astype(np.uint16)
-                    elif col_max < np.iinfo(np.uint32).max:
-                        dataframe[col] = dataframe[col].astype(np.uint32)
-                    else:
-                        dataframe[col] = dataframe[col]
-                else:
+                if col_min < 0:
                     # if it has negative values, downcast based on the min and max
                     if (
                         col_max < np.iinfo(np.int8).max
@@ -85,6 +77,14 @@ class RDFData:
                         dataframe[col] = dataframe[col].astype(np.int32)
                     else:
                         dataframe[col] = dataframe[col]
+                elif col_max < np.iinfo(np.uint8).max:
+                    dataframe[col] = dataframe[col].astype(np.uint8)
+                elif col_max < np.iinfo(np.uint16).max:
+                    dataframe[col] = dataframe[col].astype(np.uint16)
+                elif col_max < np.iinfo(np.uint32).max:
+                    dataframe[col] = dataframe[col].astype(np.uint32)
+                else:
+                    dataframe[col] = dataframe[col]
 
             # process the float columns
             elif dataframe[col].dtype == "float":
@@ -99,10 +99,12 @@ class RDFData:
                 else:
                     dataframe[col] = dataframe[col]
 
-            if object_option:
-                if dataframe[col].dtype == "object":
-                    if len(dataframe[col].value_counts()) < 0.5 * dataframe.shape[0]:
-                        dataframe[col] = dataframe[col].astype("category")
+            if (
+                object_option
+                and dataframe[col].dtype == "object"
+                and len(dataframe[col].value_counts()) < 0.5 * dataframe.shape[0]
+            ):
+                dataframe[col] = dataframe[col].astype("category")
 
         return dataframe
 
@@ -154,8 +156,7 @@ class RDFData:
                 elif object_id in self.triple_plan:
                     self.triple_plan[object_id]["objects"].add(index)
                 else:
-                    self.triple_plan[object_id] = {
-                        "objects": {index}, "subject": set()}
+                    self.triple_plan[object_id] = {"objects": {index}, "subject": set()}
 
             elif len(splitlist) > 2:
                 raise SyntaxError(
@@ -169,12 +170,10 @@ class RDFData:
                 self.triple_plan[first_col_has_ref[1]]["objects"].update(
                     first_col_objects
                 )
-                self.triple_plan["**"] = self.triple_plan.pop(
-                    first_col_has_ref[1])
+                self.triple_plan["**"] = self.triple_plan.pop(first_col_has_ref[1])
 
             else:
-                self.triple_plan["**"] = {"objects":
-                                          first_col_objects, "subject": {0}}
+                self.triple_plan["**"] = {"objects": first_col_objects, "subject": {0}}
 
             self.data.rename({column: new_column_name}, axis=1, inplace=True)
 
@@ -189,11 +188,10 @@ class RDFData:
                     unc_column = next(iter(plan["certainties"]))
                     for row_index in range(len(self.data)):
                         if pd.notna(self.data.iat[row_index, unc_column]):
-                            uncertainties = self._get_uncertainty_dict(
+                            if uncertainties := self._get_uncertainty_dict(
                                 str(self.data.iat[row_index, sub_column]),
                                 str(self.data.iat[row_index, unc_column]),
-                            )
-                            if uncertainties:
+                            ):
                                 self.uncertainties[
                                     (row_index, sub_column)
                                 ] = uncertainties
@@ -220,7 +218,7 @@ class RDFData:
         unc_splitlist = uncertainty.split(";")
 
         if uncertainty == "c":
-            return dict()
+            return {}
         elif uncertainty == "ou" and len(sub_splitlist) == 1:
             return {"mode": "ou"}
         elif uncertainty == "a" and len(sub_splitlist) > 1:
@@ -235,40 +233,34 @@ class RDFData:
                 if 0 <= numb < 1:
                     return {"mode": "ou", "weights": [numb]}
                 elif numb == 1:
-                    return dict()
-                elif not pd.isna(numb):
-                    warn(
-                        f'\033[93mUncertainty "{uncertainty}" out of bounds. No uncertainty will be transmit.\033[0m'
+                    return {}
+                else:
+                    logging.warning(
+                        f'Uncertainty "{uncertainty}" out of bounds. No uncertainty will be transmit.'
                     )
-                    return dict()
-            except:
-                return dict()
+                    return {}
+            except Exception:
+                return {}
         elif len(sub_splitlist) == len(unc_splitlist):
             try:
-                unc_splitlist = [float(elem) for elem in unc_splitlist]
-            except:
-                return dict()
-            if all(isinstance(n, float) for n in unc_splitlist):
-                if sum(unc_splitlist) == 1:
-                    return {"mode": "a", "weights": unc_splitlist}
-                elif 0 <= sum(unc_splitlist) < 1:
-                    return {"mode": "au", "weights": unc_splitlist}
-            warn(
-                f'\033[93mUnknown distribution "{uncertainty}". No uncertainties will be transmit.\033[0m'
+                uncertainty_values = [float(elem) for elem in unc_splitlist]
+            except Exception:
+                return {}
+            if all(isinstance(n, float) for n in uncertainty_values):
+                if sum(uncertainty_values) == 1:
+                    return {"mode": "a", "weights": uncertainty_values}
+                elif 0 <= sum(uncertainty_values) < 1:
+                    return {"mode": "au", "weights": uncertainty_values}
+            logging.warning(
+                f'Unknown distribution "{uncertainty}". No uncertainties will be transmit.'
             )
-            return dict()
-        elif len(sub_splitlist) != len(unc_splitlist):
-            warn(
-                f'\033[93mEntry "{subjects}" hasn\'t the correct number of uncertainties "{uncertainty}".'
-                f" No uncertainties will be transmit.\033[0m"
-            )
-            return dict()
+            return {}
         else:
-            warn(
-                f'\033[93mEntry "{subjects}" hasn\'t identiefiable uncertainties "{uncertainty}". '
-                f"No uncertainties will be transmit.\033[0m"
+            logging.warning(
+                f'Entry "{subjects}" hasn\'t identiefiable uncertainties "{uncertainty}". '
+                f"No uncertainties will be transmit."
             )
-            return dict()
+            return {}
 
     def _generate_type_and_language_plan(self) -> None:
         """
@@ -276,8 +268,7 @@ class RDFData:
         """
         # Column type or language:
         for col_index, column in enumerate(self.data):
-            column_type_language, column_name = self._get_datatype_language(
-                str(column))
+            column_type_language, column_name = self._get_datatype_language(str(column))
 
             # Entry type or language:
             for cell_index, cell in enumerate(self.data.iloc[:, col_index]):
@@ -299,9 +290,18 @@ class RDFData:
                         (cell_index, col_index)
                     ] = cell_types_languages
 
-                    self.data.iat[cell_index, col_index] = "; ".join(
-                        splitlist
-                    )  # Rename cell
+                    new_value = "; ".join(splitlist)  # Rename cell
+                    replaced = False
+                    with contextlib.suppress(Exception):
+                        self.data.iat[cell_index, col_index] = int(new_value)
+                        replaced = True
+
+                    with contextlib.suppress(Exception):
+                        self.data.iat[cell_index, col_index] = float(new_value)
+                        replaced = True
+
+                    if replaced:
+                        self.data.iat[cell_index, col_index] = new_value
 
             if column_name != str(column):
                 # Rename column
@@ -335,8 +335,8 @@ class RDFData:
                     entry[: -len(language_splitlist[-1]) - 1],
                 )
             else:
-                warn(
-                    f'\033[93mEntry "{language_splitlist[-1]}" is not a right language acronym.\033[0m'
+                logging.warning(
+                    f'Entry "{language_splitlist[-1]}" is not a right language acronym.'
                 )
 
         return "", entry
@@ -350,19 +350,12 @@ class RDFData:
         string : str
             Value for which no datatype or language was specified.
         """
-        try:
+        with contextlib.suppress(Exception):
             _ = int(string)
             return "^^xsd:long"
-        except:
-            pass
 
-        try:
+        with contextlib.suppress(Exception):
             _ = float(string)
             return "^^xsd:decimal"
-        except:
-            pass
 
-        if string.lower() == "true" or string.lower() == "false":
-            return "^^xsd:boolean"
-        else:
-            return ""
+        return "^^xsd:boolean" if string.lower() in {"true", "false"} else ""

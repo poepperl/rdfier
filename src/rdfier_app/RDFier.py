@@ -5,7 +5,6 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 from PIL import Image
-
 from rdfier import RDFIER_PATH
 from rdfier.data.rdf_data import RDFData
 from rdfier.features.graph_generator import GraphGenerator
@@ -44,7 +43,7 @@ if not uploaded_file:
     st.session_state.rerun = True
 else:
     st.session_state.df = st.data_editor(
-        pd.read_csv(uploaded_file), on_change=activate_rerun
+        pd.read_csv(uploaded_file, encoding="latin_1"), on_change=activate_rerun
     )
     if st.session_state.rerun:
         update()
@@ -91,8 +90,7 @@ else:
 
         path = Path(
             RDFIER_PATH,
-            "data/output/graph" +
-            (".ttl" if turtle_format == "Turtle" else ".rdf"),
+            "data/output/graph" + (".ttl" if turtle_format == "Turtle" else ".rdf"),
         )
 
         if generator.rdfdata.data.shape[0] > 30:
@@ -106,7 +104,7 @@ else:
             codcol, graphcol = st.columns(2)
 
             codcol.code(
-                path.read_text(),
+                path.read_text(encoding="latin_1"),
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
@@ -123,7 +121,7 @@ else:
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
-        if solution == 9 or solution == 10:
+        if solution in [9, 10]:
             st.warning(
                 "For RDF*, only the graphs in Turtle format can be output so far!",
                 icon="⚠️",
