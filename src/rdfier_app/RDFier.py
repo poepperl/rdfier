@@ -43,7 +43,7 @@ if not uploaded_file:
     st.session_state.rerun = True
 else:
     st.session_state.df = st.data_editor(
-        pd.read_csv(uploaded_file), on_change=activate_rerun
+        pd.read_csv(uploaded_file, encoding="latin_1"), on_change=activate_rerun
     )
     if st.session_state.rerun:
         update()
@@ -104,7 +104,7 @@ else:
             codcol, graphcol = st.columns(2)
 
             codcol.code(
-                path.read_text(),
+                path.read_text(encoding="latin_1"),
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 

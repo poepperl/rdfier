@@ -29,27 +29,19 @@ Project Organization
 Installation and Execution
 --------------------------
 
-**Windows**:
 ```shell
-pip install poetry
+pip install poetry # for Linux use pip3 instead
 poetry config virtualenvs.path "{project-dir}/.venv"
 poetry lock
-.venv\Scripts\activate
+poetry shell
 poetry install
+streamlit run src/rdfier_app/RDFier.py
 ```
 
-**Linux**:
-```shell
-pip3 install poetry
-poetry config virtualenvs.path "{project-dir}/.venv"
-poetry lock
-source .venv/bin/activate
-poetry install
-```
 
 Documentation
 -------------
-A documentation of RDFier is available in English ([here](docu/0_en_documentation.md)) and German ([here](docu/0_de_dokumentation.md)).
+A documentation of RDFier is available in English ([here](docu\source\documentation_en.md)) and German ([here](docu\source\dokumentation_de.md)).
 
 Update RDFier Documentation
 ---------------------------

@@ -38,7 +38,7 @@ class Illustrator:
             Path to the rdf data which should get a graphical version.
         """
         # data = open(str(path), 'r', encoding='utf-8').read()
-        data = Path(path).read_text()
+        data = Path(path).read_text(encoding="latin_1")
         params = {"rdf": data}
         path = str(path)
 
