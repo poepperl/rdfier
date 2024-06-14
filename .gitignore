@@ -15,6 +15,7 @@ __pycache__/
 # Data
 data/output/*
 data/testdata/
+data/input/privat_test_data
 
 # Gitkeep
 !.gitkeep
