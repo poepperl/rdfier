@@ -95,7 +95,7 @@ class GraphGenerator:
         if type(path_data) is pd.DataFrame:
             namespaces = path_data
         else:
-            namespaces = pd.read_csv(path_data)
+            namespaces = pd.read_csv(path_data, encoding="latin_1")
 
         for rowindex in range(len(namespaces)):
             self.prefixes[str(namespaces.iloc[rowindex, 0]).lower()] = Namespace(
@@ -152,7 +152,7 @@ class GraphGenerator:
                         self.rdfdata.types_and_languages[(row_index, subject_colindex)][
                             0
                         ],
-                        f"r{row_index}c{subject_colindex}",
+                        f"v{self.rdfdata.data.iat[row_index, subject_colindex]}c{subject_colindex}",
                     )
 
                     for column_index in object_colindices:
@@ -170,7 +170,7 @@ class GraphGenerator:
                                     self.rdfdata.types_and_languages[
                                         (row_index, column_index)
                                     ][i],
-                                    f"r{row_index}c{column_index}",
+                                    f"v{value}c{column_index}",
                                 )
                                 for i, value in enumerate(obj_names)
                             ]

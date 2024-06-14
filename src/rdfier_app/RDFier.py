@@ -83,7 +83,9 @@ else:
             st.session_state.rerun = False
             generator = GraphGenerator(st.session_state.rdf_data)
             if uploaded_prefixes:
-                generator.load_prefixes(pd.read_csv(uploaded_prefixes))
+                generator.load_prefixes(
+                    pd.read_csv(uploaded_prefixes, encoding="latin_1")
+                )
             generator.generate_graph(
                 model_id=solution, xml_format=(turtle_format == "XML")
             )
@@ -117,7 +119,7 @@ else:
             graphcol.image(image, output_format="PNG", use_column_width="auto")
         else:
             st.code(
-                path.read_text(),
+                path.read_text(encoding="latin_1"),
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
