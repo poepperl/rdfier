@@ -30,7 +30,7 @@ class RDFData:
         dataframe : pd.DataFrame
             Dataframe of the data which gets pseudorandom uncertainty.
         """
-        self.data = self.data_optimize(dataframe)
+        self.data = dataframe
         self.triple_plan: dict = {}
         self.types_and_languages: dict[tuple[int, int], list[str]] = {}
         self.uncertainties: dict = {}
