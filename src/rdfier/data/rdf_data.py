@@ -192,9 +192,9 @@ class RDFData:
                                 str(self.data.iat[row_index, sub_column]),
                                 str(self.data.iat[row_index, unc_column]),
                             ):
-                                self.uncertainties[
-                                    (row_index, sub_column)
-                                ] = uncertainties
+                                self.uncertainties[(row_index, sub_column)] = (
+                                    uncertainties
+                                )
                 elif lenght > 1:
                     raise SyntaxError(
                         f"Subject-column {self.data.columns[sub_column]} has more than one certainty-column."
@@ -286,9 +286,9 @@ class RDFData:
                             else self._get_fitting_datatype(entry)
                         )
 
-                    self.types_and_languages[
-                        (cell_index, col_index)
-                    ] = cell_types_languages
+                    self.types_and_languages[(cell_index, col_index)] = (
+                        cell_types_languages
+                    )
 
                     new_value = "; ".join(splitlist)  # Rename cell
                     replaced = False
