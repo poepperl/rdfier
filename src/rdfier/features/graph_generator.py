@@ -53,16 +53,19 @@ class GraphGenerator:
         Dictionary which contains the prefixes and namespaces which binds to the graph.
     """
 
-    def __init__(self, rdfdata: RDFData) -> None:
+    def __init__(self, rdfdata: RDFData, encoding: str) -> None:
         """
         Parameters
         ----------
         rdfdata: RDFData
             Object which contains the data of the rdf graph.
+        encoding: str
+            Encoding for the input and output data.
         """
         self.rdfdata = rdfdata
         self.graph = Graph()
         self.OUTPUT_FOLDER = Path(RDFIER_PATH, "data/output")
+        self.encoding = encoding
         self.prefixes: dict[str, Namespace] = {
             "crm": CRM,
             "dcterms": DCTERMS,
@@ -95,7 +98,7 @@ class GraphGenerator:
         if type(path_data) is pd.DataFrame:
             namespaces = path_data
         else:
-            namespaces = pd.read_csv(path_data, encoding="latin_1")
+            namespaces = pd.read_csv(path_data, encoding=self.encoding)
 
         for rowindex in range(len(namespaces)):
             self.prefixes[str(namespaces.iloc[rowindex, 0]).lower()] = Namespace(
@@ -280,12 +283,12 @@ class GraphGenerator:
         # Save RDF Graph:
         if xml_format:
             with open(
-                Path(self.OUTPUT_FOLDER, "graph.rdf"), "w", encoding="utf-8"
+                Path(self.OUTPUT_FOLDER, "graph.rdf"), "w", encoding=self.encoding
             ) as file:
                 file.write(self.graph.serialize(format="pretty-xml"))
         else:
             with open(
-                Path(self.OUTPUT_FOLDER, "graph.ttl"), "w", encoding="utf-8"
+                Path(self.OUTPUT_FOLDER, "graph.ttl"), "w", encoding=self.encoding
             ) as file:
                 file.write(self.graph.serialize(format="turtle"))
 
