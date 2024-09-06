@@ -24,7 +24,7 @@ def activate_rerun():
     st.session_state.rerun = True
 
 
-@hydra.main(config_path="../../config", config_name="config")
+@hydra.main(version_base=None, config_path="../../config", config_name="config")
 def init_config(cfg: DictConfig) -> None:
     OmegaConf.resolve(cfg)
     st.session_state.config = cfg
@@ -72,7 +72,18 @@ else:
 
         solution = col2.selectbox(
             "Select model:",
-            (1, 2, 3, 4, 5, 6, 7, 8, "9a", "9b"),
+            (
+                "1: Transformation of RDF Reification",
+                "2: Integrating Uncertainty in RDF Statements",
+                "3: Assigning Reliability from CRM",
+                "4: Assigning Believability from CRMinf",
+                "5: Assigning .2-Properties from CRM",
+                "6: Adapting RDF Reification with EDTFO",
+                "7: Approximate Statements through EDTFO",
+                "8: Assigning Bundled Uncertainties ",
+                "9a: RDF-star Approach",
+                "9b: RDF-star Approach",
+            ),
             on_change=activate_rerun,
         )
         if solution == "9a":
@@ -83,6 +94,8 @@ else:
             solution = 10
             graphical_version = False
             turtle_format = "Turtle"
+        else:
+            solution = int(solution.split(":")[0])
     # Graph generieren-------------------------------------------------------------------------------
 
     generate = st.button("Generate RDF graph")
