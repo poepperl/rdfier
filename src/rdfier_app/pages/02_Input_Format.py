@@ -4,6 +4,7 @@ from pathlib import Path
 
 import streamlit as st
 from PIL import Image
+
 from rdfier import RDFIER_PATH
 
 st.set_page_config(page_title="Input Format", layout="wide")

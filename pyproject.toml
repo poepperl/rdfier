@@ -22,6 +22,7 @@ pydoc-markdown = "^4.8.2"
 requests = "^2.31.0"
 rdflib = "^7.0.0"
 streamlit = "^1.30.0"
+hydra-core = "^1.3.2"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.0"
@@ -40,9 +41,9 @@ exclude = [
     "env",
     ".env",
 ]
-ignore = ["E501"]
+lint.ignore = ["E501"]
 line-length = 88
-select = [
+lint.select = [
     "F", # Pyflakes
     "E", # Pycodestyle
     "W", # Pycodestyle
@@ -51,7 +52,7 @@ select = [
     "C",
 ]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 28 # 18
 
 [tool.ruff.format]

@@ -18,7 +18,7 @@ class Illustrator:
         Path to the rdf data which should get a graphical version.
     """
 
-    def __init__(self, path: str | Path) -> None:
+    def __init__(self, path: str | Path, encoding: str) -> None:
         """
         Parameters
         ----------
@@ -26,6 +26,7 @@ class Illustrator:
             Path to the rdf file.
         """
         self.path = path
+        self.encoding = encoding
         self.get_illustration(path)
 
     def get_illustration(self, path: str | Path):
@@ -37,8 +38,7 @@ class Illustrator:
         path : Path
             Path to the rdf data which should get a graphical version.
         """
-        # data = open(str(path), 'r', encoding='utf-8').read()
-        data = Path(path).read_text(encoding="latin_1")
+        data = Path(path).read_text(encoding=self.encoding)
         params = {"rdf": data}
         path = str(path)
 

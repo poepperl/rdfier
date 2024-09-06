@@ -2,9 +2,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import hydra
 import pandas as pd
 import streamlit as st
+from omegaconf import DictConfig, OmegaConf
 from PIL import Image
+
 from rdfier import RDFIER_PATH
 from rdfier.data.rdf_data import RDFData
 from rdfier.features.graph_generator import GraphGenerator
@@ -21,8 +24,18 @@ def activate_rerun():
     st.session_state.rerun = True
 
 
-# Begin webpage---------------------------------------------------------------------------
+@hydra.main(config_path="../../config", config_name="config")
+def init_config(cfg: DictConfig) -> None:
+    OmegaConf.resolve(cfg)
+    st.session_state.config = cfg
 
+
+if "config" not in st.session_state:
+    init_config()
+
+config: DictConfig = st.session_state.config
+
+# Begin webpage---------------------------------------------------------------------------
 st.title("RDFier")
 st.subheader("A RDF Mapper")
 
@@ -43,7 +56,7 @@ if not uploaded_file:
     st.session_state.rerun = True
 else:
     st.session_state.df = st.data_editor(
-        pd.read_csv(uploaded_file, encoding="latin_1"), on_change=activate_rerun
+        pd.read_csv(uploaded_file, encoding=config.encoding), on_change=activate_rerun
     )
     if st.session_state.rerun:
         update()
@@ -81,10 +94,12 @@ else:
     if st.session_state.generate:
         if st.session_state.rerun:
             st.session_state.rerun = False
-            generator = GraphGenerator(st.session_state.rdf_data)
+            generator = GraphGenerator(
+                rdfdata=st.session_state.rdf_data, encoding=config.encoding
+            )
             if uploaded_prefixes:
                 generator.load_prefixes(
-                    pd.read_csv(uploaded_prefixes, encoding="latin_1")
+                    pd.read_csv(uploaded_prefixes, encoding=config.encoding)
                 )
             generator.generate_graph(
                 model_id=solution, xml_format=(turtle_format == "XML")
@@ -106,11 +121,11 @@ else:
             codcol, graphcol = st.columns(2)
 
             codcol.code(
-                path.read_text(encoding="latin_1"),
+                path.read_text(encoding=config.encoding),
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
-            grapher = Illustrator(path)
+            grapher = Illustrator(path=path, encoding=config.encoding)
 
             image = Image.open(
                 str(Path(RDFIER_PATH, "data/output/downloaded_graph.png"))
@@ -119,7 +134,7 @@ else:
             graphcol.image(image, output_format="PNG", use_column_width="auto")
         else:
             st.code(
-                path.read_text(encoding="latin_1"),
+                path.read_text(encoding=config.encoding),
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
