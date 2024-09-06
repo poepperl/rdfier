@@ -300,7 +300,7 @@ class RDFData:
                         self.data.iat[cell_index, col_index] = float(new_value)
                         replaced = True
 
-                    if replaced:
+                    if not replaced:
                         self.data.iat[cell_index, col_index] = new_value
 
             if column_name != str(column):
