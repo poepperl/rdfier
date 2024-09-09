@@ -32,6 +32,7 @@ def init_config(cfg: DictConfig) -> None:
 
 if "config" not in st.session_state:
     init_config()
+    st.session_state.encoding = st.session_state.config.encoding
 
 config: DictConfig = st.session_state.config
 
@@ -50,13 +51,26 @@ uploaded_prefixes = button2.file_uploader(
 )
 
 if not uploaded_file:
+    st.session_state.encoding = st.selectbox(
+        "Select encoding:",
+        (
+            st.session_state.encoding,
+            *[
+                i
+                for i in ["utf8", "utf16", "latin1", "latin9"]
+                if i != st.session_state.encoding
+            ],
+        ),
+        help="Encoding used for reading input and writing output data.",
+    )
     st.session_state.df = None
     st.session_state.generate = False
     st.session_state.rdf_data = None
     st.session_state.rerun = True
 else:
     st.session_state.df = st.data_editor(
-        pd.read_csv(uploaded_file, encoding=config.encoding), on_change=activate_rerun
+        pd.read_csv(uploaded_file, encoding=st.session_state.encoding),
+        on_change=activate_rerun,
     )
     if st.session_state.rerun:
         update()
@@ -108,11 +122,11 @@ else:
         if st.session_state.rerun:
             st.session_state.rerun = False
             generator = GraphGenerator(
-                rdfdata=st.session_state.rdf_data, encoding=config.encoding
+                rdfdata=st.session_state.rdf_data, encoding=st.session_state.encoding
             )
             if uploaded_prefixes:
                 generator.load_prefixes(
-                    pd.read_csv(uploaded_prefixes, encoding=config.encoding)
+                    pd.read_csv(uploaded_prefixes, encoding=st.session_state.encoding)
                 )
             generator.generate_graph(
                 model_id=solution, xml_format=(turtle_format == "XML")
@@ -134,11 +148,11 @@ else:
             codcol, graphcol = st.columns(2)
 
             codcol.code(
-                path.read_text(encoding=config.encoding),
+                path.read_text(encoding=st.session_state.encoding),
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
-            grapher = Illustrator(path=path, encoding=config.encoding)
+            grapher = Illustrator(path=path, encoding=st.session_state.encoding)
 
             image = Image.open(
                 str(Path(RDFIER_PATH, "data/output/downloaded_graph.png"))
@@ -147,7 +161,7 @@ else:
             graphcol.image(image, output_format="PNG", use_column_width="auto")
         else:
             st.code(
-                path.read_text(encoding=config.encoding),
+                path.read_text(encoding=st.session_state.encoding),
                 language="turtle" if turtle_format == "Turtle" else "xml",
             )
 
