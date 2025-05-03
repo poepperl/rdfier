@@ -39,7 +39,7 @@ streamlit run src/rdfier_app/RDFier.py
 
 Documentation
 -------------
-A documentation of RDFier is available in English ([here](docu\source\documentation_en.md)) and German ([here](docu\source\dokumentation_de.md)).
+A documentation of RDFier is available in English ([here](docu/source/documentation_en.md)) and German ([here](docu/source/dokumentation_de.md)).
 
 Update RDFier Documentation
 ---------------------------
