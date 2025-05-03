@@ -100,6 +100,7 @@ else:
             ),
             on_change=activate_rerun,
         )
+        solution = solution.split(":")[0]
         if solution == "9a":
             solution = 9
             graphical_version = False
@@ -109,7 +110,7 @@ else:
             graphical_version = False
             turtle_format = "Turtle"
         else:
-            solution = int(solution.split(":")[0])
+            solution = int(solution)
     # Graph generieren-------------------------------------------------------------------------------
 
     generate = st.button("Generate RDF graph")
