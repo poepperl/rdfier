@@ -30,9 +30,7 @@ Installation and Execution
 --------------------------
 
 ```shell
-pip install poetry # for Linux use pip3 instead
-poetry config virtualenvs.path "{project-dir}/.venv"
-poetry lock
+pip install poetry==1.8.5 # for Linux use pip3 instead
 poetry shell
 poetry install
 streamlit run src/rdfier_app/RDFier.py
